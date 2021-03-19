@@ -1,0 +1,20 @@
+{
+	"compilerOptions": {
+  	"module": "commonjs",
+		"target": "es2019",
+    "types": ["node"],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "declaration": true,
+		"noImplicitAny": false,
+		"sourceMap": true,
+		"outDir": "dist"
+  },
+	"include": [
+      "src/**/*.ts",
+      "tests/**/*.ts"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}

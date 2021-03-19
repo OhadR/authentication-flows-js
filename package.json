@@ -1,0 +1,21 @@
+{
+  "name": "authentication-flows-js",
+  "version": "0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "compile": "npx tsc --sourcemap --declaration",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git-codecommit.us-east-2.amazonaws.com/v1/repos/authentication-flows-js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^14.0.13",
+    "proxy-agent": "^3.1.1"
+  }
+}
