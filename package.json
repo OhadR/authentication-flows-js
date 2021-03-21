@@ -1,7 +1,7 @@
 {
   "name": "authentication-flows-js",
-  "version": "0.1",
-  "description": "",
+  "version": "0.0.1",
+  "description": "authentication-flows for javascript",
   "main": "dist/index.js",
   "scripts": {
     "compile": "npx tsc --sourcemap --declaration",

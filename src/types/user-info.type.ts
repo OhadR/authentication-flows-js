@@ -1,0 +1,22 @@
+export interface UserInfo {
+  account: string,
+  accountId: string,
+  accounts: string[],
+  changePasswordAt: string,
+  countryCode: string,
+  createOn: string,
+  eluaId: string,
+  email: string,
+  firstname: string,
+  isForceChangePassword: boolean,
+  isForcedToResetPassword: boolean,
+  lastname: string,
+  loginAttempts: number,
+  modifyOn: string,
+  password: string,
+  passwords: string[],
+  role: string,
+  status: string,
+  userId: string,
+  workspaceId: string
+}
