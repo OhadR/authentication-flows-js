@@ -2,39 +2,28 @@ export class AuthenticationPolicy {
 
 	private static readonly DB_ITEMS_DELIMITER: string = ";";
 
-	private passwordMinLength: number;
-
-	private passwordMaxLength: number;
-
-	private passwordMinUpCaseChars: number;
-
-	private passwordMinLoCaseChars: number;
-
-	private passwordMinNumbericDigits: number;
-
-	private passwordMinSpecialSymbols: number;
-	
-	private passwordBlackList: string[];
-	
-	private maxPasswordEntryAttempts: number;
-
-	private passwordLifeInDays: number;
-
-	private rememberMeTokenValidityInDays: number;
+	private readonly passwordMinLength: number;
+	private readonly passwordMaxLength: number;
+	private readonly passwordMinUpCaseChars: number;
+	private readonly passwordMinLoCaseChars: number;
+	private readonly passwordMinNumbericDigits: number;
+	private readonly passwordMinSpecialSymbols: number;
+	private readonly passwordBlackList: string[];
+	private readonly maxPasswordEntryAttempts: number;
+	private readonly passwordLifeInDays: number;
+	private readonly rememberMeTokenValidityInDays: number;
 
 
-
-	@SuppressWarnings("unchecked")
-	public AuthenticationPolicy(int passwordMinLength,
-			int passwordMaxLength,
-			int passwordMinUpCaseChars,
-			int passwordMinLoCaseChars, 
-			int passwordMinNumbericDigits,
-			int passwordMinSpecialSymbols,
-			String passwordBlackList,
-			int maxPasswordEntryAttempts,
-			int passwordLifeInDays,
-			int rememberMeTokenValidityInDays)
+	public constructor(passwordMinLength: number,
+			passwordMaxLength: number,
+			passwordMinUpCaseChars: number,
+			passwordMinLoCaseChars: number,
+			passwordMinNumbericDigits: number,
+			passwordMinSpecialSymbols: number,
+			passwordBlackList: string,
+			maxPasswordEntryAttempts: number,
+			passwordLifeInDays: number,
+			rememberMeTokenValidityInDays: number)
 	{
 		this.passwordMinLength = passwordMinLength;
 		this.passwordMaxLength = passwordMaxLength;
@@ -46,58 +35,58 @@ export class AuthenticationPolicy {
 		this.passwordLifeInDays = passwordLifeInDays;
 		this.rememberMeTokenValidityInDays = rememberMeTokenValidityInDays;
 		
-		this.passwordBlackList = CollectionUtils.arrayToList( passwordBlackList.split(DB_ITEMS_DELIMITER)); 
+		this.passwordBlackList = passwordBlackList.split(AuthenticationPolicy.DB_ITEMS_DELIMITER);
 
 	}
 
-	public int getPasswordMinSpecialSymbols()
+	public getPasswordMinSpecialSymbols(): number
 	{
-		return passwordMinSpecialSymbols;
+		return this.passwordMinSpecialSymbols;
 	}
 
-	public List<String> getPasswordBlackList()
+	public getPasswordBlackList(): string[]
 	{
-		return passwordBlackList;
+		return this.passwordBlackList;
 	}
 
-	public int getPasswordLifeInDays()
+	public getPasswordLifeInDays(): number
 	{
-		return passwordLifeInDays;
+		return this.passwordLifeInDays;
 	}
 
-	public int getPasswordMinLength()
+	public getPasswordMinLength(): number
 	{
-		return passwordMinLength;
+		return this.passwordMinLength;
 	}
 
-	public int getPasswordMinLoCaseChars()
+	public getPasswordMinLoCaseChars(): number
 	{
-		return passwordMinLoCaseChars;
+		return this.passwordMinLoCaseChars;
 	}
 
-	public int getRememberMeTokenValidityInDays()
+	public getRememberMeTokenValidityInDays(): number
 	{
-		return rememberMeTokenValidityInDays;
+		return this.rememberMeTokenValidityInDays;
 	}
 
-	public int getPasswordMinUpCaseChars()
+	public getPasswordMinUpCaseChars(): number
 	{
-		return passwordMinUpCaseChars;
+		return this.passwordMinUpCaseChars;
 	}
 
 	public getPasswordMaxLength(): number
 	{
-		return passwordMaxLength;
+		return this.passwordMaxLength;
 	}
 
-	public int getPasswordMinNumbericDigits()
+	public getPasswordMinNumbericDigits(): number
 	{
-		return passwordMinNumbericDigits;
+		return this.passwordMinNumbericDigits;
 	}
 
-	public int getMaxPasswordEntryAttempts()
+	public getMaxPasswordEntryAttempts(): number
 	{
-		return maxPasswordEntryAttempts;
+		return this.maxPasswordEntryAttempts;
 	}
 
 }
