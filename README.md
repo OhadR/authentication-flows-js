@@ -1,2 +1,3 @@
 # authentication-flows-js
-authentication-flows for javascript
+
+[authentication-flows](https://github.com/OhadR/authentication-flows) for javascript
