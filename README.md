@@ -9,3 +9,9 @@
 * `crypto-js` - to encrypt user's password. and to encode verification emails that are sent to users.
 * `express` - this module uses web-api for flows such create-account, forget-password, etc.
 * `log4js` - logs.
+
+
+## deploy 
+* tsc
+* npm version patch
+* npm publish
