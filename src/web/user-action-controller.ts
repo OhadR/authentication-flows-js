@@ -1,6 +1,6 @@
 const debug = require('debug')('user-action-controller');
 const express = require('express');
-const app = express();
+export const app = express();
 const port = 3000;
 
 // app.get('/', (req, res) => {
