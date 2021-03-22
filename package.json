@@ -9,15 +9,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:OhadR/authentication-flows-js.git"
+    "url": "git+ssh://git@github.com/OhadR/authentication-flows-js.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Ohad Redlich",
   "license": "ISC",
   "dependencies": {
     "@types/node": "^14.0.13",
     "crypto-js": "^4.0.0",
+    "express": "^4.17.1",
     "log4js": "^6.3.0",
     "proxy-agent": "^3.1.1"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/OhadR/authentication-flows-js/issues"
+  },
+  "homepage": "https://github.com/OhadR/authentication-flows-js#readme",
+  "devDependencies": {}
 }
