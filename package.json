@@ -11,7 +11,7 @@
     "type": "git",
     "url": "git+ssh://git@github.com/OhadR/authentication-flows-js.git"
   },
-  "keywords": [],
+  "keywords": ["authentication", "create account", "forgot password" ],
   "author": "Ohad Redlich",
   "license": "ISC",
   "dependencies": {
