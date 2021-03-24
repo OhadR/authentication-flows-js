@@ -1,13 +1,21 @@
 const debug = require('debug')('user-action-controller');
-const express = require('express');
+//const express = require('express');
 let app;
 
-export function config_test_wip(user_app) {
+export function config(user_app) {
     app = user_app;
 
-    app.get('/createAccountPage', (req, res) => {
-        debug('yo yo i am here!');
-        res.send('Hello World!')
+    /**
+     * The UI calls this method in order to get the password policy
+     */
+    app.get('/getPasswordConstraints', (req, res) => {
+        debug('getPasswordConstraints');
+        res.send('Hello getPasswordConstraints!')
+    });
+
+    app.post('/createAccount', (req, res) => {
+        debug('createAccount');
+        res.send('Hello createAccount!')
     });
 }
 
