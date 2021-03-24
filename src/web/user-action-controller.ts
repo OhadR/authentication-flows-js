@@ -34,7 +34,7 @@ export function config(user_app) {
 
 //        res.redirect(LOGIN_FORMS_DIR + "/accountCreatedSuccess.jsp");
 //        res.redirect("accountCreatedSuccess.html");
-        res.render('accountCreatedSuccess.html', {name: 'BatteryApp'});
+        res.render('accountCreatedSuccess', {name: 'BatteryApp'});
     });
 }
 
