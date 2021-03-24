@@ -1,6 +1,7 @@
-export * from './types/account-state';
-export * from './types/authentication-policy';
+export * from './types/account-state'
+export * from './types/authentication-flows-error'
+export * from './types/authentication-policy'
 
-export * from './interfaces/authentication-flows-processor';
+export * from './interfaces/authentication-flows-processor'
 
-export * from './web/user-action-controller';
+export * from './web/user-action-controller'
