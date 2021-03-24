@@ -33,7 +33,7 @@ export function config(user_app) {
         }
 
 //        res.redirect(LOGIN_FORMS_DIR + "/accountCreatedSuccess.jsp");
-        res.redirect("accountCreatedSuccess.jsp");
+        res.redirect("accountCreatedSuccess.html");
     });
 }
 
