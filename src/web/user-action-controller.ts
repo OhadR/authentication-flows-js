@@ -14,7 +14,8 @@ export function config(user_app) {
     });
 
     app.post('/createAccount', (req, res) => {
-        debug(`createAccount ${JSON.stringify(req)}`);
+        const requestParams = req.params;
+        debug(`createAccount requestParams ${JSON.stringify(requestParams)}`);
         res.send('Hello createAccount!')
     });
 }
