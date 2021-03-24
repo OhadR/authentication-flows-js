@@ -1,7 +1,9 @@
+import Base64 from 'crypto-js/enc-base64';
 import { AccountState,
     AuthenticationFlowsError,
     AuthenticationFlowsProcessor,
     AuthenticationPolicy } from "..";
+const debug = require('debug')('authentication-flows-processor');
 
 export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProcessor {
 
@@ -46,9 +48,9 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
 
         AuthenticationFlowsProcessorImpl.validatePassword(password, settings);
 
-        // const encodedPassword: string = encodeString(email, password);
-        //
-        //
+        const encodedPassword: string = AuthenticationFlowsProcessorImpl.encodeString(email, password);
+
+
         // //make any other additional chackes. this let applications override this impl and add their custom functionality:
         // createAccountEndpoint.additionalValidations(email, password);
         //
@@ -191,4 +193,12 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
     //     throw new AuthenticationFlowsException(SETTING_A_NEW_PASSWORD_HAS_FAILED_PLEASE_NOTE_THE_PASSWORD_POLICY_AND_TRY_AGAIN_ERROR_MESSAGE + "; " + retVal);
     // }
     }
+
+    private static encodeString(salt: string, rawPass: string): string {
+        //encoding the password:
+        var base64 = Base64.stringify(rawPass);
+        debug(base64);
+        return base64;
+    }
+
 }
