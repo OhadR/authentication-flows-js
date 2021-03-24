@@ -17,6 +17,15 @@ Thus, the client-app should pass authentication-flows-js its server object, like
 
 an example for a client-app can be found [here](https://github.com/OhadR/authentication-flows-js-app).
 
+## `body-parser`
+
+According to https://www.digitalocean.com/community/tutorials/use-expressjs-to-get-url-and-post-parameters, the client-app
+MUST use body-parser in order to be able to parse the body params.
+Thus, the `authentication-flows-js` can use:
+
+        debug(`createAccount requestBody ${req.body}`);
+
+
 ## dependencies
 
 * `crypto-js` - to encrypt user's password. and to encode verification emails that are sent to users.
