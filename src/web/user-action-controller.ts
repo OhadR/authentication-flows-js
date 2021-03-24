@@ -1,17 +1,13 @@
 const debug = require('debug')('user-action-controller');
 const express = require('express');
-export const app = express();
-const port = 3000;
+let app;
 
-// app.get('/', (req, res) => {
-//     res.send('Hello World!')
-// });
+export function config_test_wip(user_app) {
+    app = user_app;
 
-app.get('/createAccountPage', (req, res) => {
-    debug('yo yo i am here!');
-    res.send('Hello World!')
-});
+    app.get('/createAccountPage', (req, res) => {
+        debug('yo yo i am here!');
+        res.send('Hello World!')
+    });
+}
 
-app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
-});
