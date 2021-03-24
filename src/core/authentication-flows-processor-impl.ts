@@ -44,9 +44,8 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
 
         AuthenticationFlowsProcessorImpl.validateRetypedPassword(password, retypedPassword);
 
-        // validatePassword(password, settings);
-        //
-        //
+        AuthenticationFlowsProcessorImpl.validatePassword(password, settings);
+
         // const encodedPassword: string = encodeString(email, password);
         //
         //
@@ -54,13 +53,6 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         // createAccountEndpoint.additionalValidations(email, password);
         //
         // internalCreateAccount(email, encodedPassword, firstName, lastName, path);
-        //
-        //
-        // //update the "remember-me" token validity:
-        // int rememberMeTokenValidityInDays = settings.getRememberMeTokenValidityInDays();
-
-        //get the "remem-me" bean and update its validity:
-//        rememberMeService.setTokenValiditySeconds(rememberMeTokenValidityInDays * 60 * 60 * 24);
     }
 
     getAccountState(email: string): AccountState {
@@ -116,5 +108,87 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         if(password !== retypedPassword) {
             throw new AuthenticationFlowsError( this.ACCOUNT_CREATION_HAS_FAILED_PASSWORDS_DO_NOT_MATCH );
         }
+    }
+
+    //TODO
+    private static validatePassword(password: string,
+                                    settings: AuthenticationPolicy) {
+    //     List<String> blackList = settings.getPasswordBlackList();
+    //     if(blackList != null)
+    // {
+    //     for(String forbidenPswd : blackList)
+    // {
+    //     if(password.equalsIgnoreCase(forbidenPswd))
+    // {
+    //     throw new AuthenticationFlowsException(SETTING_A_NEW_PASSWORD_HAS_FAILED_PLEASE_NOTE_THE_PASSWORD_POLICY_AND_TRY_AGAIN_ERROR_MESSAGE + "; " + PASSWORD_CANNOT_BE_USED);
+    // }
+    // }
+    // }
+    //
+    //
+    // if(password.length() > settings.getPasswordMaxLength())
+    // {
+    //     throw new AuthenticationFlowsException(SETTING_A_NEW_PASSWORD_HAS_FAILED_PLEASE_NOTE_THE_PASSWORD_POLICY_AND_TRY_AGAIN_ERROR_MESSAGE + "; " + PASSWORD_IS_TOO_LONG);
+    // }
+    //
+    // if(password.length() < settings.getPasswordMinLength())
+    // {
+    //     throw new AuthenticationFlowsException(SETTING_A_NEW_PASSWORD_HAS_FAILED_PLEASE_NOTE_THE_PASSWORD_POLICY_AND_TRY_AGAIN_ERROR_MESSAGE + "; " + PASSWORD_IS_TOO_SHORT);
+    // }
+    //
+    // int uppersCounter = 0;
+    // int lowersCounter = 0;
+    // int numericCounter = 0;
+    // int specialSymbolCounter = 0;
+    // char[] dst = new char[password.length()];
+    // password.getChars(0, password.length(), dst, 0);
+    // for(int i=0; i<password.length(); ++i)
+    // {
+    //     if(Character.isUpperCase(dst[i]))
+    //     {
+    //         ++uppersCounter;
+    //     }
+    //     else if(Character.isLowerCase(dst[i]))
+    //     {
+    //         ++lowersCounter;
+    //     }
+    //     else if(Character.isDigit(dst[i]))
+    //     {
+    //         ++numericCounter;
+    //     }
+    //     else
+    //     {
+    //         //not digit and not a letter - consider it as a 'special symbol':
+    //         ++specialSymbolCounter;
+    //     }
+    // }
+    //
+    // Formatter formatter = new Formatter();
+    //
+    // String retVal = "";
+    //
+    // if(uppersCounter < settings.getPasswordMinUpCaseChars())
+    // {
+    //     retVal = formatter.format(PASSWORD_TOO_FEW_UPPERS, settings.getPasswordMinUpCaseChars()).toString() ;
+    // }
+    // if(lowersCounter < settings.getPasswordMinLoCaseChars())
+    // {
+    //     retVal =  formatter.format(PASSWORD_TOO_FEW_LOWERS, settings.getPasswordMinLoCaseChars()).toString();
+    // }
+    // if(numericCounter < settings.getPasswordMinNumbericDigits())
+    // {
+    //     retVal =  formatter.format(PASSWORD_TOO_FEW_NUMERICS, settings.getPasswordMinNumbericDigits()).toString();
+    // }
+    // if(specialSymbolCounter < settings.getPasswordMinSpecialSymbols())
+    // {
+    //     retVal =  formatter.format(PASSWORD_TOO_FEW_SPECIAL_SYMBOLS, settings.getPasswordMinSpecialSymbols()).toString();
+    // }
+    //
+    // formatter.close();
+    //
+    // if(!retVal.isEmpty())
+    // {
+    //     throw new AuthenticationFlowsException(SETTING_A_NEW_PASSWORD_HAS_FAILED_PLEASE_NOTE_THE_PASSWORD_POLICY_AND_TRY_AGAIN_ERROR_MESSAGE + "; " + retVal);
+    // }
     }
 }

@@ -1,4 +1,6 @@
 import { AuthenticationFlowsProcessorImpl } from "../core/authentication-flows-processor-impl";
+import { LOGIN_FORMS_DIR } from "../types/flows-constatns";
+import * as path from "path";
 
 const debug = require('debug')('user-action-controller');
 //const express = require('express');
@@ -18,15 +20,20 @@ export function config(user_app) {
     app.post('/createAccount', (req, res) => {
         const requestBody = req.body;
         debug(`createAccount requestBody ${JSON.stringify(requestBody)}`);
-        AuthenticationFlowsProcessorImpl.instance.createAccount(requestBody.email,
-            requestBody.password,
-            requestBody.retypedPassword,
-            requestBody.firstName,
-            requestBody.lastName,
-            requestBody.path);
+        try {
+            AuthenticationFlowsProcessorImpl.instance.createAccount(
+                requestBody.email,
+                requestBody.password,
+                requestBody.retypedPassword,
+                requestBody.firstName,
+                requestBody.lastName,
+                requestBody.path);
+        }
+        catch (e) {
+            
+        }
 
-
-        res.send('Hello createAccount!')
+        res.redirect(path.join(LOGIN_FORMS_DIR, "accountCreatedSuccess.jsp"));
     });
 }
 
