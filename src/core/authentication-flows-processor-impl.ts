@@ -196,7 +196,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
 
     private static encodeString(salt: string, rawPass: string): string {
         //encoding the password:
-        var base64 = Base64.stringify(rawPass);
+        const base64 = Base64.stringify(rawPass);
         debug(base64);
         return base64;
     }

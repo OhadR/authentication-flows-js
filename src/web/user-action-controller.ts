@@ -29,6 +29,7 @@ export function config(user_app) {
                 requestBody.path);
         }
         catch (e) {
+            debug('ERROR: ', e);
             
         }
 
