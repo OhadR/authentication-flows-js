@@ -38,13 +38,13 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
 
     private createAccountEndpoint: CreateAccountEndpoint = new CreateAccountEndpoint();
 
-    private constructor() {}
+    private constructor() {
+        // Generate keys
+        generateKeyFile();
+    }
 
     public static get instance() {
         return this._instance || (this._instance = new this());
-
-        // Generate keys
-        generateKeyFile();
     }
 
     createAccount(email: string, password: string, retypedPassword: string, firstName: string, lastName: string, path: string) {
