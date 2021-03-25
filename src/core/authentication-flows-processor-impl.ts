@@ -2,6 +2,7 @@ import { AccountState,
     AuthenticationFlowsError,
     AuthenticationFlowsProcessor,
     AuthenticationPolicy } from "..";
+import { CreateAccountEndpoint } from "../endpoints/create-account-endpoint";
 const debug = require('debug')('authentication-flows-processor');
 
 export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProcessor {
@@ -30,6 +31,8 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
 
     private static readonly CHANGE_PASSWORD_FAILED_NEW_PASSWORD_SAME_AS_OLD_PASSWORD = "CHANGE PASSWORD FAILED: New Password is same as Old Password.";
     private static readonly CHANGE_PASSWORD_BAD_OLD_PASSWORD = "CHANGE PASSWORD Failed: Bad Old Password.";
+
+    private createAccountEndpoint: CreateAccountEndpoint = new CreateAccountEndpoint();
 
     private constructor() {}
 
