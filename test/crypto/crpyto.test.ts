@@ -1,5 +1,8 @@
 // Defining a text to be encrypted
-import { encryptString } from "../..";
+import { encryptString, generateKeyFile } from "../../src";
+
+//generate the key file:
+generateKeyFile();
 
 const plainText = "GfG";
 

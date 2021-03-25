@@ -4,6 +4,7 @@
 // Including crypto and fs module
 import * as crypto from 'crypto';
 import * as fs from 'fs';
+import * as path from "path";
 
 const PUBLIC_KEY_FILE_NAME = "auth_flows_js_public_key";
 
@@ -32,7 +33,7 @@ function _generateKeyFile(publicKeyFile) {
 }
 
 export function encryptString (plaintext) {
-    return _encryptString(plaintext, "./" + PUBLIC_KEY_FILE_NAME);
+    return _encryptString(plaintext, path.join(".", PUBLIC_KEY_FILE_NAME));
 }
 
 // Creating a function to encrypt string
@@ -45,14 +46,4 @@ function _encryptString (plaintext, publicKeyFile) {
     return encrypted.toString("base64");
 }
 
-// Defining a text to be encrypted
-const plainText = "GfG";
 
-// Defining encrypted text
-const encrypted = encryptString(plainText);
-
-// Prints plain text
-console.log("Plaintext:", plainText);
-
-// Prints encrypted text
-console.log("Encrypted: ", encrypted);
