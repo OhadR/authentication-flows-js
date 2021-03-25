@@ -50,13 +50,12 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
 
         AuthenticationFlowsProcessorImpl.validatePassword(password, settings);
 
-        const encodedPassword: string = AuthenticationFlowsProcessorImpl.encodeString(email, password);
+        const encodedPassword: string = AuthenticationFlowsProcessorImpl.encryptString(password);
 
+        //make any other additional chackes. this let applications override this impl and add their custom functionality:
+        this.createAccountEndpoint.additionalValidations(email, password);
 
-        // //make any other additional chackes. this let applications override this impl and add their custom functionality:
-        // createAccountEndpoint.additionalValidations(email, password);
-        //
-        // internalCreateAccount(email, encodedPassword, firstName, lastName, path);
+        this.internalCreateAccount(email, encodedPassword, firstName, lastName, path);
     }
 
     getAccountState(email: string): AccountState {
@@ -196,14 +195,108 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
     // }
     }
 
-    private static encodeString(salt: string, rawPass: string): string {
+    private static encryptString(rawPass: string): string {
         //encoding the password:
         //const base64 = Base64.stringify(rawPass);
 //        const base64 = CryptoJS.Base64.encrypt(rawPass, 'secret key 123').toString();
         const encoded = Buffer.from(rawPass).toString('base64')
 
+
+
+        // const cipher = crypto.createCipheriv(algorithm, secretKey, iv);
+        //
+        // const encrypted = Buffer.concat([cipher.update(rawPass), cipher.final()]);
+
+        return '';
+
+
         debug(encoded);
         return encoded;
     }
 
+    private internalCreateAccount(email: string, encodedPassword: string, firstName: string, lastName: string, path: string) {
+        // email = email.toLowerCase();		// issue #23 : username is case-sensitive (https://github.com/OhadR/oAuth2-sample/issues/23)
+        // log.info("createAccount() for user " + email);
+        //
+        // try
+        // {
+        //     AuthenticationUser oauthUser = null;
+        //     try
+        //     {
+        //         oauthUser = (AuthenticationUser) repository.loadUserByUsername( email );
+        //     }
+        //     catch(UsernameNotFoundException unfe)
+        //     {
+        //         //basically do nothing - we expect user not to be found.
+        //     }
+        //
+        //     //if user exist, but not activated - we allow re-registration:
+        //     if(oauthUser != null)
+        //     {
+        //         if( !oauthUser.isEnabled())
+        //         {
+        //             repository.deleteUser( email );
+        //         }
+        //         else
+        //         {
+        //             //error - user already exists and active
+        //             log.error( "cannot create account - user " + email + " already exist." );
+        //             throw new AuthenticationFlowsException( USER_ALREADY_EXIST );
+        //         }
+        //     }
+        //
+        //     Collection<? extends GrantedAuthority> authorities = setAuthorities();		//set authorities
+        //     AuthenticationUser user = new InMemoryAuthenticationUserImpl(
+        //     email, encodedPassword,
+        //     false,									//start as de-activated
+        //     policyRepo.getDefaultAuthenticationPolicy().getMaxPasswordEntryAttempts(),
+        //     null,					//set by the repo-impl
+        //     firstName,
+        //     lastName,
+        //     authorities);
+        //
+        //     repository.createUser(user);
+        //
+        //     createAccountEndpoint.postCreateAccount( email );
+        // }
+        //     //we should not get to these exceptions since we check earlier if account already exist (so repo's do not
+        //     // have to check it)
+        // catch(DataIntegrityViolationException e)
+        // {
+        //     //get the cause-exception, since it has a better message:
+        //     Throwable root = e.getRootCause();
+        //     String msg = root.getMessage();
+        //     Assert.isTrue(msg.contains("Duplicate entry"));
+        //
+        //
+        //     log.error( msg );
+        //     throw new AuthenticationFlowsException( USER_ALREADY_EXIST );
+        // }
+        //
+        //
+        // String utsPart = cryptoService.createEncodedContent( new Date(System.currentTimeMillis()), email);
+        // String activationUrl = serverPath + FlowsConstatns.ACTIVATE_ACCOUNT_ENDPOINT +
+        //     "?" +
+        //     //			"a=" + FlowsConstatns.MailMessage.OAUTH_ACTIVATE_ACCOUNT + "&" +
+        //     "uts=" + utsPart;
+        // //persist the "uts", so this activation link will be single-used:
+        // linksRepository.addLink( utsPart );
+        //
+        //
+        // log.info("Manager: sending registration email to " + email + "; activationUrl: " + activationUrl);
+        //
+        //
+        // try
+        // {
+        //     sendMail(email,
+        //         FlowsConstatns.MailMessage.AUTHENTICATION_MAIL_SUBJECT,
+        //         "authentication.vm",
+        //         activationUrl );
+        // }
+        // catch (MailException me)
+        // {
+        //     log.error( me.getMessage() );
+        //     throw new AuthenticationFlowsException( me.getMessage() );
+        // }
+    }
 }
