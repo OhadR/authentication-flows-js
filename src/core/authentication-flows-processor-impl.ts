@@ -1,4 +1,5 @@
-const CryptoJS = require("crypto-js");
+//const CryptoJS = require("crypto-js");
+import sha256 from 'crypto-js/sha256';
 import { AccountState,
     AuthenticationFlowsError,
     AuthenticationFlowsProcessor,
@@ -197,10 +198,11 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
     private static encodeString(salt: string, rawPass: string): string {
         //encoding the password:
         //const base64 = Base64.stringify(rawPass);
-        const base64 = CryptoJS.Base64.encrypt(rawPass, 'secret key 123').toString();
+//        const base64 = CryptoJS.Base64.encrypt(rawPass, 'secret key 123').toString();
+        const hashDigest = sha256(rawPass);
 
-        debug(base64);
-        return base64;
+        debug(hashDigest);
+        return hashDigest;
     }
 
 }
