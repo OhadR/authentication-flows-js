@@ -5,11 +5,14 @@
 import * as crypto from 'crypto';
 import * as fs from 'fs';
 
-export const PUBLIC_KEY_FILE_NAME = "public_key_auth_flows_js";
+const PUBLIC_KEY_FILE_NAME = "auth_flows_js_public_key";
 
-// Using a function generateKeyFiles
-export function generateKeyFiles() {
+export function generateKeyFile() {
+    return _generateKeyFile(PUBLIC_KEY_FILE_NAME);
+}
 
+
+function _generateKeyFile(publicKeyFile) {
     const keyPair = crypto.generateKeyPairSync('rsa', {
         modulusLength: 520,
         publicKeyEncoding: {
@@ -25,14 +28,15 @@ export function generateKeyFiles() {
     });
 
     // Creating public key file
-    fs.writeFileSync(PUBLIC_KEY_FILE_NAME, keyPair.publicKey);
+    fs.writeFileSync(publicKeyFile, keyPair.publicKey);
 }
 
-// Generate keys
-generateKeyFiles();
+export function encryptString (plaintext) {
+    return _encryptString(plaintext, "./" + PUBLIC_KEY_FILE_NAME);
+}
 
 // Creating a function to encrypt string
-function encryptString (plaintext, publicKeyFile) {
+function _encryptString (plaintext, publicKeyFile) {
     const publicKey = fs.readFileSync(publicKeyFile, "utf8");
 
     // publicEncrypt() method with its parameters
@@ -45,7 +49,7 @@ function encryptString (plaintext, publicKeyFile) {
 const plainText = "GfG";
 
 // Defining encrypted text
-const encrypted = encryptString(plainText, "./" + PUBLIC_KEY_FILE_NAME);
+const encrypted = encryptString(plainText);
 
 // Prints plain text
 console.log("Plaintext:", plainText);

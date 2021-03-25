@@ -1,7 +1,11 @@
-import { AccountState,
+import {
+    AccountState,
     AuthenticationFlowsError,
     AuthenticationFlowsProcessor,
-    AuthenticationPolicy } from "..";
+    AuthenticationPolicy,
+    encryptString,
+    generateKeyFile
+} from "..";
 import { CreateAccountEndpoint } from "../endpoints/create-account-endpoint";
 const debug = require('debug')('authentication-flows-processor');
 
@@ -38,6 +42,9 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
 
     public static get instance() {
         return this._instance || (this._instance = new this());
+
+        // Generate keys
+        generateKeyFile();
     }
 
     createAccount(email: string, password: string, retypedPassword: string, firstName: string, lastName: string, path: string) {
@@ -50,7 +57,8 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
 
         AuthenticationFlowsProcessorImpl.validatePassword(password, settings);
 
-        const encodedPassword: string = AuthenticationFlowsProcessorImpl.encryptString(password);
+        //encrypt the password:
+        const encodedPassword: string = encryptString(password);
 
         //make any other additional chackes. this let applications override this impl and add their custom functionality:
         this.createAccountEndpoint.additionalValidations(email, password);
@@ -193,25 +201,6 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
     // {
     //     throw new AuthenticationFlowsException(SETTING_A_NEW_PASSWORD_HAS_FAILED_PLEASE_NOTE_THE_PASSWORD_POLICY_AND_TRY_AGAIN_ERROR_MESSAGE + "; " + retVal);
     // }
-    }
-
-    private static encryptString(rawPass: string): string {
-        //encoding the password:
-        //const base64 = Base64.stringify(rawPass);
-//        const base64 = CryptoJS.Base64.encrypt(rawPass, 'secret key 123').toString();
-        const encoded = Buffer.from(rawPass).toString('base64')
-
-
-
-        // const cipher = crypto.createCipheriv(algorithm, secretKey, iv);
-        //
-        // const encrypted = Buffer.concat([cipher.update(rawPass), cipher.final()]);
-
-        return '';
-
-
-        debug(encoded);
-        return encoded;
     }
 
     private internalCreateAccount(email: string, encodedPassword: string, firstName: string, lastName: string, path: string) {
