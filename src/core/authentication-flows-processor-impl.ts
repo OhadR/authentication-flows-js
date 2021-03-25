@@ -7,6 +7,8 @@ import {
     generateKeyFile
 } from "..";
 import { CreateAccountEndpoint } from "../endpoints/create-account-endpoint";
+import * as nodemailer from 'nodemailer';
+import { AUTHENTICATION_MAIL_SUBJECT } from "../types/flows-constatns";
 const debug = require('debug')('authentication-flows-processor');
 
 export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProcessor {
@@ -47,7 +49,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         return this._instance || (this._instance = new this());
     }
 
-    createAccount(email: string, password: string, retypedPassword: string, firstName: string, lastName: string, path: string) {
+    async createAccount(email: string, password: string, retypedPassword: string, firstName: string, lastName: string, path: string) {
         //validate the input:
         const settings: AuthenticationPolicy = this.getAuthenticationSettings();
 
@@ -63,7 +65,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         //make any other additional chackes. this let applications override this impl and add their custom functionality:
         this.createAccountEndpoint.additionalValidations(email, password);
 
-        this.internalCreateAccount(email, encodedPassword, firstName, lastName, path);
+        await this.internalCreateAccount(email, encodedPassword, firstName, lastName, path);
     }
 
     getAccountState(email: string): AccountState {
@@ -203,9 +205,10 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
     // }
     }
 
-    private internalCreateAccount(email: string, encodedPassword: string, firstName: string, lastName: string, path: string) {
-        // email = email.toLowerCase();		// issue #23 : username is case-sensitive (https://github.com/OhadR/oAuth2-sample/issues/23)
-        // log.info("createAccount() for user " + email);
+    private async internalCreateAccount(email: string, encedPassword: string, firstName: string, lastName: string, path: string) {
+        email = email.toLowerCase();		// issue #23 : username is case-sensitive (https://github.com/OhadR/oAuth2-sample/issues/23)
+        debug('createAccount() for user ' + email);
+        debug('encrypted password: ' + encedPassword);
         //
         // try
         // {
@@ -275,17 +278,35 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         // log.info("Manager: sending registration email to " + email + "; activationUrl: " + activationUrl);
         //
         //
-        // try
-        // {
-        //     sendMail(email,
-        //         FlowsConstatns.MailMessage.AUTHENTICATION_MAIL_SUBJECT,
-        //         "authentication.vm",
-        //         activationUrl );
-        // }
-        // catch (MailException me)
-        // {
-        //     log.error( me.getMessage() );
-        //     throw new AuthenticationFlowsException( me.getMessage() );
-        // }
+        try {
+            await this.sendEmail(email,
+                AUTHENTICATION_MAIL_SUBJECT,
+                'activationUrl' );
+        }
+        catch (me) {
+            debug( me.getMessage() );
+            throw new AuthenticationFlowsError( me.getMessage() );
+        }
+    }
+
+    private async sendEmail(recipient: string,
+                            subject: string,
+                            url: string) {
+        var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'youremail@gmail.com',
+                pass: 'yourpassword'
+            }
+        });
+
+        var mailOptions = {
+            from: 'youremail@gmail.com',
+            to: 'myfriend@yahoo.com',
+            subject: 'Sending Email using Node.js',
+            text: 'That was easy!'
+        };
+
+        await transporter.sendMail(mailOptions);
     }
 }
