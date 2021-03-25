@@ -1,5 +1,3 @@
-//const CryptoJS = require("crypto-js");
-import sha256 from 'crypto-js/sha256';
 import { AccountState,
     AuthenticationFlowsError,
     AuthenticationFlowsProcessor,
@@ -199,10 +197,10 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         //encoding the password:
         //const base64 = Base64.stringify(rawPass);
 //        const base64 = CryptoJS.Base64.encrypt(rawPass, 'secret key 123').toString();
-        const hashDigest = sha256(rawPass);
+        const encoded = btoa(rawPass);
 
-        debug(hashDigest);
-        return hashDigest;
+        debug(encoded);
+        return encoded;
     }
 
 }
