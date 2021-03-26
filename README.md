@@ -28,9 +28,10 @@ Thus, the `authentication-flows-js` can use:
 
 ## dependencies
 
-* `crypto-js` - to encrypt user's password. and to encode verification emails that are sent to users.
+* `crypto` - to encrypt user's password. and to encode verification emails that are sent to users.
 * `express` - this module uses web-api for flows such create-account, forget-password, etc.
 * `log4js` - logs.
+* `nodemailer` - sending verification emails. version 4.7.0 and NOT latest: https://stackoverflow.com/questions/54385031/nodemailer-fails-with-connection-refused-using-known-good-smtp-server/54537119#54537119
 
 
 ## deploy 

@@ -291,22 +291,23 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
     private async sendEmail(recipient: string,
                             subject: string,
                             url: string) {
-        debug( 'email user: ' + AuthenticationFlowsConfig.instance.emailServerUser );
+        debug( 'email sender: ' + AuthenticationFlowsConfig.instance.emailSender );
 
         try {
             const transporter = nodemailer.createTransport({
-                service: 'gmail',
+                host: "mail.smtp2go.com",
+                port: 2525,
                 auth: {
-                    user: AuthenticationFlowsConfig.instance.emailServerUser,
-                    pass: AuthenticationFlowsConfig.instance.emailServerPass
+                    user: 'intel.com',
+                    pass: 'aqupvtthwc78'
                 }
             });
 
             const mailOptions = {
-                from: AuthenticationFlowsConfig.instance.emailServerUser,
-                to: 'ohad.redlich@gmail.com',
+                from: AuthenticationFlowsConfig.instance.emailSender,
+                to: recipient,
                 subject: 'Sending Email using Node.js',
-                text: 'That was easy!'
+                text: url
             };
 
             await transporter.sendMail(mailOptions);
