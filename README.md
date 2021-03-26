@@ -38,3 +38,11 @@ Thus, the `authentication-flows-js` can use:
 * tsc
 * npm version patch
 * npm publish
+
+## emails
+
+This module sends verification emails. By default, it uses `nodemail`er` and [SMTP2GO](https://www.smtp2go.com/),
+but it makes sense that each client-app will has its own mailing system, plus verification emails
+can have the same look and feel of the hosting application.
+
+Client-app can easily override the `sendEmail()` function.
