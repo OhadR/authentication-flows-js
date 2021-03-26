@@ -7,9 +7,9 @@ import {
     generateKeyFile
 } from "..";
 import { CreateAccountEndpoint } from "../endpoints/create-account-endpoint";
-import * as nodemailer from 'nodemailer';
 import { AUTHENTICATION_MAIL_SUBJECT } from "../types/flows-constatns";
 import { AuthenticationFlowsConfig } from "..";
+import { sendEmail } from "../endpoints/email";
 
 const debug = require('debug')('authentication-flows-processor');
 
@@ -282,40 +282,9 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         // log.info("Manager: sending registration email to " + email + "; activationUrl: " + activationUrl);
         //
         //
-        await this.sendEmail(email,
+        await sendEmail(email,
             AUTHENTICATION_MAIL_SUBJECT,
             'activationUrl' );
 
-    }
-
-    private async sendEmail(recipient: string,
-                            subject: string,
-                            url: string) {
-        debug( 'email sender: ' + AuthenticationFlowsConfig.instance.emailSender );
-
-        try {
-            const transporter = nodemailer.createTransport({
-                host: "mail.smtp2go.com",
-                port: 2525,
-                auth: {
-                    user: 'intel.com',
-                    pass: 'aqupvtthwc78'
-                }
-            });
-
-            const mailOptions = {
-                from: AuthenticationFlowsConfig.instance.emailSender,
-                to: recipient,
-                subject: 'Sending Email using Node.js',
-                text: url
-            };
-
-            await transporter.sendMail(mailOptions);
-            debug( 'email was sent successfully.' );
-        }
-        catch (me) {
-            debug( me );
-            throw new AuthenticationFlowsError( me );
-        }
     }
 }
