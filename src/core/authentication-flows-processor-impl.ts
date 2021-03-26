@@ -282,15 +282,10 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         // log.info("Manager: sending registration email to " + email + "; activationUrl: " + activationUrl);
         //
         //
-        try {
-            await this.sendEmail(email,
-                AUTHENTICATION_MAIL_SUBJECT,
-                'activationUrl' );
-        }
-        catch (me) {
-            debug( me );
-            throw new AuthenticationFlowsError( me );
-        }
+        await this.sendEmail(email,
+            AUTHENTICATION_MAIL_SUBJECT,
+            'activationUrl' );
+
     }
 
     private async sendEmail(recipient: string,
@@ -298,21 +293,28 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
                             url: string) {
         debug( 'email user: ' + AuthenticationFlowsConfig.instance.emailServerUser );
 
-        var transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: AuthenticationFlowsConfig.instance.emailServerUser,
-                pass: AuthenticationFlowsConfig.instance.emailServerPass
-            }
-        });
+        try {
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: AuthenticationFlowsConfig.instance.emailServerUser,
+                    pass: AuthenticationFlowsConfig.instance.emailServerPass
+                }
+            });
 
-        var mailOptions = {
-            from: 'youremail@gmail.com',
-            to: 'ohad.redlich@gmail.com',
-            subject: 'Sending Email using Node.js',
-            text: 'That was easy!'
-        };
+            const mailOptions = {
+                from: AuthenticationFlowsConfig.instance.emailServerUser,
+                to: 'ohad.redlich@gmail.com',
+                subject: 'Sending Email using Node.js',
+                text: 'That was easy!'
+            };
 
-        await transporter.sendMail(mailOptions);
+            await transporter.sendMail(mailOptions);
+            debug( 'email was sent successfully.' );
+        }
+        catch (me) {
+            debug( me );
+            throw new AuthenticationFlowsError( me );
+        }
     }
 }
