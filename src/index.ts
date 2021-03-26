@@ -1,3 +1,5 @@
+export * from './config/authentication-flows-config'
+
 export * from './crypto/key-generator'
 
 export * from './types/account-state'

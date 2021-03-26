@@ -9,7 +9,10 @@ import {
 import { CreateAccountEndpoint } from "../endpoints/create-account-endpoint";
 import * as nodemailer from 'nodemailer';
 import { AUTHENTICATION_MAIL_SUBJECT } from "../types/flows-constatns";
+import { AuthenticationFlowsConfig } from "..";
+
 const debug = require('debug')('authentication-flows-processor');
+
 
 export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProcessor {
 
@@ -39,8 +42,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
     private static readonly CHANGE_PASSWORD_BAD_OLD_PASSWORD = "CHANGE PASSWORD Failed: Bad Old Password.";
 
     private createAccountEndpoint: CreateAccountEndpoint = new CreateAccountEndpoint();
-    private email_server_user: string;
-    private email_server_pass: string;
+
 
     private constructor() {
         // Generate keys
@@ -294,11 +296,13 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
     private async sendEmail(recipient: string,
                             subject: string,
                             url: string) {
+        debug( 'email pass: ' + AuthenticationFlowsConfig.instance.emailServerUser );
+
         var transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: this.email_server_user,
-                pass: this.email_server_pass
+                user: AuthenticationFlowsConfig.instance.emailServerUser,
+                pass: AuthenticationFlowsConfig.instance.emailServerPass
             }
         });
 
