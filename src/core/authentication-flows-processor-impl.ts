@@ -288,15 +288,15 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
                 'activationUrl' );
         }
         catch (me) {
-            debug( me.getMessage() );
-            throw new AuthenticationFlowsError( me.getMessage() );
+            debug( me );
+            throw new AuthenticationFlowsError( me );
         }
     }
 
     private async sendEmail(recipient: string,
                             subject: string,
                             url: string) {
-        debug( 'email pass: ' + AuthenticationFlowsConfig.instance.emailServerUser );
+        debug( 'email user: ' + AuthenticationFlowsConfig.instance.emailServerUser );
 
         var transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -308,7 +308,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
 
         var mailOptions = {
             from: 'youremail@gmail.com',
-            to: 'myfriend@yahoo.com',
+            to: 'ohad.redlich@gmail.com',
             subject: 'Sending Email using Node.js',
             text: 'That was easy!'
         };
