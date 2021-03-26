@@ -39,6 +39,8 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
     private static readonly CHANGE_PASSWORD_BAD_OLD_PASSWORD = "CHANGE PASSWORD Failed: Bad Old Password.";
 
     private createAccountEndpoint: CreateAccountEndpoint = new CreateAccountEndpoint();
+    private email_server_user: string;
+    private email_server_pass: string;
 
     private constructor() {
         // Generate keys
@@ -295,8 +297,8 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         var transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: 'youremail@gmail.com',
-                pass: 'yourpassword'
+                user: this.email_server_user,
+                pass: this.email_server_pass
             }
         });
 
