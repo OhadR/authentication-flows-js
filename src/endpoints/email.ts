@@ -20,6 +20,8 @@ export async function sendEmail(recipient: string,
         const mailOptions = {
             from: AuthenticationFlowsConfig.instance.emailSender,
             to: recipient,
+            // from: '"Fred Foo 👻" <foo@example.com>', // sender address
+            // to: "bar@example.com, baz@example.com", // list of receivers
             subject: 'Sending Email using Node.js',
             text: url
         };

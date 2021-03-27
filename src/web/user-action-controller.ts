@@ -1,8 +1,7 @@
 import { AuthenticationFlowsProcessorImpl } from "../core/authentication-flows-processor-impl";
-import { LOGIN_FORMS_DIR } from "../types/flows-constatns";
-
+import * as url from 'url';
+import * as express from 'express';
 const debug = require('debug')('user-action-controller');
-//const express = require('express');
 let app;
 
 export function config(user_app) {
@@ -16,7 +15,7 @@ export function config(user_app) {
         res.send('Hello getPasswordConstraints!')
     });
 
-    app.post('/createAccount', (req, res) => {
+    app.post('/createAccount', (req: express.Request, res) => {
         const requestBody = req.body;
         debug(`createAccount requestBody ${JSON.stringify(requestBody)}`);
         try {
@@ -26,16 +25,21 @@ export function config(user_app) {
                 requestBody.retypedPassword,
                 requestBody.firstName,
                 requestBody.lastName,
-                requestBody.path);
+                fullUrl(req));
         }
         catch (e) {
             debug('ERROR: ', e);
             
         }
-
-//        res.redirect(LOGIN_FORMS_DIR + "/accountCreatedSuccess.jsp");
-//        res.redirect("accountCreatedSuccess.html");
         res.render('accountCreatedSuccess', { email: requestBody.email });
+    });
+}
+
+function fullUrl(req: express.Request): string {
+    return url.format({
+        protocol: req.protocol,
+        host: req.get('host'),
+        pathname: req.originalUrl
     });
 }
 
