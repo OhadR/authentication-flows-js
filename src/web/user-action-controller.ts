@@ -38,8 +38,9 @@ export function config(user_app) {
 function fullUrl(req: express.Request): string {
     return url.format({
         protocol: req.protocol,
-        host: req.get('host'),
-        pathname: req.originalUrl
+        host: req.get('host'),      //host + port
+//        pathname: req.originalUrl
+        pathname: req.baseUrl
     });
 }
 
