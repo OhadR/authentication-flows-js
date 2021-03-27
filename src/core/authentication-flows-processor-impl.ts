@@ -7,7 +7,7 @@ import {
     generateKeyFile
 } from "..";
 import { CreateAccountEndpoint } from "../endpoints/create-account-endpoint";
-import { AUTHENTICATION_MAIL_SUBJECT } from "../types/flows-constatns";
+import { ACTIVATE_ACCOUNT_ENDPOINT, AUTHENTICATION_MAIL_SUBJECT } from "../types/flows-constatns";
 import { AuthenticationFlowsConfig } from "..";
 import { sendEmail } from "../endpoints/email";
 
@@ -209,7 +209,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
     // }
     }
 
-    private async internalCreateAccount(email: string, encedPassword: string, firstName: string, lastName: string, path: string) {
+    private async internalCreateAccount(email: string, encedPassword: string, firstName: string, lastName: string, serverPath: string) {
         email = email.toLowerCase();		// issue #23 : username is case-sensitive (https://github.com/OhadR/oAuth2-sample/issues/23)
         debug('createAccount() for user ' + email);
         debug('encrypted password: ' + encedPassword);
@@ -268,20 +268,19 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         //     log.error( msg );
         //     throw new AuthenticationFlowsException( USER_ALREADY_EXIST );
         // }
-        //
-        //
-        // String utsPart = cryptoService.createEncodedContent( new Date(System.currentTimeMillis()), email);
-        // String activationUrl = serverPath + FlowsConstatns.ACTIVATE_ACCOUNT_ENDPOINT +
-        //     "?" +
-        //     //			"a=" + FlowsConstatns.MailMessage.OAUTH_ACTIVATE_ACCOUNT + "&" +
-        //     "uts=" + utsPart;
-        // //persist the "uts", so this activation link will be single-used:
+
+
+        const utsPart: string = encryptString( /*new Date(System.currentTimeMillis()),*/ email);
+        const activationUrl: string = serverPath + ACTIVATE_ACCOUNT_ENDPOINT +
+            "?" +
+            "uts=" + utsPart;
+        //persist the "uts", so this activation link will be single-used:
         // linksRepository.addLink( utsPart );
-        //
-        //
-        // log.info("Manager: sending registration email to " + email + "; activationUrl: " + activationUrl);
-        //
-        //
+
+
+        debug("Manager: sending registration email to " + email + "; activationUrl: " + activationUrl);
+
+
         await sendEmail(email,
             AUTHENTICATION_MAIL_SUBJECT,
             'activationUrl' );

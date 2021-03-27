@@ -32,12 +32,21 @@ function _generateKeyFile(publicKeyFile) {
     fs.writeFileSync(publicKeyFile, keyPair.publicKey);
 }
 
-export function encryptString (plaintext) {
+/**
+ * encrypt string and then encode-base64
+ * @param plaintext
+ */
+export function encryptString (plaintext): string {
     return _encryptString(plaintext, path.join(".", PUBLIC_KEY_FILE_NAME));
 }
 
-// Creating a function to encrypt string
-function _encryptString (plaintext, publicKeyFile) {
+/**
+ * encrypt string and then encode-base64
+ * @param plaintext
+ * @param publicKeyFile
+ * @private
+ */
+function _encryptString (plaintext, publicKeyFile): string {
     const publicKey = fs.readFileSync(publicKeyFile, "utf8");
 
     // publicEncrypt() method with its parameters
@@ -45,5 +54,16 @@ function _encryptString (plaintext, publicKeyFile) {
         publicKey, Buffer.from(plaintext));
     return encrypted.toString("base64");
 }
+
+/*
+function _encryptIntAndString (arg1, arg2, publicKeyFile): string {
+    const publicKey = fs.readFileSync(publicKeyFile, "utf8");
+
+    // publicEncrypt() method with its parameters
+    const encrypted = crypto.publicEncrypt(
+        publicKey, Buffer.from(plaintext));
+    return encrypted.toString("base64");
+}
+*/
 
 
