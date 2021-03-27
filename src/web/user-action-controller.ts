@@ -33,6 +33,11 @@ export function config(user_app) {
         }
         res.render('accountCreatedSuccess', { email: requestBody.email });
     });
+
+    app.get('/aa', (req: express.Request, res) => {
+        debug('ActivateAccountEndpoint');
+        //res.send('Hello getPasswordConstraints!')
+    });
 }
 
 function fullUrl(req: express.Request): string {
