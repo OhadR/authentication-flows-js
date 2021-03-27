@@ -283,7 +283,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
 
         await sendEmail(email,
             AUTHENTICATION_MAIL_SUBJECT,
-            'activationUrl' );
+            activationUrl );
 
     }
 }
