@@ -72,10 +72,10 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         await this.internalCreateAccount(email, encodedPassword, firstName, lastName, path);
     }
 
-    public async activateAccount(utsParam: string) {
-        debug(`ustParam: ${utsParam}`);
+    public async activateAccount(ustParam: string) {
+        debug(`ustParam: ${ustParam}`);
         //encrypt the password:
-        const xxx: string = decryptString(utsParam);
+        const xxx: string = decryptString(ustParam);
         debug(`xxx: ${xxx}`);
     }
 

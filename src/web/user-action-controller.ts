@@ -38,7 +38,7 @@ export function config(user_app) {
         debug('ActivateAccountEndpoint');
         try {
             AuthenticationFlowsProcessorImpl.instance.activateAccount(
-                debug(req.param('uts')));
+                debug(req.param('ust')));
         }
         catch (e) {
             debug('ERROR: ', e);
