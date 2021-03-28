@@ -1,10 +1,12 @@
 // Defining a text to be encrypted
-import { encryptString, generateKeyFile } from "../../src";
+import { encryptString,
+    decryptString,
+    generateKeyFile } from "../../src";
 
 //generate the key file:
 generateKeyFile();
 
-const plainText = "GfG";
+const plainText = "ohad redlich is the man";
 
 // Defining encrypted text
 const encrypted = encryptString(plainText);
@@ -14,3 +16,6 @@ console.log("Plaintext:", plainText);
 
 // Prints encrypted text
 console.log("Encrypted: ", encrypted);
+
+const decrypted = decryptString(encrypted);
+console.log("Decrypted: ", decrypted);

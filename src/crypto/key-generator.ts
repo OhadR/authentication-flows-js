@@ -5,23 +5,21 @@
 import * as crypto from 'crypto';
 import * as fs from 'fs';
 import * as path from "path";
+const debug = require('debug')('crypto');
 
 const PUBLIC_KEY_FILE_NAME = "auth_flows_js_public_key";
+const PRIVATE_KEY_FILE_NAME = "auth_flows_js_private_key";
 
 export function generateKeyFile() {
-    return _generateKeyFile(PUBLIC_KEY_FILE_NAME);
-}
-
-
-function _generateKeyFile(publicKeyFile) {
+    debug('generating key files...');
     const keyPair = crypto.generateKeyPairSync('rsa', {
         modulusLength: 520,
         publicKeyEncoding: {
-            type: 'spki',
+            type: 'pkcs1',
             format: 'pem'
         },
         privateKeyEncoding: {
-            type: 'pkcs8',
+            type: 'pkcs1',
             format: 'pem',
             cipher: 'aes-256-cbc',
             passphrase: ''
@@ -29,15 +27,20 @@ function _generateKeyFile(publicKeyFile) {
     });
 
     // Creating public key file
-    fs.writeFileSync(publicKeyFile, keyPair.publicKey);
+    fs.writeFileSync(PUBLIC_KEY_FILE_NAME, keyPair.publicKey);
+    fs.writeFileSync(PRIVATE_KEY_FILE_NAME, keyPair.privateKey);
 }
 
 /**
  * encrypt string and then encode-base64
  * @param plaintext
  */
-export function encryptString (plaintext): string {
+export function encryptString (plaintext: string): string {
     return _encryptString(plaintext, path.join(".", PUBLIC_KEY_FILE_NAME));
+}
+
+export function decryptString (encryptedText: string): string {
+    return _decryptString(encryptedText, path.join(".", PRIVATE_KEY_FILE_NAME));
 }
 
 /**
@@ -46,13 +49,29 @@ export function encryptString (plaintext): string {
  * @param publicKeyFile
  * @private
  */
-function _encryptString (plaintext, publicKeyFile): string {
-    const publicKey = fs.readFileSync(publicKeyFile, "utf8");
+function _encryptString (plaintext: string, publicKeyFile: string): string {
+    const publicKey = fs.readFileSync(publicKeyFile, 'utf8');
 
     // publicEncrypt() method with its parameters
     const encrypted = crypto.publicEncrypt(
-        publicKey, Buffer.from(plaintext));
-    return encrypted.toString("base64");
+        {
+            key: publicKey,
+//            padding: crypto.constants.RSA_PKCS1_OAEP_PADDING
+        },
+        Buffer.from(plaintext, 'utf8'));
+    return encrypted.toString('base64');
+}
+
+function _decryptString (encryptedText: string, privateKeyFile): string {
+    const privateKey = fs.readFileSync(privateKeyFile, 'utf8');
+    const decrypted = crypto.privateDecrypt(
+        {
+            key: privateKey.toString(),
+            passphrase: '',
+//            padding: crypto.constants.RSA_PKCS1_PADDING
+        },
+        Buffer.from(encryptedText, 'base64'));
+    return decrypted.toString("utf8");
 }
 
 /*
