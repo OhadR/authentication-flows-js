@@ -2,7 +2,7 @@ import {
     AccountState,
     AuthenticationFlowsError,
     AuthenticationFlowsProcessor,
-    AuthenticationPolicy,
+    AuthenticationPolicy, decryptString,
     encryptString,
     generateKeyFile
 } from "..";
@@ -70,6 +70,13 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         this.createAccountEndpoint.additionalValidations(email, password);
 
         await this.internalCreateAccount(email, encodedPassword, firstName, lastName, path);
+    }
+
+    public async activateAccount(utsParam: string) {
+        debug(`ustParam: ${utsParam}`);
+        //encrypt the password:
+        const xxx: string = decryptString(utsParam);
+        debug(`xxx: ${xxx}`);
     }
 
     getAccountState(email: string): AccountState {

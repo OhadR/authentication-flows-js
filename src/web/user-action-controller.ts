@@ -36,7 +36,13 @@ export function config(user_app) {
 
     app.get('/aa', (req: express.Request, res) => {
         debug('ActivateAccountEndpoint');
-        debug(req.param('uts'));
+        try {
+            AuthenticationFlowsProcessorImpl.instance.activateAccount(
+                debug(req.param('uts')));
+        }
+        catch (e) {
+            debug('ERROR: ', e);
+        }
         //res.send('Hello getPasswordConstraints!')
     });
 }
