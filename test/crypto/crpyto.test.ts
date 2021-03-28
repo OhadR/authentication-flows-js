@@ -8,11 +8,11 @@ generateKeyFile();
 
 const plainText = "ohad redlich is the man";
 
-// Defining encrypted text
-const encrypted = encryptString(plainText);
-
 // Prints plain text
 console.log("Plaintext:", plainText);
+
+// Defining encrypted text
+const encrypted = encryptString(plainText);
 
 // Prints encrypted text
 console.log("Encrypted: ", encrypted);

@@ -60,13 +60,15 @@ function _encryptString (plaintext: string, publicKeyFile: string): string {
         },
         Buffer.from(plaintext, 'utf8'));
     const based64EncryptedContent: string = encrypted.toString('base64');
+    //debug(based64EncryptedContent);
     //instead of encodeURI(), just replace the '+' to '.':
     return based64EncryptedContent.replace(/\+/g, '.');
 }
 
 function _decryptString (encryptedText: string, privateKeyFile): string {
     //first, instead of decodeURI(), just replace the '.' to '+':
-    encryptedText = encryptedText.replace(/./g, '+');
+    encryptedText = encryptedText.replace(/\./g, '+');
+    //debug(encryptedText);
     const privateKey = fs.readFileSync(privateKeyFile, 'utf8');
     const decrypted = crypto.privateDecrypt(
         {
