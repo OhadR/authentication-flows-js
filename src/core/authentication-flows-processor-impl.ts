@@ -7,8 +7,9 @@ import {
     generateKeyFile
 } from "..";
 import { CreateAccountEndpoint } from "../endpoints/create-account-endpoint";
-import { ACTIVATE_ACCOUNT_ENDPOINT, AUTHENTICATION_MAIL_SUBJECT } from "../types/flows-constatns";
-import { AuthenticationFlowsConfig } from "..";
+import { ACTIVATE_ACCOUNT_ENDPOINT,
+    AUTHENTICATION_MAIL_SUBJECT,
+    UTS_PARAM } from "../types/flows-constatns";
 import { sendEmail } from "../endpoints/email";
 
 const debug = require('debug')('authentication-flows-processor');
@@ -72,10 +73,10 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         await this.internalCreateAccount(email, encodedPassword, firstName, lastName, path);
     }
 
-    public async activateAccount(ustParam: string) {
-        debug(`ustParam: ${ustParam}`);
+    public async activateAccount(utsParam: string) {
+        debug(`param: ${utsParam}`);
         //encrypt the password:
-        const xxx: string = decryptString(ustParam);
+        const xxx: string = decryptString(utsParam);
         debug(`xxx: ${xxx}`);
     }
 
@@ -280,7 +281,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         const utsPart: string = encryptString( /*new Date(System.currentTimeMillis()),*/ email);
         const activationUrl: string = serverPath + ACTIVATE_ACCOUNT_ENDPOINT +
             "?" +
-            "uts=" + utsPart;
+            UTS_PARAM + "=" + utsPart;
         //persist the "uts", so this activation link will be single-used:
         // linksRepository.addLink( utsPart );
 

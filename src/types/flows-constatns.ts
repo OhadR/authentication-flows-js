@@ -23,6 +23,8 @@ export const ERR_HEADER = "err_header";
 export const ACTIVATE_ACCOUNT_ENDPOINT = "/aa";
 export const RESTORE_PASSWORD_ENDPOINT = "/rp";
 export const CHANGE_PASSWORD_ENDPOINT = "/cp";
+
+export const UTS_PARAM = 'uts';
 	
 export const AUTHENTICATION_MAIL_SUBJECT = "OhadR Authentication Service: Account Created Successfully";
 export const RESTORE_PASSWORD_MAIL_SUBJECT = "OhadR Authentication Service: Password Restore Request";

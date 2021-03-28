@@ -1,6 +1,7 @@
 import { AuthenticationFlowsProcessorImpl } from "../core/authentication-flows-processor-impl";
 import * as url from 'url';
 import * as express from 'express';
+import { UTS_PARAM } from "../types/flows-constatns";
 const debug = require('debug')('user-action-controller');
 let app;
 
@@ -37,8 +38,7 @@ export function config(user_app) {
     app.get('/aa', (req: express.Request, res) => {
         debug('ActivateAccountEndpoint');
         try {
-            AuthenticationFlowsProcessorImpl.instance.activateAccount(
-                debug(req.param('ust')));
+            AuthenticationFlowsProcessorImpl.instance.activateAccount(req.param(UTS_PARAM));
         }
         catch (e) {
             debug('ERROR: ', e);
