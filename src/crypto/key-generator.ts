@@ -59,10 +59,14 @@ function _encryptString (plaintext: string, publicKeyFile: string): string {
 //            padding: crypto.constants.RSA_PKCS1_OAEP_PADDING
         },
         Buffer.from(plaintext, 'utf8'));
-    return encrypted.toString('base64');
+    const based64EncryptedContent: string = encrypted.toString('base64');
+    //instead of encodeURI(), just replace the '+' to '.':
+    return based64EncryptedContent.replace(/\+/g, '.');
 }
 
 function _decryptString (encryptedText: string, privateKeyFile): string {
+    //first, instead of decodeURI(), just replace the '.' to '+':
+    encryptedText = encryptedText.replace(/./g, '+');
     const privateKey = fs.readFileSync(privateKeyFile, 'utf8');
     const decrypted = crypto.privateDecrypt(
         {
