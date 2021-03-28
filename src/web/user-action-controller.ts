@@ -36,6 +36,7 @@ export function config(user_app) {
 
     app.get('/aa', (req: express.Request, res) => {
         debug('ActivateAccountEndpoint');
+        debug(req.param('uts'));
         //res.send('Hello getPasswordConstraints!')
     });
 }
