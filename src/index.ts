@@ -7,5 +7,6 @@ export * from './types/authentication-flows-error'
 export * from './types/authentication-policy'
 
 export * from './interfaces/authentication-flows-processor'
+export * from './interfaces/authentication-user'
 
 export * from './web/user-action-controller'

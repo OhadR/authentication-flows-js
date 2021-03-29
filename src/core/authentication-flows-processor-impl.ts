@@ -2,7 +2,9 @@ import {
     AccountState,
     AuthenticationFlowsError,
     AuthenticationFlowsProcessor,
-    AuthenticationPolicy, decryptString,
+    AuthenticationPolicy,
+    AuthenticationUser,
+    decryptString,
     encryptString,
     generateKeyFile
 } from "..";
@@ -11,16 +13,17 @@ import { ACTIVATE_ACCOUNT_ENDPOINT,
     AUTHENTICATION_MAIL_SUBJECT,
     UTS_PARAM } from "../types/flows-constatns";
 import { sendEmail } from "../endpoints/email";
+import { AuthenticationAccountRepository } from "../interfaces/repository/authentication-account-repository";
 
 const debug = require('debug')('authentication-flows-processor');
 
+//constants that are relevant only for this class:
+const EMAIL_NOT_VALID = "The e-mail you have entered is not valid.";
+const USER_ALREADY_EXIST = "USER_ALREADY_EXIST";
 
 export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProcessor {
 
     private static _instance: AuthenticationFlowsProcessorImpl;
-
-    public static readonly EMAIL_NOT_VALID = "The e-mail you have entered is not valid.";
-    public static readonly USER_ALREADY_EXIST = "USER_ALREADY_EXIST";
 
     private static readonly PASSWORD_CANNOT_BE_USED = "Your password is not acceptable by the organizational password policy.";
     private static readonly PASSWORD_IS_TOO_LONG = "Password is too long";
@@ -44,6 +47,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
 
     private createAccountEndpoint: CreateAccountEndpoint = new CreateAccountEndpoint();
 
+    private repository: AuthenticationAccountRepository;
 
     private constructor() {
         // Generate keys
@@ -125,7 +129,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
 
     private static validateEmail(email: string) {
         if( ! email.includes("@") ) {
-            throw new AuthenticationFlowsError( this.EMAIL_NOT_VALID );
+            throw new AuthenticationFlowsError( EMAIL_NOT_VALID );
         }
     }
 
@@ -224,30 +228,31 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         //
         // try
         // {
-        //     AuthenticationUser oauthUser = null;
-        //     try
-        //     {
-        //         oauthUser = (AuthenticationUser) repository.loadUserByUsername( email );
-        //     }
-        //     catch(UsernameNotFoundException unfe)
-        //     {
-        //         //basically do nothing - we expect user not to be found.
-        //     }
-        //
-        //     //if user exist, but not activated - we allow re-registration:
-        //     if(oauthUser != null)
-        //     {
-        //         if( !oauthUser.isEnabled())
-        //         {
-        //             repository.deleteUser( email );
-        //         }
-        //         else
-        //         {
-        //             //error - user already exists and active
-        //             log.error( "cannot create account - user " + email + " already exist." );
-        //             throw new AuthenticationFlowsException( USER_ALREADY_EXIST );
-        //         }
-        //     }
+            let oauthUser: AuthenticationUser = null;
+            try
+            {
+                oauthUser = this.repository.loadUserByUsername( email );
+            }
+            catch(unfe)
+            {
+                //basically do nothing - we expect user not to be found.
+            }
+
+            //if user exist, but not activated - we allow re-registration:
+            if(oauthUser)
+            {
+                if( !oauthUser.isEnabled())
+                {
+                    this.repository.deleteUser( email );
+                }
+                else
+                {
+                    //error - user already exists and active
+                    //log.error( "cannot create account - user " + email + " already exist." );
+                    debug( "cannot create account - user " + email + " already exist." );
+                    throw new AuthenticationFlowsError( USER_ALREADY_EXIST );
+                }
+            }
         //
         //     Collection<? extends GrantedAuthority> authorities = setAuthorities();		//set authorities
         //     AuthenticationUser user = new InMemoryAuthenticationUserImpl(
