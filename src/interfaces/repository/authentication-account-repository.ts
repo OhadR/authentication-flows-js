@@ -50,16 +50,7 @@ export interface AuthenticationAccountRepository /*extends UserDetailsManager*/
 	*/
 
 
-    /**
-	 * this method is not needed anymore since we extend 
-	 * {@link org.springframework.security.core.userdetails.UserDetailsService} 
-	 * with its <code>createUser(UserDetails user)</code>
-     */
-	createAccount(email: string,
-			encodedPassword: string,
-			numLoginAttemptsAllowed: number): AccountState;
+	createUser(authenticationUser: AuthenticationUser): AccountState;
 
-
-	
 	deleteUser(email: string): void;
 }

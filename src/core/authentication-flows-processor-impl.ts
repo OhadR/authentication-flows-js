@@ -14,6 +14,7 @@ import { ACTIVATE_ACCOUNT_ENDPOINT,
     UTS_PARAM } from "../types/flows-constatns";
 import { sendEmail } from "../endpoints/email";
 import { AuthenticationAccountRepository } from "../interfaces/repository/authentication-account-repository";
+import { AuthenticationUserImpl } from "./authentication-user-impl";
 
 const debug = require('debug')('authentication-flows-processor');
 
@@ -228,20 +229,21 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         //
         // try
         // {
-            let oauthUser: AuthenticationUser = null;
+            let authUser: AuthenticationUser = null;
             try
             {
-                oauthUser = this.repository.loadUserByUsername( email );
+                authUser = this.repository.loadUserByUsername( email );
             }
             catch(unfe)
             {
                 //basically do nothing - we expect user not to be found.
             }
+            debug(`oauthUser: ${authUser}`);
 
             //if user exist, but not activated - we allow re-registration:
-            if(oauthUser)
+            if(authUser)
             {
-                if( !oauthUser.isEnabled())
+                if( !authUser.isEnabled())
                 {
                     this.repository.deleteUser( email );
                 }
@@ -253,18 +255,21 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
                     throw new AuthenticationFlowsError( USER_ALREADY_EXIST );
                 }
             }
-        //
-        //     Collection<? extends GrantedAuthority> authorities = setAuthorities();		//set authorities
-        //     AuthenticationUser user = new InMemoryAuthenticationUserImpl(
-        //     email, encodedPassword,
-        //     false,									//start as de-activated
-        //     policyRepo.getDefaultAuthenticationPolicy().getMaxPasswordEntryAttempts(),
-        //     null,					//set by the repo-impl
-        //     firstName,
-        //     lastName,
-        //     authorities);
-        //
-        //     repository.createUser(user);
+
+            const authorities: string[] = this.setAuthorities();		//set authorities
+            authUser = new AuthenticationUserImpl(
+                email, encedPassword,
+                false,									//start as de-activated
+//            policyRepo.getDefaultAuthenticationPolicy().getMaxPasswordEntryAttempts(),
+                5,
+                null,					//set by the repo-impl
+                firstName,
+                lastName,
+                authorities);
+
+            debug(`authUser: ${authUser}`);
+
+            this.repository.createUser(authUser);
         //
         //     createAccountEndpoint.postCreateAccount( email );
         // }
@@ -298,5 +303,12 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
             AUTHENTICATION_MAIL_SUBJECT,
             activationUrl );
 
+    }
+
+    private setAuthorities(): string[]
+    {
+        const set: string[] = [];
+        set.push("ROLE_USER");
+        return set;
     }
 }
