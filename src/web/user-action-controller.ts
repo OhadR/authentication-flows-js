@@ -16,11 +16,11 @@ export function config(user_app) {
         res.send('Hello getPasswordConstraints!')
     });
 
-    app.post('/createAccount', (req: express.Request, res) => {
+    app.post('/createAccount', async (req: express.Request, res) => {
         const requestBody = req.body;
         debug(`createAccount requestBody ${JSON.stringify(requestBody)}`);
         try {
-            AuthenticationFlowsProcessorImpl.instance.createAccount(
+            await AuthenticationFlowsProcessorImpl.instance.createAccount(
                 requestBody.email,
                 requestBody.password,
                 requestBody.retypedPassword,
