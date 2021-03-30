@@ -1,5 +1,23 @@
 export interface AuthenticationUser /*extends UserDetails*/
 {
+	/**
+	 * 	Returns the authorities granted to the user.
+	 */
+	getAuthorities(): string[];
+
+	/**
+	 * 	Returns the password used to authenticate the user.
+	 */
+	getPassword(): string;
+
+	/**
+	 * Returns the username used to authenticate the user.
+	 */
+	getUsername(): string;
+
+	/**
+	 * Indicates whether the user is enabled or disabled.
+	 */
 	isEnabled(): boolean;
 
 	/**
