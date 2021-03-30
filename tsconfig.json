@@ -1,11 +1,11 @@
 {
 	"compilerOptions": {
-  	"module": "commonjs",
+        "module": "commonjs",
 		"target": "es2019",
-    "types": ["node"],
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "declaration": true,
+        "types": ["node"],
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "declaration": true,
 		"noImplicitAny": false,
 		"sourceMap": true,
 		"outDir": "dist"
