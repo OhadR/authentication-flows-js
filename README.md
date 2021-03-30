@@ -8,12 +8,23 @@
  
 ## configuration
 
-This module reuses that client-app' express server and adds several endpoints to it (such as /createAccount, for example).
-Thus, the client-app should pass authentication-flows-js its server object, like:  
+### repository adapters
+
+The client-app passes the repository-adapters (**TODO: elaborate**).  
+
+### express server object
+
+This module *reuses* that client-app' express server and adds several endpoints to it (e.g. `/createAccount`).
+Thus, the client-app should pass authentication-flows-js its server object (example below).
+
 
     const app = module.exports = express();
     var authentication-flows-js = require('authentication-flows-js');
-    authentication-flows-js.config_test_wip(app);
+    authentication-flows-js.config(
+        config: {
+            user_app: app, 
+            authenticationAccountRepository: inmemRepo
+        });
 
 an example for a client-app can be found [here](https://github.com/OhadR/authentication-flows-js-app).
 

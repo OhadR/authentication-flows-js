@@ -50,7 +50,7 @@ export interface AuthenticationAccountRepository /*extends UserDetailsManager*/
 	*/
 
 
-	createUser(authenticationUser: AuthenticationUser): AccountState;
+	createUser(authenticationUser: AuthenticationUser): void;
 
 	deleteUser(email: string): void;
 }

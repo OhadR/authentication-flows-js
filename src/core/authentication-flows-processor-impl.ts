@@ -48,7 +48,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
 
     private createAccountEndpoint: CreateAccountEndpoint = new CreateAccountEndpoint();
 
-    private repository: AuthenticationAccountRepository;
+    private _authenticationAccountRepository: AuthenticationAccountRepository;
 
     private constructor() {
         // Generate keys
@@ -57,6 +57,11 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
 
     public static get instance() {
         return this._instance || (this._instance = new this());
+    }
+
+    public set authenticationAccountRepository(authenticationAccountRepository: AuthenticationAccountRepository) {
+        debug(`set authenticationAccountRepository: ${JSON.stringify(authenticationAccountRepository)}`);
+        this._authenticationAccountRepository = authenticationAccountRepository;
     }
 
     async createAccount(email: string, password: string, retypedPassword: string, firstName: string, lastName: string, path: string) {
@@ -232,7 +237,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
             let authUser: AuthenticationUser = null;
             try
             {
-                authUser = this.repository.loadUserByUsername( email );
+                authUser = this._authenticationAccountRepository.loadUserByUsername( email );
             }
             catch(unfe)
             {
@@ -245,7 +250,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
             {
                 if( !authUser.isEnabled())
                 {
-                    this.repository.deleteUser( email );
+                    this._authenticationAccountRepository.deleteUser( email );
                 }
                 else
                 {
@@ -269,7 +274,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
 
             debug(`authUser: ${authUser}`);
 
-            this.repository.createUser(authUser);
+            this._authenticationAccountRepository.createUser(authUser);
         //
         //     createAccountEndpoint.postCreateAccount( email );
         // }
