@@ -84,10 +84,18 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
     }
 
     public async activateAccount(utsParam: string) {
-        debug(`param: ${utsParam}`);
+        //debug(`param: ${utsParam}`);
         //encrypt the password:
-        const xxx: string = decryptString(utsParam);
-        debug(`xxx: ${xxx}`);
+        const username: string = decryptString(utsParam);
+        debug(`activating username: ${username}`);
+
+        // enable the account. NOTE: if userEmail was not found in DB, we will get RuntimeException (NoSuchElement)
+        this.setEnabled(username);
+
+        // reset the #attempts, since there is a flow of exceeding attempts number, so when clicking the link
+        // (in the email), we get here and enable the account and reset the attempts number
+        this.setLoginSuccessForUser(username);
+
     }
 
     getAccountState(email: string): AccountState {
@@ -121,13 +129,19 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
     }
 
     setEnabled(userEmail: string) {
+        this._authenticationAccountRepository.setEnabled(userEmail);
     }
 
     setLoginFailureForUser(email: string) {
     }
 
     setLoginSuccessForUser(username: string): boolean {
-        return false;
+        debug("setting login success for user " + username);
+        //TODO:
+        // this._authenticationAccountRepository.setAttemptsLeft( username,
+        //     getAuthenticationSettings().getMaxPasswordEntryAttempts() );
+
+        return this.isPasswordChangeRequired(username);
     }
 
     setPassword(email: string, encodedPassword: string) {
@@ -315,5 +329,9 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         const set: string[] = [];
         set.push("ROLE_USER");
         return set;
+    }
+
+    private isPasswordChangeRequired(username: string) {
+        return false;
     }
 }
