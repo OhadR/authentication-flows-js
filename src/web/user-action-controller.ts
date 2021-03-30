@@ -21,7 +21,7 @@ export function config(config: {
         res.send('Hello getPasswordConstraints!')
     });
 
-    app.post('/createAccount', async (req: express.Request, res) => {
+    app.post('/createAccount', async (req: express.Request, res: express.Response) => {
         const requestBody = req.body;
         //debug(`createAccount requestBody ${JSON.stringify(requestBody)}`);
         try {
@@ -36,7 +36,9 @@ export function config(config: {
         catch (e) {
             debug('ERROR: ', e);
             //back again to createAccountPage, but add error message:
-            res.render('createAccountPage', { [ERR_MSG]: e.message });
+            res
+                .status(500)
+                .render('createAccountPage', { [ERR_MSG]: e.message });
             return;
         }
         res.render('accountCreatedSuccess', { email: requestBody.email });
