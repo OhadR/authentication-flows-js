@@ -4,6 +4,23 @@ export interface AuthenticationAccountRepository /*extends UserDetailsManager*/
 {
 	loadUserByUsername(email: string): AuthenticationUser;
 
+	/**
+	 * Create a new user with the supplied details.
+	 */
+	createUser(authenticationUser: AuthenticationUser): void;
+
+	/**
+	 * Remove the user with the given login name from the system.
+	 * @param email
+	 */
+	deleteUser(email: string): void;
+
+	/**
+	 * Check if a user with the supplied login name exists in the system.
+	 */
+	userExists(username: string): boolean;
+
+
 	setEnabled(email: string);
 	setDisabled(email: string);
 	isActivated(email: string): boolean;
@@ -48,9 +65,4 @@ export interface AuthenticationAccountRepository /*extends UserDetailsManager*/
 	 * 
 	AuthenticationUser getUser(String email);
 	*/
-
-
-	createUser(authenticationUser: AuthenticationUser): void;
-
-	deleteUser(email: string): void;
 }
