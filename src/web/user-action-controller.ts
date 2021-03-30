@@ -1,7 +1,7 @@
 import { AuthenticationFlowsProcessorImpl } from "../core/authentication-flows-processor-impl";
 import * as url from 'url';
 import * as express from 'express';
-import { UTS_PARAM } from "../types/flows-constatns";
+import { ERR_MSG, UTS_PARAM } from "../types/flows-constatns";
 import { AuthenticationAccountRepository } from "..";
 const debug = require('debug')('user-action-controller');
 let app;
@@ -23,7 +23,7 @@ export function config(config: {
 
     app.post('/createAccount', async (req: express.Request, res) => {
         const requestBody = req.body;
-        debug(`createAccount requestBody ${JSON.stringify(requestBody)}`);
+        //debug(`createAccount requestBody ${JSON.stringify(requestBody)}`);
         try {
             await AuthenticationFlowsProcessorImpl.instance.createAccount(
                 requestBody.email,
@@ -35,7 +35,9 @@ export function config(config: {
         }
         catch (e) {
             debug('ERROR: ', e);
-            
+            //back again to createAccountPage, but add error message:
+            res.render('createAccountPage', { [ERR_MSG]: e.message });
+            return;
         }
         res.render('accountCreatedSuccess', { email: requestBody.email });
     });
