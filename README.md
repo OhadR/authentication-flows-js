@@ -57,3 +57,8 @@ but it makes sense that each client-app will has its own mailing system, plus ve
 can have the same look and feel of the hosting application.
 
 Client-app can easily override the `sendEmail()` function.
+
+## tests
+
+* happy flow
+* create account with user already exists
