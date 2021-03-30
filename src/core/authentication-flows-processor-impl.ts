@@ -20,7 +20,7 @@ const debug = require('debug')('authentication-flows-processor');
 
 //constants that are relevant only for this class:
 const EMAIL_NOT_VALID = "The e-mail you have entered is not valid.";
-const USER_ALREADY_EXIST = "USER_ALREADY_EXIST";
+const USER_ALREADY_EXIST = "cannot create account - user already exist.";
 
 export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProcessor {
 
