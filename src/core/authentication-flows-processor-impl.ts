@@ -245,67 +245,50 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         email = email.toLowerCase();		// issue #23 : username is case-sensitive (https://github.com/OhadR/oAuth2-sample/issues/23)
         debug('createAccount() for user ' + email);
         debug('encrypted password: ' + encedPassword);
-        //
-        // try
-        // {
-            let authUser: AuthenticationUser = null;
-            try
-            {
-                authUser = this._authenticationAccountRepository.loadUserByUsername( email );
-            }
-            catch(unfe)
-            {
-                //basically do nothing - we expect user not to be found.
-            }
-            debug(`oauthUser: ${authUser}`);
 
-            //if user exist, but not activated - we allow re-registration:
-            if(authUser)
-            {
-                if( !authUser.isEnabled())
-                {
-                    this._authenticationAccountRepository.deleteUser( email );
-                }
-                else
-                {
-                    //error - user already exists and active
-                    //log.error( "cannot create account - user " + email + " already exist." );
-                    debug( "cannot create account - user " + email + " already exist." );
-                    throw new AuthenticationFlowsError( USER_ALREADY_EXIST );
-                }
-            }
+        let authUser: AuthenticationUser = null;
+        try
+        {
+            authUser = this._authenticationAccountRepository.loadUserByUsername( email );
+        }
+        catch(unfe)
+        {
+            //basically do nothing - we expect user not to be found.
+        }
+        debug(`oauthUser: ${authUser}`);
 
-            const authorities: string[] = this.setAuthorities();		//set authorities
-            authUser = new AuthenticationUserImpl(
-                email, encedPassword,
-                false,									//start as de-activated
+        //if user exist, but not activated - we allow re-registration:
+        if(authUser)
+        {
+            if( !authUser.isEnabled())
+            {
+                this._authenticationAccountRepository.deleteUser( email );
+            }
+            else
+            {
+                //error - user already exists and active
+                //log.error( "cannot create account - user " + email + " already exist." );
+                debug( "cannot create account - user " + email + " already exist." );
+                throw new AuthenticationFlowsError( USER_ALREADY_EXIST );
+            }
+        }
+
+        const authorities: string[] = this.setAuthorities();		//set authorities
+        authUser = new AuthenticationUserImpl(
+            email, encedPassword,
+            false,									//start as de-activated
 //            policyRepo.getDefaultAuthenticationPolicy().getMaxPasswordEntryAttempts(),
-                5,
-                null,					//set by the repo-impl
-                firstName,
-                lastName,
-                authorities);
+            5,
+            null,					//set by the repo-impl
+            firstName,
+            lastName,
+            authorities);
 
-            debug(`authUser: ${authUser}`);
+        debug(`authUser: ${authUser}`);
 
-            this._authenticationAccountRepository.createUser(authUser);
-        //
-        //     createAccountEndpoint.postCreateAccount( email );
-        // }
-        //     //we should not get to these exceptions since we check earlier if account already exist (so repo's do not
-        //     // have to check it)
-        // catch(DataIntegrityViolationException e)
-        // {
-        //     //get the cause-exception, since it has a better message:
-        //     Throwable root = e.getRootCause();
-        //     String msg = root.getMessage();
-        //     Assert.isTrue(msg.contains("Duplicate entry"));
-        //
-        //
-        //     log.error( msg );
-        //     throw new AuthenticationFlowsException( USER_ALREADY_EXIST );
-        // }
+        this._authenticationAccountRepository.createUser(authUser);
 
+//            createAccountEndpoint.postCreateAccount( email );
 
         const utsPart: string = encryptString( /*new Date(System.currentTimeMillis()),*/ email);
         const activationUrl: string = serverPath + ACTIVATE_ACCOUNT_ENDPOINT +
@@ -315,13 +298,12 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         // linksRepository.addLink( utsPart );
 
 
-        debug("Manager: sending registration email to " + email + "; activationUrl: " + activationUrl);
+        debug("sending registration email to " + email + "; activationUrl: " + activationUrl);
 
 
         await sendEmail(email,
             AUTHENTICATION_MAIL_SUBJECT,
             activationUrl );
-
     }
 
     private setAuthorities(): string[]
