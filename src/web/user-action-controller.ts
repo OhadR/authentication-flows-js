@@ -48,7 +48,7 @@ export function config(config: {
         catch (e) {
             debug('ERROR: ', e);
         }
-        res.redirect('accountActivated');
+        res.render('accountActivated');
     });
 }
 
