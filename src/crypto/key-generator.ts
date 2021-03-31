@@ -43,6 +43,13 @@ export function decryptString (encryptedText: string): string {
     return _decryptString(encryptedText, path.join(".", PRIVATE_KEY_FILE_NAME));
 }
 
+export function shaString(data: string): string {
+    return crypto
+        .createHash('sha256')
+        .update(data)
+        .digest('base64');
+}
+
 /**
  * encrypt string and then encode-base64
  * @param plaintext

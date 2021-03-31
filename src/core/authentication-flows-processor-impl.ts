@@ -6,7 +6,7 @@ import {
     AuthenticationUser,
     decryptString,
     encryptString,
-    generateKeyFile
+    generateKeyFile, shaString
 } from "..";
 import { CreateAccountEndpoint } from "../endpoints/create-account-endpoint";
 import { ACTIVATE_ACCOUNT_ENDPOINT,
@@ -83,7 +83,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         AuthenticationFlowsProcessorImpl.validatePassword(password, settings);
 
         //encrypt the password:
-        const encodedPassword: string = encryptString(password);
+        const encodedPassword: string = shaString(password);
 
         //make any other additional chackes. this let applications override this impl and add their custom functionality:
         this.createAccountEndpoint.additionalValidations(email, password);
@@ -337,7 +337,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
 
     async deleteAccount(email: string, password: string) {
         //encrypt the password:
-        const encodedPassword: string = encryptString(password);
+        const encodedPassword: string = shaString(password);
 
         //validate the credentials:
         if(encodedPassword !== await this._authenticationAccountRepository.getEncodedPassword(email))
