@@ -6,6 +6,20 @@
 
 ## motivation
  
+The Authentication-Flows module implements all authentication flows: 
+ * create account, 
+ * forgot password, 
+ * change password by user request, 
+ * force change password if password is expired,
+ * locks the accont after pre-configured login failures.
+ 
+Find [here](here) all required configurations, API and more.
+ 
+The authentication-flows *uses cryptography* in order to encrypt the data in the links that are sent to the user's email 
+(upon user's registration and "forget password" flows). 
+Passwords are encrypted as well.
+
+
 ## configuration
 
 ### repository adapters
@@ -60,5 +74,9 @@ Client-app can easily override the `sendEmail()` function.
 
 ## tests
 
-* happy flow
-* create account with user already exists
+all flows are tested very clearly using [Cucumber automated tests](https://github.com/OhadR/authentication-flows-js-automation).
+
+
+## refs
+
+https://softwareengineering.stackexchange.com/questions/424981/authentication-flows-for-secured-applications
