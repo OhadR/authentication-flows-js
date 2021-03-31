@@ -136,7 +136,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
     }
 
     async removeLinkFromDB(link: string) {
-        this.linksRepository.removeLink(link);
+        this._linksRepository.removeLink(link);
     }
 
     sendUnlockAccountMail(email: string, serverPath: string) {
