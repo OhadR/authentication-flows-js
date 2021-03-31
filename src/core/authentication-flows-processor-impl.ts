@@ -15,6 +15,7 @@ import { ACTIVATE_ACCOUNT_ENDPOINT,
 import { sendEmail } from "../endpoints/email";
 import { AuthenticationAccountRepository } from "../interfaces/repository/authentication-account-repository";
 import { AuthenticationUserImpl } from "./authentication-user-impl";
+import { LinksRepository } from "../interfaces/repository/links-repository";
 
 const debug = require('debug')('authentication-flows-processor');
 
@@ -49,6 +50,8 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
     private createAccountEndpoint: CreateAccountEndpoint = new CreateAccountEndpoint();
 
     private _authenticationAccountRepository: AuthenticationAccountRepository;
+    private _linksRepository: LinksRepository;
+
 
     private constructor() {
         // Generate keys
@@ -62,6 +65,11 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
     public set authenticationAccountRepository(authenticationAccountRepository: AuthenticationAccountRepository) {
         debug(`set authenticationAccountRepository: ${JSON.stringify(authenticationAccountRepository)}`);
         this._authenticationAccountRepository = authenticationAccountRepository;
+    }
+
+    public set linksRepository(linksRepository: LinksRepository) {
+        debug(`set linksRepository: ${JSON.stringify(linksRepository)}`);
+        this._linksRepository = linksRepository;
     }
 
     async createAccount(email: string, password: string, retypedPassword: string, firstName: string, lastName: string, path: string) {
@@ -295,7 +303,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
             "?" +
             UTS_PARAM + "=" + utsPart;
         //persist the "uts", so this activation link will be single-used:
-        // linksRepository.addLink( utsPart );
+        this._linksRepository.addLink( utsPart );
 
 
         debug("sending registration email to " + email + "; activationUrl: " + activationUrl);
@@ -304,6 +312,8 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         await sendEmail(email,
             AUTHENTICATION_MAIL_SUBJECT,
             activationUrl );
+
+        return activationUrl;
     }
 
     private setAuthorities(): string[]

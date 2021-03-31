@@ -11,5 +11,6 @@ export * from './types/authentication-policy'
 export * from './interfaces/authentication-flows-processor'
 export * from './interfaces/authentication-user'
 export * from './interfaces/repository/authentication-account-repository'
+export * from './interfaces/repository/links-repository'
 
 export * from './web/user-action-controller'
