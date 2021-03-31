@@ -57,7 +57,7 @@ export function config(config: {
             debug('ERROR: ', e);
             res
                 .status(500)
-                .append([ERR_MSG], e.message)
+                .append('err_msg', e.message)
                 .render('errorPage', { [ERR_MSG]: e.message });
             return;
         }
