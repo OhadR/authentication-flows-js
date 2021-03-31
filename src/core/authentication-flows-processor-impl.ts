@@ -303,7 +303,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
             "?" +
             UTS_PARAM + "=" + utsPart;
         //persist the "uts", so this activation link will be single-used:
-        this._linksRepository.addLink( utsPart );
+        this._linksRepository.addLink( email, utsPart );
 
 
         debug("sending registration email to " + email + "; activationUrl: " + activationUrl);
