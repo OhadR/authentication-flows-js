@@ -93,12 +93,17 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
 
     public async activateAccount(utsParam: string) {
         //debug(`param: ${utsParam}`);
-        //encrypt the password:
+
+        //decrypt date:
         const username: string = decryptString(utsParam);
         debug(`activating username: ${username}`);
 
+        //this part was persisted in the DB, in order to make sure the activation-link is single-used.
+        //so here we remove it from the DB:
+        await this.removeLinkFromDB( username );
+
         // enable the account. NOTE: if userEmail was not found in DB, we will get RuntimeException (NoSuchElement)
-        this.setEnabled(username);
+        await this.setEnabled(username);
 
         // reset the #attempts, since there is a flow of exceeding attempts number, so when clicking the link
         // (in the email), we get here and enable the account and reset the attempts number
@@ -130,13 +135,14 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         return "";
     }
 
-    removeLinkFromDB(link: string) {
+    async removeLinkFromDB(link: string) {
+        this.linksRepository.removeLink(link);
     }
 
     sendUnlockAccountMail(email: string, serverPath: string) {
     }
 
-    setEnabled(userEmail: string) {
+    async setEnabled(userEmail: string) {
         this._authenticationAccountRepository.setEnabled(userEmail);
     }
 
