@@ -43,7 +43,9 @@ export function config(config: {
                 .render('createAccountPage', { [ERR_MSG]: e.message });
             return;
         }
-        res.render('accountCreatedSuccess', { email: requestBody.email });
+        res
+            .append('verification_link','is the man')
+            .render('accountCreatedSuccess', { email: requestBody.email });
     });
 
     app.get('/aa', (req: express.Request, res) => {
