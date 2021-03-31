@@ -55,6 +55,10 @@ export function config(config: {
         }
         catch (e) {
             debug('ERROR: ', e);
+            res
+                .status(500)
+                .render('errorPage', { [ERR_MSG]: e.message });
+            return;
         }
         res.render('accountActivated');
     });
