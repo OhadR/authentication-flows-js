@@ -48,10 +48,10 @@ export function config(config: {
             .render('accountCreatedSuccess', { email: requestBody.email });
     });
 
-    app.get('/aa', (req: express.Request, res) => {
+    app.get('/aa', async (req: express.Request, res) => {
         debug('ActivateAccountEndpoint');
         try {
-            AuthenticationFlowsProcessorImpl.instance.activateAccount(req.param(UTS_PARAM));
+            await AuthenticationFlowsProcessorImpl.instance.activateAccount(req.param(UTS_PARAM));
         }
         catch (e) {
             debug('ERROR: ', e);
