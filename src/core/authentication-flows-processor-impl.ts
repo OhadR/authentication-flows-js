@@ -334,4 +334,17 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
     private isPasswordChangeRequired(username: string) {
         return false;
     }
+
+    async deleteAccount(email: string, password: string) {
+        //encrypt the password:
+        const encodedPassword: string = encryptString(password);
+
+        //validate the credentials:
+        if(encodedPassword !== await this._authenticationAccountRepository.getEncodedPassword(email))
+            throw new Error('bad credentials');
+
+        //delete:
+        await this._authenticationAccountRepository.deleteUser( email );
+    }
+
 }

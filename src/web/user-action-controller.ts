@@ -63,6 +63,26 @@ export function config(config: {
         }
         res.render('accountActivated');
     });
+
+    app.post('/deleteAccount', async (req: express.Request, res: express.Response) => {
+        const requestBody = req.body;
+        //debug(`createAccount requestBody ${JSON.stringify(requestBody)}`);
+        try {
+            await AuthenticationFlowsProcessorImpl.instance.deleteAccount(
+                requestBody.email,
+                requestBody.password);
+        }
+        catch (e) {
+            debug('ERROR: ', e);
+            //back again to deleteAccountPage, but add error message:
+            res
+                .status(500)
+                .render('deleteAccountPage', { [ERR_MSG]: e.message });
+            return;
+        }
+        res
+            .render('accountDeletedSuccess', { email: requestBody.email });
+    });
 }
 
 function fullUrl(req: express.Request): string {
