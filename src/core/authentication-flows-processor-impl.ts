@@ -23,29 +23,29 @@ const debug = require('debug')('authentication-flows-processor');
 const EMAIL_NOT_VALID = "The e-mail you have entered is not valid.";
 const USER_ALREADY_EXIST = "cannot create account - user already exist.";
 
+const PASSWORD_CANNOT_BE_USED = "Your password is not acceptable by the organizational password policy.";
+const PASSWORD_IS_TOO_LONG = "Password is too long";
+const PASSWORD_IS_TOO_SHORT = "Password is too short";
+const PASSWORD_TOO_FEW_LOWERS = "Password needs to contains at least %d lower-case characters";
+const PASSWORD_TOO_FEW_UPPERS = "Password needs to contains at least %d upper-case characters";
+const PASSWORD_TOO_FEW_NUMERICS = "Password needs to contains at least %d numeric characters";
+const PASSWORD_TOO_FEW_SPECIAL_SYMBOLS = "Password needs to contains at least %d special symbols";
+const SETTING_A_NEW_PASSWORD_HAS_FAILED_PLEASE_NOTE_THE_PASSWORD_POLICY_AND_TRY_AGAIN_ERROR_MESSAGE =
+    "Setting a new password has failed. Please note the password policy and try again. Error message: ";
+const ACCOUNT_CREATION_HAS_FAILED_PASSWORDS_DO_NOT_MATCH =
+    "Account creation has failed. These passwords don't match";
+
+const ACCOUNT_LOCKED_OR_DOES_NOT_EXIST = "Account is locked or does not exist";
+
+const LINK_HAS_EXPIRED = "link has expired";
+const LINK_DOES_NOT_EXIST = "link does not exist in DB";	//means that link was already used, or it is invalid
+
+const CHANGE_PASSWORD_FAILED_NEW_PASSWORD_SAME_AS_OLD_PASSWORD = "CHANGE PASSWORD FAILED: New Password is same as Old Password.";
+const CHANGE_PASSWORD_BAD_OLD_PASSWORD = "CHANGE PASSWORD Failed: Bad Old Password.";
+
 export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProcessor {
 
     private static _instance: AuthenticationFlowsProcessorImpl;
-
-    private static readonly PASSWORD_CANNOT_BE_USED = "Your password is not acceptable by the organizational password policy.";
-    private static readonly PASSWORD_IS_TOO_LONG = "Password is too long";
-    private static readonly PASSWORD_IS_TOO_SHORT = "Password is too short";
-    private static readonly PASSWORD_TOO_FEW_LOWERS = "Password needs to contains at least %d lower-case characters";
-    private static readonly PASSWORD_TOO_FEW_UPPERS = "Password needs to contains at least %d upper-case characters";
-    private static readonly PASSWORD_TOO_FEW_NUMERICS = "Password needs to contains at least %d numeric characters";
-    private static readonly PASSWORD_TOO_FEW_SPECIAL_SYMBOLS = "Password needs to contains at least %d special symbols";
-    private static readonly SETTING_A_NEW_PASSWORD_HAS_FAILED_PLEASE_NOTE_THE_PASSWORD_POLICY_AND_TRY_AGAIN_ERROR_MESSAGE =
-        "Setting a new password has failed. Please note the password policy and try again. Error message: ";
-    public static readonly ACCOUNT_CREATION_HAS_FAILED_PASSWORDS_DO_NOT_MATCH =
-        "Account creation has failed. These passwords don't match";
-
-    private static readonly ACCOUNT_LOCKED_OR_DOES_NOT_EXIST = "Account is locked or does not exist";
-
-    private static readonly LINK_HAS_EXPIRED = "link has expired";
-    private static readonly LINK_DOES_NOT_EXIST = "link does not exist in DB";	//means that link was already used, or it is invalid
-
-    private static readonly CHANGE_PASSWORD_FAILED_NEW_PASSWORD_SAME_AS_OLD_PASSWORD = "CHANGE PASSWORD FAILED: New Password is same as Old Password.";
-    private static readonly CHANGE_PASSWORD_BAD_OLD_PASSWORD = "CHANGE PASSWORD Failed: Bad Old Password.";
 
     private createAccountEndpoint: CreateAccountEndpoint = new CreateAccountEndpoint();
 
@@ -135,8 +135,10 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         return "";
     }
 
-    async removeLinkFromDB(link: string) {
-        this._linksRepository.removeLink(link);
+    async removeLinkFromDB(username: string) {
+        const deleted = this._linksRepository.removeLink(username);
+        if(!deleted)
+            throw new Error(LINK_DOES_NOT_EXIST);
     }
 
     sendUnlockAccountMail(email: string, serverPath: string) {
@@ -169,7 +171,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
 
     private static validateRetypedPassword(password: string, retypedPassword: string) {
         if(password !== retypedPassword) {
-            throw new AuthenticationFlowsError( this.ACCOUNT_CREATION_HAS_FAILED_PASSWORDS_DO_NOT_MATCH );
+            throw new AuthenticationFlowsError( ACCOUNT_CREATION_HAS_FAILED_PASSWORDS_DO_NOT_MATCH );
         }
     }
 

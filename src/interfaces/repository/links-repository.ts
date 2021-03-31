@@ -4,7 +4,7 @@ export interface LinksRepository
 	
 	/**
 	 * 
-	 * @param link- the link to search
+	 * @param username- the key in the map to whom the link is attached
 	 * @return true if link was found (and removed). false otherwise.
 	 */
 	removeLink(username: string): boolean;
