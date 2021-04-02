@@ -31,7 +31,7 @@ export async function onAuthenticationFailure(
         //redirect the user to "account has been locked" page:
         res
             .status(SC_LOCKED)
-            .render('accountLockedPage', { [ERR_MSG]: e.message });
+            .render('accountLockedPage');
         return;
     }
 
