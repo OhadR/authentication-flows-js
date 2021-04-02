@@ -161,10 +161,27 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
     }
 
     async setEnabled(userEmail: string) {
-        this._authenticationAccountRepository.setEnabled(userEmail);
+        await this._authenticationAccountRepository.setEnabled(userEmail);
     }
 
-    setLoginFailureForUser(email: string) {
+    async setLoginFailureForUser(email: string) {
+        let user: AuthenticationUser;
+        try {
+            user = await this._authenticationAccountRepository.loadUserByUsername( email );
+        }
+        catch(usernameNotFoundError) {
+            return;
+        }
+        if(!user)
+            return;
+
+        if( 0 == user.getLoginAttemptsLeft() ) {
+            //lock the user; NOTE: if email was not found in DB, we will get RuntimeException (NoSuchElement). but it cannot happen as we just called @loadUserByUsername()
+            await this._authenticationAccountRepository.setDisabled(email);
+        }
+        else {
+            await this._authenticationAccountRepository.decrementAttemptsLeft(email);
+        }
     }
 
     setLoginSuccessForUser(username: string): boolean {
