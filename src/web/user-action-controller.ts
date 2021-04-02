@@ -56,7 +56,7 @@ export function config(config: {
             .render('accountCreatedSuccess', { email: requestBody.email });
     });
 
-    app.get('/aa', async (req: express.Request, res) => {
+    app.get('/aa', async (req: express.Request, res: express.Response) => {
         debug('ActivateAccountEndpoint');
         try {
             await AuthenticationFlowsProcessorImpl.instance.activateAccount(req.param(UTS_PARAM));
@@ -76,7 +76,7 @@ export function config(config: {
     /**
      * just like createAccount, this controller renders the forgot-password form:
      */
-    app.get('/forgotPasswordPage', (req, res) => {
+    app.get('/forgotPasswordPage', (req: express.Request, res: express.Response) => {
         res.render('forgotPasswordPage', { 'err_msg': null });
     });
 
@@ -120,7 +120,7 @@ export function config(config: {
     });
 }
 
-function fullUrl(req: express.Request): string {
+export function fullUrl(req: express.Request): string {
     return url.format({
         protocol: req.protocol,
         host: req.get('host'),      //host + port
