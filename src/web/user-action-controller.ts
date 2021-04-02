@@ -73,6 +73,13 @@ export function config(config: {
     });
 
 
+    /**
+     * just like createAccount, this controller renders the forgot-password form:
+     */
+    app.get('/forgotPasswordPage', (req, res) => {
+        res.render('forgotPasswordPage', { 'err_msg': null });
+    });
+
     app.post('/forgotPassword', async (req: express.Request, res: express.Response) => {
         const requestBody = req.body;
         try {
