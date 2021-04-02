@@ -9,9 +9,12 @@ import {
     generateKeyFile, shaString
 } from "..";
 import { CreateAccountEndpoint } from "../endpoints/create-account-endpoint";
-import { ACTIVATE_ACCOUNT_ENDPOINT,
+import {
+    ACTIVATE_ACCOUNT_ENDPOINT,
     AUTHENTICATION_MAIL_SUBJECT,
-    UTS_PARAM } from "../types/flows-constatns";
+    RESTORE_PASSWORD_ENDPOINT, RESTORE_PASSWORD_MAIL_SUBJECT,
+    UTS_PARAM
+} from "../types/flows-constatns";
 import { sendEmail } from "../endpoints/email";
 import { AuthenticationAccountRepository } from "../interfaces/repository/authentication-account-repository";
 import { AuthenticationUserImpl } from "./authentication-user-impl";
@@ -111,7 +114,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
 
     }
 
-    getAccountState(email: string): AccountState {
+    async getAccountState(email: string): Promise<AccountState> {
         return undefined;
     }
 
@@ -128,7 +131,20 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
     handleChangePassword(currentPassword: string, newPassword: string, retypedPassword: string, encUser?: string) {
     }
 
-    handleForgotPassword(email: string, serverPath: string) {
+    async forgotPassword(email: string, serverPath: string) {
+        debug('forgotPassword() for user ' + email);
+
+
+        AuthenticationFlowsProcessorImpl.validateEmail(email);
+
+        //if account is already locked, no need to ask the user the secret question:
+        const accountState: AccountState = await this.getAccountState(email);
+        if( accountState != AccountState.OK )
+        {
+            throw new Error( ACCOUNT_LOCKED_OR_DOES_NOT_EXIST );
+        }
+
+        await this.sendPasswordRestoreMail(email, serverPath);
     }
 
     handleSetNewPassword(encUserAndTimestamp: string, password: string, retypedPassword: string): string {
@@ -136,7 +152,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
     }
 
     async removeLinkFromDB(username: string) {
-        const deleted = this._linksRepository.removeLink(username);
+        const deleted = await this._linksRepository.removeLink(username);
         if(!deleted)
             throw new Error(LINK_DOES_NOT_EXIST);
     }
@@ -311,7 +327,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
             "?" +
             UTS_PARAM + "=" + utsPart;
         //persist the "uts", so this activation link will be single-used:
-        this._linksRepository.addLink( email, utsPart );
+        await this._linksRepository.addLink( email, utsPart );
 
 
         debug("sending registration email to " + email + "; activationUrl: " + activationUrl);
@@ -347,4 +363,18 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         await this._authenticationAccountRepository.deleteUser( email );
     }
 
+    private async sendPasswordRestoreMail(email: string, serverPath: string) {
+        const utsPart: string = encryptString( /*new Date(System.currentTimeMillis()),*/ email);
+        const passwordRestoreUrl: string = serverPath + RESTORE_PASSWORD_ENDPOINT +
+            "?" +
+            UTS_PARAM + "=" + utsPart;
+        //persist the "uts", so this activation link will be single-used:
+        await this._linksRepository.addLink( email, utsPart );
+
+        debug("sending restore-password email to " + email + "; url: " + passwordRestoreUrl);
+
+        await sendEmail(email,
+            RESTORE_PASSWORD_MAIL_SUBJECT,
+            passwordRestoreUrl );
+    }
 }

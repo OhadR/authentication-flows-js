@@ -15,7 +15,6 @@ export interface AuthenticationFlowsProcessor
 	 * @param firstName: first name of the registered user.
 	 * @param lastName: second (last) name of the registered user.
 	 * @param path: the server-path. used for building the link in the email.
-	 * @throws AuthenticationFlowsException
 	 */
 	createAccount(
 		email: string,
@@ -30,9 +29,8 @@ export interface AuthenticationFlowsProcessor
 	 * 
 	 * @param email
 	 * @param serverPath - the server-path. used for building the link in the email
-	 * @throws AuthenticationFlowsException
 	 */
-	handleForgotPassword( email: string, serverPath: string );
+	forgotPassword( email: string, serverPath: string );
 	
 	/**
 	 * 
@@ -81,7 +79,7 @@ export interface AuthenticationFlowsProcessor
 
 	getAuthenticationSettings(): AuthenticationPolicy;
 
-	getAccountState(email: string): AccountState;
+	getAccountState(email: string): Promise<AccountState>;
 
 
 	setLoginFailureForUser(email: string);

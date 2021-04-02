@@ -15,12 +15,20 @@ export function config(config: {
     AuthenticationFlowsProcessorImpl.instance.authenticationAccountRepository = config.authenticationAccountRepository;
     AuthenticationFlowsProcessorImpl.instance.linksRepository = config.linksRepository;
 
+
     /**
      * The UI calls this method in order to get the password policy
      */
     app.get('/getPasswordConstraints', (req, res) => {
         debug('getPasswordConstraints');
         res.send('Hello getPasswordConstraints!')
+    });
+
+    /**
+ 	 * The UI calls this method in order to get the password policy
+     */
+    app.get('/createAccountPage', (req, res) => {
+        res.render('createAccountPage', { [ERR_MSG]: null });
     });
 
     app.post('/createAccount', async (req: express.Request, res: express.Response) => {
@@ -62,6 +70,26 @@ export function config(config: {
             return;
         }
         res.render('accountActivated');
+    });
+
+
+    app.post('/forgotPassword', async (req: express.Request, res: express.Response) => {
+        const requestBody = req.body;
+        try {
+            await AuthenticationFlowsProcessorImpl.instance.forgotPassword(
+                requestBody.email,
+                fullUrl(req));
+        }
+        catch (e) {
+            debug('ERROR: ', e);
+            //back again to forgotPasswordPage, but add error message:
+            res
+                .status(500)
+                .render('forgotPasswordPage', { [ERR_MSG]: e.message });
+            return;
+        }
+        res
+            .render('passwordRestoreEmailSent', { email: requestBody.email });
     });
 
     app.post('/deleteAccount', async (req: express.Request, res: express.Response) => {
