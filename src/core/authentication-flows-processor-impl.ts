@@ -12,7 +12,7 @@ import { CreateAccountEndpoint } from "../endpoints/create-account-endpoint";
 import {
     ACTIVATE_ACCOUNT_ENDPOINT,
     AUTHENTICATION_MAIL_SUBJECT,
-    RESTORE_PASSWORD_ENDPOINT, RESTORE_PASSWORD_MAIL_SUBJECT,
+    RESTORE_PASSWORD_ENDPOINT, RESTORE_PASSWORD_MAIL_SUBJECT, UNLOCK_MAIL_SUBJECT,
     UTS_PARAM
 } from "../types/flows-constatns";
 import { sendEmail } from "../endpoints/email";
@@ -179,7 +179,20 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
             throw new Error(LINK_DOES_NOT_EXIST);
     }
 
-    sendUnlockAccountMail(email: string, serverPath: string) {
+    private async sendUnlockAccountMail(email: string, serverPath: string) {
+
+        const utsPart: string = encryptString( /*new Date(System.currentTimeMillis()),*/ email);
+        const activationUrl: string = serverPath + ACTIVATE_ACCOUNT_ENDPOINT +
+            "?" +
+            UTS_PARAM + "=" + utsPart;
+        //persist the "uts", so this activation link will be single-used:
+        await this._linksRepository.addLink( email, utsPart );
+
+        debug(`sending Unlock-Account email to ${email}...`);
+
+        await sendEmail(email,
+            UNLOCK_MAIL_SUBJECT,
+            activationUrl );
     }
 
     async setEnabled(userEmail: string) {
@@ -355,8 +368,6 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         await sendEmail(email,
             AUTHENTICATION_MAIL_SUBJECT,
             activationUrl );
-
-        return activationUrl;
     }
 
     private setAuthorities(): string[]
@@ -425,8 +436,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
             //lock the user
             await this._authenticationAccountRepository.setDisabled(username);
 
-            //TODO setDisabled()!!
-            await AuthenticationFlowsProcessorImpl.instance.sendUnlockAccountMail(username, serverPath);
+            await this.sendUnlockAccountMail(username, serverPath);
             throw new AccountLockedError();
         }
 

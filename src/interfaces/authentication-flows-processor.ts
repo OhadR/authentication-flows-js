@@ -79,14 +79,9 @@ export interface AuthenticationFlowsProcessor
 
 	getAuthenticationSettings(): AuthenticationPolicy;
 
-
-	sendUnlockAccountMail(email: string,
-			serverPath: string);
-
 	setPassword(email: string, encodedPassword: string);
 	
 	getPasswordLastChangeDate(email: string): Date;
-
 
 	setEnabled(userEmail: string);
 	
