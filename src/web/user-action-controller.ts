@@ -2,9 +2,14 @@ import { AuthenticationFlowsProcessorImpl } from "../core/authentication-flows-p
 import * as url from 'url';
 import * as express from 'express';
 import { ERR_MSG, UTS_PARAM } from "../types/flows-constatns";
-import { AuthenticationAccountRepository, LinksRepository } from "..";
+import { AccountLockedError, AuthenticationAccountRepository, LinksRepository } from "..";
 const debug = require('debug')('user-action-controller');
 let app;
+
+/**
+ * Status code (423) indicating that the resource that is being accessed is locked
+ */
+const SC_LOCKED = 423;
 
 export function config(config: {
     user_app: object,
@@ -15,6 +20,52 @@ export function config(config: {
     AuthenticationFlowsProcessorImpl.instance.authenticationAccountRepository = config.authenticationAccountRepository;
     AuthenticationFlowsProcessorImpl.instance.linksRepository = config.linksRepository;
 
+
+
+    app.get('/login', function(req: express.Request, res: express.Response){
+        res.render('login');
+    });
+
+    app.post('/login', async function(req: express.Request, res: express.Response){
+        let user;
+        try {
+            user = await AuthenticationFlowsProcessorImpl.instance.authenticate(
+                req.body.username,
+                req.body.password,
+                fullUrl(req));
+        }
+        catch(err) {
+            if (err instanceof AccountLockedError) {
+                debug(`note: caught XXXError`);
+                //redirect the user to "account has been locked" page:
+                res
+                    .status(SC_LOCKED)
+                    .render('accountLockedPage');
+                return;
+            }
+
+            debug(`authentication failed for ${req.body.username}`);
+            req.session.error = 'Authentication failed, please check your '
+                + ' username and password.';
+            res.redirect(401, '/login');
+            return;
+        }
+
+        debug(user);
+
+        // Regenerate session when signing in
+        // to prevent fixation
+        req.session.regenerate(function() {
+            // Store the user's primary key
+            // in the session store to be retrieved,
+            // or in this case the entire user object
+            req.session.user = user;
+            req.session.success = 'Authenticated as ' + user.email
+                + ' click to <a href="/logout">logout</a>. '
+                + ' You may now access <a href="/restricted">/restricted</a>.';
+            res.redirect('back');
+        });
+    });
 
     /**
      * The UI calls this method in order to get the password policy

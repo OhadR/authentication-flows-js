@@ -4,3 +4,7 @@ export class AuthenticationFlowsError extends Error {
         this.name = 'MyError';
     }
 }
+
+export class AccountLockedError extends Error {
+
+}

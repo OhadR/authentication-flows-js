@@ -1,20 +1,11 @@
-import { AccountState, fullUrl } from "..";
-import { express } from 'express';
+import { AccountLockedError, AccountState } from "..";
 import { AuthenticationFlowsProcessorImpl } from "./authentication-flows-processor-impl";
-import { ERR_MSG } from "../types/flows-constatns";
 
 const debug = require('debug')('authentication-failure-handler');
 
-/**
- * Status code (423) indicating that the resource that is being accessed is locked
- */
-const SC_LOCKED = 423;
-
-
 export async function onAuthenticationFailure(
-    req: express.Request,
-    res: express.Response,
-    username: string) {
+    username: string,
+    serverPath: string) {
 
     debug(`login failed for user: ` + username);
 
@@ -25,14 +16,8 @@ export async function onAuthenticationFailure(
     if( state == AccountState.LOCKED ) {
         debug(`Account has been locked out for user: ${username} due to exceeding number of attempts to login.`);
 
-        const serverPath: string = fullUrl(req);
         await AuthenticationFlowsProcessorImpl.instance.sendUnlockAccountMail(username, serverPath);
-
-        //redirect the user to "account has been locked" page:
-        res
-            .status(SC_LOCKED)
-            .render('accountLockedPage');
-        return;
+        throw new AccountLockedError();
     }
 
     throw new Error('bad credentials');

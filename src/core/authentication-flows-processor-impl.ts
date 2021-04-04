@@ -6,7 +6,7 @@ import {
     AuthenticationUser,
     decryptString,
     encryptString,
-    generateKeyFile, shaString
+    generateKeyFile, onAuthenticationFailure, shaString
 } from "..";
 import { CreateAccountEndpoint } from "../endpoints/create-account-endpoint";
 import {
@@ -73,6 +73,33 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
     public set linksRepository(linksRepository: LinksRepository) {
         debug(`set linksRepository: ${JSON.stringify(linksRepository)}`);
         this._linksRepository = linksRepository;
+    }
+
+    async authenticate(
+        name: string,
+        pass: string,
+        serverPath: string) {
+        debug(`authenticating ${name}...`);
+
+        const hashedPass = shaString(pass);
+
+        const user: AuthenticationUser = await this._authenticationAccountRepository.loadUserByUsername(name);
+        // query the db for the given username
+        if (!user)
+            throw new Error('cannot find user');
+
+        if(!user.isEnabled())
+            throw new Error('account is not active');
+
+
+        //validate the credentials:
+        if(hashedPass !== user.getPassword()) {
+            //wrong password:
+            await onAuthenticationFailure(user.getUsername(), serverPath);
+        }
+
+        //success
+        return user;
     }
 
     async createAccount(email: string, password: string, retypedPassword: string, firstName: string, lastName: string, path: string) {
