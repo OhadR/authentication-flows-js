@@ -379,6 +379,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
             throw new Error('bad credentials');
 
         //delete:
+        debug("deleting account " + email);
         await this._authenticationAccountRepository.deleteUser( email );
     }
 
@@ -415,17 +416,14 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         if(!user)
             return;
 
-        if( 0 == user.getLoginAttemptsLeft() ) {
-            //lock the user; NOTE: if email was not found in DB, we will get RuntimeException (NoSuchElement). but it cannot happen as we just called @loadUserByUsername()
-            await this._authenticationAccountRepository.setDisabled(username);
-        }
-        else {
-            await this._authenticationAccountRepository.decrementAttemptsLeft(username);
-        }
+        await this._authenticationAccountRepository.decrementAttemptsLeft(username);
 
         //if user is currently enabled, and num attempts left is 0, it means now we lock him up:
         if( user.isEnabled() && user.getLoginAttemptsLeft() == 0 ) {
             debug(`Account has been locked out for user: ${username} due to exceeding number of attempts to login.`);
+
+            //lock the user
+            await this._authenticationAccountRepository.setDisabled(username);
 
             //TODO setDisabled()!!
             await AuthenticationFlowsProcessorImpl.instance.sendUnlockAccountMail(username, serverPath);
