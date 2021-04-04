@@ -1,12 +1,12 @@
 import {
-    AccountState,
+    AccountLockedError,
     AuthenticationFlowsError,
     AuthenticationFlowsProcessor,
     AuthenticationPolicy,
     AuthenticationUser,
     decryptString,
     encryptString,
-    generateKeyFile, onAuthenticationFailure, shaString
+    generateKeyFile, shaString
 } from "..";
 import { CreateAccountEndpoint } from "../endpoints/create-account-endpoint";
 import {
@@ -95,7 +95,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         //validate the credentials:
         if(hashedPass !== user.getPassword()) {
             //wrong password:
-            await onAuthenticationFailure(user.getUsername(), serverPath);
+            await this.onAuthenticationFailure(user.getUsername(), serverPath);
         }
 
         //success
@@ -141,10 +141,6 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
 
     }
 
-    async getAccountState(email: string): Promise<AccountState> {
-        return undefined;
-    }
-
     getAuthenticationSettings(): AuthenticationPolicy {
         return undefined;
     }
@@ -165,8 +161,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         AuthenticationFlowsProcessorImpl.validateEmail(email);
 
         //if account is already locked, no need to ask the user the secret question:
-        const accountState: AccountState = await this.getAccountState(email);
-        if( accountState != AccountState.OK )
+        if( ! await this._authenticationAccountRepository.isActivated(email) )
         {
             throw new Error( ACCOUNT_LOCKED_OR_DOES_NOT_EXIST );
         }
@@ -189,26 +184,6 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
 
     async setEnabled(userEmail: string) {
         await this._authenticationAccountRepository.setEnabled(userEmail);
-    }
-
-    async setLoginFailureForUser(email: string) {
-        let user: AuthenticationUser;
-        try {
-            user = await this._authenticationAccountRepository.loadUserByUsername( email );
-        }
-        catch(usernameNotFoundError) {
-            return;
-        }
-        if(!user)
-            return;
-
-        if( 0 == user.getLoginAttemptsLeft() ) {
-            //lock the user; NOTE: if email was not found in DB, we will get RuntimeException (NoSuchElement). but it cannot happen as we just called @loadUserByUsername()
-            await this._authenticationAccountRepository.setDisabled(email);
-        }
-        else {
-            await this._authenticationAccountRepository.decrementAttemptsLeft(email);
-        }
     }
 
     setLoginSuccessForUser(username: string): boolean {
@@ -420,5 +395,43 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         await sendEmail(email,
             RESTORE_PASSWORD_MAIL_SUBJECT,
             passwordRestoreUrl );
+    }
+
+
+    private async onAuthenticationFailure(
+        username: string,
+        serverPath: string) {
+
+        debug(`login failed for user: ` + username);
+
+        //notify the processor (that updates the DB):
+        let user: AuthenticationUser;
+        try {
+            user = await this._authenticationAccountRepository.loadUserByUsername( username );
+        }
+        catch(usernameNotFoundError) {
+            return;
+        }
+        if(!user)
+            return;
+
+        if( 0 == user.getLoginAttemptsLeft() ) {
+            //lock the user; NOTE: if email was not found in DB, we will get RuntimeException (NoSuchElement). but it cannot happen as we just called @loadUserByUsername()
+            await this._authenticationAccountRepository.setDisabled(username);
+        }
+        else {
+            await this._authenticationAccountRepository.decrementAttemptsLeft(username);
+        }
+
+        //if user is currently enabled, and num attempts left is 0, it means now we lock him up:
+        if( user.isEnabled() && user.getLoginAttemptsLeft() == 0 ) {
+            debug(`Account has been locked out for user: ${username} due to exceeding number of attempts to login.`);
+
+            //TODO setDisabled()!!
+            await AuthenticationFlowsProcessorImpl.instance.sendUnlockAccountMail(username, serverPath);
+            throw new AccountLockedError();
+        }
+
+        throw new Error('bad credentials');
     }
 }

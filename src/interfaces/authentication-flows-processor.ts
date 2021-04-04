@@ -1,4 +1,4 @@
-import { AccountState, AuthenticationPolicy } from "..";
+import { AuthenticationPolicy } from "..";
 
 
 /**
@@ -79,10 +79,6 @@ export interface AuthenticationFlowsProcessor
 
 	getAuthenticationSettings(): AuthenticationPolicy;
 
-	getAccountState(email: string): Promise<AccountState>;
-
-
-	setLoginFailureForUser(email: string);
 
 	sendUnlockAccountMail(email: string,
 			serverPath: string);

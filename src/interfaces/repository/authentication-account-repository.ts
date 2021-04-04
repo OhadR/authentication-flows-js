@@ -1,4 +1,4 @@
-import { AccountState, AuthenticationUser } from "../..";
+import { AuthenticationUser } from "../..";
 
 export interface AuthenticationAccountRepository /*extends UserDetailsManager*/
 {
@@ -25,8 +25,6 @@ export interface AuthenticationAccountRepository /*extends UserDetailsManager*/
 	setDisabled(email: string);
 	isActivated(email: string): boolean;
 
-	isAccountLocked(email: string): AccountState;
-
 //	boolean changePassword(String username, String newEncodedPassword);
 	
 	/**
@@ -47,22 +45,4 @@ export interface AuthenticationAccountRepository /*extends UserDetailsManager*/
 	getPasswordLastChangeDate(email: string): Date;
 
 	setAuthority(username: string, authority: string);
-
-	/**
-	 * NOT IMPLEMENTED
-	 * 
-	 * 
-	String getEncodedSecretAnswer(String email);
-	*/
-
-	/**
-	 * this method is not needed anymore since we extend 
-	 * {@link org.springframework.security.core.userdetails.UserDetailsService} 
-	 * with its <code>loadUserByUsername(String username)</code>
-	 *  
-	 * @param email
-	 * @return null if username was not found
-	 * 
-	AuthenticationUser getUser(String email);
-	*/
 }

@@ -1,11 +1,9 @@
 export * from './config/authentication-flows-config'
 
-export * from './core/authentication-failure-handler'
 export * from './core/authentication-user-impl'
 
 export * from './crypto/key-generator'
 
-export * from './types/account-state'
 export * from './types/authentication-flows-error'
 export * from './types/authentication-policy'
 
