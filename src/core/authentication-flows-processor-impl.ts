@@ -188,7 +188,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         //persist the "uts", so this activation link will be single-used:
         await this._linksRepository.addLink( email, utsPart );
 
-        debug(`sending Unlock-Account email to ${email}...`);
+        debug(`sending Unlock-Account email to ${email}; activationUrl: ${activationUrl}`);
 
         await sendEmail(email,
             UNLOCK_MAIL_SUBJECT,
