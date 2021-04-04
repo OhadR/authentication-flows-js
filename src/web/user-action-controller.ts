@@ -36,7 +36,7 @@ export function config(config: {
         }
         catch(err) {
             if (err instanceof AccountLockedError) {
-                debug(`note: caught XXXError`);
+                debug(`note: caught AccountLockedError`);
                 //redirect the user to "account has been locked" page:
                 res
                     .status(SC_LOCKED)
