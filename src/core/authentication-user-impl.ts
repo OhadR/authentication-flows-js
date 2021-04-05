@@ -9,7 +9,8 @@ export class AuthenticationUserImpl implements AuthenticationUser {
         private passwordLastChangeDate: Date,
         private firstName: string,
         private lastName: string,
-        private authorities: string[]) {
+        private authorities: string[],
+        private link: string) {
 
     }
 
@@ -43,6 +44,10 @@ export class AuthenticationUserImpl implements AuthenticationUser {
 
     isEnabled(): boolean {
         return this.isActive;
+    }
+
+    getLink(): string {
+        return this.link;
     }
 }
 

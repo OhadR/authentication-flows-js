@@ -339,11 +339,12 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
             null,					//set by the repo-impl
             firstName,
             lastName,
-            authorities);
+            authorities,
+            null);
 
         debug(`authUser: ${authUser}`);
 
-        this._authenticationAccountRepository.createUser(authUser);
+        await this._authenticationAccountRepository.createUser(authUser);
 
 //            createAccountEndpoint.postCreateAccount( email );
 
