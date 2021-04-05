@@ -2,7 +2,7 @@ import { AuthenticationFlowsProcessorImpl } from "../core/authentication-flows-p
 import * as url from 'url';
 import * as express from 'express';
 import { ERR_MSG, UTS_PARAM } from "../types/flows-constatns";
-import { AccountLockedError, AuthenticationAccountRepository, LinksRepository } from "..";
+import { AccountLockedError, AuthenticationAccountRepository } from "..";
 const debug = require('debug')('user-action-controller');
 let app;
 
@@ -14,11 +14,9 @@ const SC_LOCKED = 423;
 export function config(config: {
     user_app: object,
     authenticationAccountRepository: AuthenticationAccountRepository,
-    linksRepository: LinksRepository
 }) {
     app = config.user_app;
     AuthenticationFlowsProcessorImpl.instance.authenticationAccountRepository = config.authenticationAccountRepository;
-    AuthenticationFlowsProcessorImpl.instance.linksRepository = config.linksRepository;
 
 
 

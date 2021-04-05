@@ -18,7 +18,6 @@ import {
 import { sendEmail } from "../endpoints/email";
 import { AuthenticationAccountRepository } from "../interfaces/repository/authentication-account-repository";
 import { AuthenticationUserImpl } from "./authentication-user-impl";
-import { LinksRepository } from "../interfaces/repository/links-repository";
 
 const debug = require('debug')('authentication-flows-processor');
 
@@ -53,7 +52,6 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
     private createAccountEndpoint: CreateAccountEndpoint = new CreateAccountEndpoint();
 
     private _authenticationAccountRepository: AuthenticationAccountRepository;
-    private _linksRepository: LinksRepository;
 
 
     private constructor() {
@@ -68,11 +66,6 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
     public set authenticationAccountRepository(authenticationAccountRepository: AuthenticationAccountRepository) {
         debug(`set authenticationAccountRepository: ${JSON.stringify(authenticationAccountRepository)}`);
         this._authenticationAccountRepository = authenticationAccountRepository;
-    }
-
-    public set linksRepository(linksRepository: LinksRepository) {
-        debug(`set linksRepository: ${JSON.stringify(linksRepository)}`);
-        this._linksRepository = linksRepository;
     }
 
     async authenticate(
@@ -174,7 +167,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
     }
 
     async removeLinkFromDB(username: string) {
-        const deleted = await this._linksRepository.removeLink(username);
+        const deleted = await this._authenticationAccountRepository.removeLink(username);
         if(!deleted)
             throw new Error(LINK_DOES_NOT_EXIST);
     }
@@ -186,7 +179,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
             "?" +
             UTS_PARAM + "=" + utsPart;
         //persist the "uts", so this activation link will be single-used:
-        await this._linksRepository.addLink( email, utsPart );
+        await this._authenticationAccountRepository.addLink( email, utsPart );
 
         debug(`sending Unlock-Account email to ${email}; activationUrl: ${activationUrl}`);
 
@@ -359,7 +352,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
             "?" +
             UTS_PARAM + "=" + utsPart;
         //persist the "uts", so this activation link will be single-used:
-        await this._linksRepository.addLink( email, utsPart );
+        await this._authenticationAccountRepository.addLink( email, utsPart );
 
 
         debug("sending registration email to " + email + "; activationUrl: " + activationUrl);
@@ -400,7 +393,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
             "?" +
             UTS_PARAM + "=" + utsPart;
         //persist the "uts", so this activation link will be single-used:
-        await this._linksRepository.addLink( email, utsPart );
+        await this._authenticationAccountRepository.addLink( email, utsPart );
 
         debug("sending restore-password email to " + email + "; url: " + passwordRestoreUrl);
 
