@@ -33,4 +33,6 @@ export interface AuthenticationUser /*extends UserDetails*/
 	
 	getFirstName(): string;
 	getLastName(): string;
+
+	getLink(): string;
 }
