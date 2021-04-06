@@ -10,7 +10,8 @@ export class AuthenticationUserImpl implements AuthenticationUser {
         private firstName: string,
         private lastName: string,
         private authorities: string[],
-        private link: string) {
+        private link: string = null,
+        private linkDate: Date = null) {
 
     }
 
@@ -48,6 +49,10 @@ export class AuthenticationUserImpl implements AuthenticationUser {
 
     getLink(): string {
         return this.link;
+    }
+
+    getLinkDate(): Date {
+        return this.linkDate;
     }
 }
 

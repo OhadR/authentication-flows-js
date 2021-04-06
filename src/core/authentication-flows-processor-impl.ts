@@ -372,8 +372,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
             null,					//set by the repo-impl
             firstName,
             lastName,
-            authorities,
-            null);
+            authorities);
 
         debug(`authUser: ${authUser}`);
 

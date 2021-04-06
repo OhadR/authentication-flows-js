@@ -35,4 +35,5 @@ export interface AuthenticationUser /*extends UserDetails*/
 	getLastName(): string;
 
 	getLink(): string;
+	getLinkDate(): Date;
 }
