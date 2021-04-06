@@ -20,9 +20,9 @@ export const ERR_MSG = "err_msg";
 export const ERR_HEADER = "err_header";
 	
 	
-export const ACTIVATE_ACCOUNT_ENDPOINT = "/aa";
-export const RESTORE_PASSWORD_ENDPOINT = "/rp";
-export const CHANGE_PASSWORD_ENDPOINT = "/cp";
+export const ACTIVATE_ACCOUNT_ENDPOINT = '/aa';
+export const RESTORE_PASSWORD_ENDPOINT = '/rp';
+export const CHANGE_PASSWORD_ENDPOINT = '/cp';
 
 export const UTS_PARAM = 'uts';
 	

@@ -57,6 +57,5 @@ export interface AuthenticationAccountRepository /*extends UserDetailsManager*/
 	 */
 	removeLink(username: string): boolean;
 
-	//this is for the automated-tests only:
-	getLink(username: string): string;
+	getLink(username: string): { link: string, date: Date };
 }

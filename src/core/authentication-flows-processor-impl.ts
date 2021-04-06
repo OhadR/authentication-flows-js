@@ -1,12 +1,15 @@
 import {
     AccountLockedError,
     AuthenticationFlowsError,
+    LinkExpiredError,
+    PasswordAlreadyChangedError,
     AuthenticationFlowsProcessor,
     AuthenticationPolicy,
     AuthenticationUser,
     decryptString,
     encryptString,
-    generateKeyFile, shaString
+    generateKeyFile,
+    shaString
 } from "..";
 import { CreateAccountEndpoint } from "../endpoints/create-account-endpoint";
 import {

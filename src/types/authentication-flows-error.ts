@@ -8,3 +8,14 @@ export class AuthenticationFlowsError extends Error {
 export class AccountLockedError extends Error {
 
 }
+
+export class PasswordAlreadyChangedError extends Error {
+
+}
+
+export class LinkExpiredError extends Error {
+
+}
+
+
+

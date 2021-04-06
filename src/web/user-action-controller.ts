@@ -1,8 +1,12 @@
 import { AuthenticationFlowsProcessorImpl } from "../core/authentication-flows-processor-impl";
 import * as url from 'url';
 import * as express from 'express';
-import { ERR_MSG, UTS_PARAM } from "../types/flows-constatns";
-import { AccountLockedError, AuthenticationAccountRepository } from "..";
+import {
+    ACTIVATE_ACCOUNT_ENDPOINT,
+    ERR_MSG, RESTORE_PASSWORD_ENDPOINT,
+    UTS_PARAM
+} from "../types/flows-constatns";
+import { AccountLockedError, AuthenticationAccountRepository, PasswordAlreadyChangedError } from "..";
 const debug = require('debug')('user-action-controller');
 let app;
 
@@ -105,7 +109,7 @@ export function config(config: {
             .render('accountCreatedSuccess', { email: requestBody.email });
     });
 
-    app.get('/aa', async (req: express.Request, res: express.Response) => {
+    app.get(ACTIVATE_ACCOUNT_ENDPOINT, async (req: express.Request, res: express.Response) => {
         debug('ActivateAccountEndpoint');
         try {
             await AuthenticationFlowsProcessorImpl.instance.activateAccount(req.param(UTS_PARAM));
@@ -146,6 +150,22 @@ export function config(config: {
         }
         res
             .render('passwordRestoreEmailSent', { email: requestBody.email });
+    });
+
+    app.get(RESTORE_PASSWORD_ENDPOINT, async (req: express.Request, res: express.Response) => {
+        debug('Restore Password Endpoint');
+        try {
+            await AuthenticationFlowsProcessorImpl.instance.activateAccount(req.param(UTS_PARAM));
+        }
+        catch (e) {
+            debug('ERROR: ', e);
+            res
+                .status(500)
+                .append('err_msg', e.message)
+                .render('errorPage', { [ERR_MSG]: e.message });
+            return;
+        }
+        res.render('accountActivated');
     });
 
     app.post('/deleteAccount', async (req: express.Request, res: express.Response) => {
