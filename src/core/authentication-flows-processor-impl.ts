@@ -137,12 +137,42 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
 
     }
 
+    /**
+     * decode/decrypt the (UTS part of the) link received. ensure it was not expired,
+     * and that the password was not changed in between
+     * @param utsParam
+     */
+    public async validatePasswordRestoration(utsParam: string) {
+
+        //decrypt date:
+        const username: string = decryptString(utsParam);
+        debug(`restore password for username: ${username}`);
+
+        const lastChange: Date = this.getPasswordLastChangeDate(username);
+
+        const linkData = this._authenticationAccountRepository.getLink(username);
+
+
+        //check if link is expired:
+        if(new Date().getTime() - linkData.date.getTime() > 1000 * 1000) {
+            debug(`ERROR: user ${username} tried to use an expired link`);
+            throw new LinkExpiredError(`ERROR: user ${username} tried to use an expired link: link is valid for 1000 seconds`);
+        }
+
+        //if password was changed AFTER the email creation (that is AFTER the user initiated "4got password" flow) -
+        //it means the request is irrelevant
+        if(lastChange > linkData.date) {
+            debug(`ERROR: user ${username} tried to use an expired link: password was already changed AFTER the timestamp of the link`);
+            throw new PasswordAlreadyChangedError(`ERROR: user ${username} tried to use an expired link: password was already changed AFTER the timestamp of the link`);
+        }
+    }
+
     getAuthenticationSettings(): AuthenticationPolicy {
         return undefined;
     }
 
     getPasswordLastChangeDate(email: string): Date {
-        return undefined;
+        return this._authenticationAccountRepository.getPasswordLastChangeDate(email);
     }
 
     handleChangePassword(currentPassword: string, newPassword: string, retypedPassword: string, encUser: string);

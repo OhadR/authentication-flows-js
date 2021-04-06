@@ -3,10 +3,10 @@ import * as url from 'url';
 import * as express from 'express';
 import {
     ACTIVATE_ACCOUNT_ENDPOINT,
-    ERR_MSG, RESTORE_PASSWORD_ENDPOINT,
+    ERR_MSG, HASH_PARAM_NAME, RESTORE_PASSWORD_ENDPOINT,
     UTS_PARAM
 } from "../types/flows-constatns";
-import { AccountLockedError, AuthenticationAccountRepository, PasswordAlreadyChangedError } from "..";
+import { AccountLockedError, AuthenticationAccountRepository, LinkExpiredError, PasswordAlreadyChangedError } from "..";
 const debug = require('debug')('user-action-controller');
 let app;
 
@@ -155,17 +155,19 @@ export function config(config: {
     app.get(RESTORE_PASSWORD_ENDPOINT, async (req: express.Request, res: express.Response) => {
         debug('Restore Password Endpoint');
         try {
-            await AuthenticationFlowsProcessorImpl.instance.activateAccount(req.param(UTS_PARAM));
+            await AuthenticationFlowsProcessorImpl.instance.validatePasswordRestoration(req.param(UTS_PARAM));
         }
-        catch (e) {
-            debug('ERROR: ', e);
+        catch (err) {
+            debug('ERROR: ', err);
             res
                 .status(500)
-                .append('err_msg', e.message)
-                .render('errorPage', { [ERR_MSG]: e.message });
+                .append('err_msg', err.message)
+                .render('errorPage', { [ERR_MSG]: err.message });
             return;
         }
-        res.render('accountActivated');
+        res
+            .append(HASH_PARAM_NAME, req.param(UTS_PARAM))
+            .render('setNewPassword');
     });
 
     app.post('/deleteAccount', async (req: express.Request, res: express.Response) => {
