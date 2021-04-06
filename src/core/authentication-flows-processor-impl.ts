@@ -154,7 +154,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         AuthenticationFlowsProcessorImpl.validateEmail(email);
 
         //if account is already locked, no need to ask the user the secret question:
-        if( ! await this._authenticationAccountRepository.isActivated(email) )
+        if( ! await this._authenticationAccountRepository.isEnabled(email) )
         {
             throw new Error( ACCOUNT_LOCKED_OR_DOES_NOT_EXIST );
         }

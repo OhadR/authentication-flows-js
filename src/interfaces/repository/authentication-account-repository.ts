@@ -23,7 +23,7 @@ export interface AuthenticationAccountRepository /*extends UserDetailsManager*/
 
 	setEnabled(email: string);
 	setDisabled(email: string);
-	isActivated(email: string): boolean;
+	isEnabled(email: string): boolean;
 
 //	boolean changePassword(String username, String newEncodedPassword);
 	
