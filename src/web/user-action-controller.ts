@@ -167,7 +167,7 @@ export function config(config: {
         }
         res
             .append(HASH_PARAM_NAME, req.param(UTS_PARAM))
-            .render('setNewPassword');
+            .render('setNewPassword', { [ERR_MSG]: null });
     });
 
     app.post('/deleteAccount', async (req: express.Request, res: express.Response) => {
