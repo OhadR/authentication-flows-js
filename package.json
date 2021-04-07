@@ -1,6 +1,6 @@
 {
   "name": "authentication-flows-js",
-  "version": "0.0.80",
+  "version": "0.0.81",
   "description": "authentication-flows for javascript",
   "main": "dist/index.js",
   "scripts": {
