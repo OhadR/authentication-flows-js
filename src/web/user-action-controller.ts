@@ -174,6 +174,7 @@ export function config(config: {
 
     app.post('/setNewPassword', async (req: express.Request, res: express.Response) => {
 
+        debug('Set New Password Endpoint');
         try {
             await AuthenticationFlowsProcessorImpl.instance.setNewPassword(
                 req.body.enc,

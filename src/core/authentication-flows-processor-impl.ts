@@ -150,7 +150,12 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
 
         const lastChange: Date = this.getPasswordLastChangeDate(username);
 
-        const linkData = this._authenticationAccountRepository.getLink(username);
+        const linkData = await this._authenticationAccountRepository.getLink(username);
+
+        if(!linkData || !linkData.link) {
+            debug(`ERROR: user ${username} tried to use an non-existing link`);
+            throw new LinkExpiredError(`ERROR: user ${username} tried to use non-existing`);
+        }
 
 
         //check if link is expired:
@@ -342,7 +347,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         let authUser: AuthenticationUser = null;
         try
         {
-            authUser = this._authenticationAccountRepository.loadUserByUsername( email );
+            authUser = await this._authenticationAccountRepository.loadUserByUsername( email );
         }
         catch(unfe)
         {
@@ -355,7 +360,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         {
             if( !authUser.isEnabled())
             {
-                this._authenticationAccountRepository.deleteUser( email );
+                await this._authenticationAccountRepository.deleteUser( email );
             }
             else
             {
