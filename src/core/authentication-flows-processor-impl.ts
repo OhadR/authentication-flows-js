@@ -439,7 +439,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
     }
 
 
-    async setNewPassword(email: string, password: string, retypedPassword: string) {
+    async setNewPassword(linkParam: string, password: string, retypedPassword: string) {
         //validate the input:
         const settings: AuthenticationPolicy = this.getAuthenticationSettings();
 
@@ -448,13 +448,15 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         AuthenticationFlowsProcessorImpl.validatePassword(password, settings);
 
         //extract the username/email:
+        const username: string = decryptString(linkParam);
+        debug(`setNewPassword(): username: ${username}`);
 
         //validate expiration (again):
 
         //encrypt the password:
         const encodedPassword: string = shaString(password);
 
-        await this.setPassword(email, encodedPassword);
+        await this.setPassword(username, encodedPassword);
     }
 
 
