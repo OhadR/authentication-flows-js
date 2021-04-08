@@ -166,15 +166,17 @@ export function config(config: {
             return;
         }
         res
-            .append(HASH_PARAM_NAME, req.param(UTS_PARAM))
-            .render('setNewPasswordPage', { [ERR_MSG]: null });
+            .render('setNewPasswordPage', {
+                [ERR_MSG]: null,
+                [HASH_PARAM_NAME]: req.param(UTS_PARAM)
+            });
     });
 
     app.post('/setNewPassword', async (req: express.Request, res: express.Response) => {
 
         try {
             await AuthenticationFlowsProcessorImpl.instance.setNewPassword(
-                req.body.data,
+                req.body.enc,
                 req.body.password,
                 req.body.retypedPassword);
         }
@@ -183,7 +185,10 @@ export function config(config: {
             //back again to setNewPasswordPage, but add error message:
             res
                 .status(500)
-                .render('setNewPasswordPage', { [ERR_MSG]: e.message });
+                .render('setNewPasswordPage', {
+                    [ERR_MSG]: e.message,
+                    [HASH_PARAM_NAME]: req.body.enc
+                });
             return;
         }
         res
