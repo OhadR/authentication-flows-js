@@ -171,22 +171,23 @@ export function config(config: {
     });
 
     app.post('/setNewPassword', async (req: express.Request, res: express.Response) => {
-        const requestBody = req.body;
+
         try {
-            await AuthenticationFlowsProcessorImpl.instance.forgotPassword(
-                requestBody.email,
-                fullUrl(req));
+            await AuthenticationFlowsProcessorImpl.instance.setNewPassword(
+                req.body.data,
+                req.body.password,
+                req.body.retypedPassword);
         }
         catch (e) {
             debug('ERROR: ', e);
-            //back again to forgotPasswordPage, but add error message:
+            //back again to setNewPasswordPage, but add error message:
             res
                 .status(500)
-                .render('forgotPasswordPage', { [ERR_MSG]: e.message });
+                .render('setNewPasswordPage', { [ERR_MSG]: e.message });
             return;
         }
         res
-            .render('passwordRestoreEmailSent', { email: requestBody.email });
+            .render('passwordSetSuccess');
     });
 
     app.post('/deleteAccount', async (req: express.Request, res: express.Response) => {

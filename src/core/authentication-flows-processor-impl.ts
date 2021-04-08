@@ -234,7 +234,10 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         return this.isPasswordChangeRequired(username);
     }
 
-    setPassword(email: string, encodedPassword: string) {
+
+    async setPassword(username: string, encodedPassword: string) {
+        debug("setting password for user " + username);
+        await this._authenticationAccountRepository.setPassword(username, encodedPassword);
     }
 
     private static validateEmail(email: string) {
@@ -433,6 +436,25 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         await sendEmail(email,
             RESTORE_PASSWORD_MAIL_SUBJECT,
             passwordRestoreUrl );
+    }
+
+
+    async setNewPassword(email: string, password: string, retypedPassword: string) {
+        //validate the input:
+        const settings: AuthenticationPolicy = this.getAuthenticationSettings();
+
+        AuthenticationFlowsProcessorImpl.validateRetypedPassword(password, retypedPassword);
+
+        AuthenticationFlowsProcessorImpl.validatePassword(password, settings);
+
+        //extract the username/email:
+
+        //validate expiration (again):
+
+        //encrypt the password:
+        const encodedPassword: string = shaString(password);
+
+        await this.setPassword(email, encodedPassword);
     }
 
 
