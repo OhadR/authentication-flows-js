@@ -1,7 +1,7 @@
 /**
  * this class let applications override this impl and add their custom functionality
  */
-export class CreateAccountEndpoint
+export class CreateAccountInterceptor
 {
 	/**
 	 * any other additional validations the app does before account creation. upon failure, exception is thrown.
@@ -9,12 +9,10 @@ export class CreateAccountEndpoint
 	 * @param password
 	 * @throws AuthenticationFlowsException
 	 */
-	public additionalValidations(email: string, password: string)
-	{
+	public additionalValidations(email: string, password: string)	{
 	}
 	
-	public postCreateAccount( username: string )
-	{
+	public postCreateAccount( username: string ) {
 	}
 	
 }

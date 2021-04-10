@@ -4,6 +4,8 @@ export * from './core/authentication-user-impl'
 
 export * from './crypto/key-generator'
 
+export * from './interceptors/create-account-interceptor'
+
 export * from './types/authentication-flows-error'
 export * from './types/authentication-policy'
 

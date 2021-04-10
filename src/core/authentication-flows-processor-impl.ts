@@ -11,14 +11,14 @@ import {
     generateKeyFile,
     shaString
 } from "..";
-import { CreateAccountEndpoint } from "../endpoints/create-account-endpoint";
+import { CreateAccountInterceptor } from "../interceptors/create-account-interceptor";
 import {
     ACTIVATE_ACCOUNT_ENDPOINT,
     AUTHENTICATION_MAIL_SUBJECT,
     RESTORE_PASSWORD_ENDPOINT, RESTORE_PASSWORD_MAIL_SUBJECT, UNLOCK_MAIL_SUBJECT,
     UTS_PARAM
 } from "../types/flows-constatns";
-import { sendEmail } from "../endpoints/email";
+import { sendEmail } from "../interceptors/email";
 import { AuthenticationAccountRepository } from "../interfaces/repository/authentication-account-repository";
 import { AuthenticationUserImpl } from "./authentication-user-impl";
 
@@ -52,7 +52,7 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
 
     private static _instance: AuthenticationFlowsProcessorImpl;
 
-    private createAccountEndpoint: CreateAccountEndpoint = new CreateAccountEndpoint();
+    private createAccountEndpoint: CreateAccountInterceptor = new CreateAccountInterceptor();
 
     private _authenticationAccountRepository: AuthenticationAccountRepository;
 

@@ -1,5 +1,5 @@
 import { AuthenticationFlowsConfig } from "../../src";
-import { sendEmail } from "../../src/endpoints/email";
+import { sendEmail } from "../../src/interceptors/email";
 
 AuthenticationFlowsConfig.instance.emailSender = 'authentication.flows@ohadr.com';
 AuthenticationFlowsConfig.instance.emailServerUser = '*******';
