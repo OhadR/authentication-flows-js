@@ -24,7 +24,7 @@ export function config(config: {
 
 
 
-    app.get('/login', function(req: express.Request, res: express.Response){
+    app.get('/login', function(req: express.Request, res: express.Response) {
         res.render('login');
     });
 
@@ -69,6 +69,15 @@ export function config(config: {
         });
     });
 
+
+    app.get('/logout', function(req: express.Request, res: express.Response) {
+        // destroy the user's session to log them out
+        // will be re-created next request
+        req.session.destroy(function() {
+            res.redirect('/');
+        });
+    });
+
     /**
      * The UI calls this method in order to get the password policy
      */
@@ -104,9 +113,7 @@ export function config(config: {
                 .render('createAccountPage', { [ERR_MSG]: e.message });
             return;
         }
-        res
-            .append('verification_link','is the man')
-            .render('accountCreatedSuccess', { email: requestBody.email });
+        res.render('accountCreatedSuccess', { email: requestBody.email });
     });
 
     app.get(ACTIVATE_ACCOUNT_ENDPOINT, async (req: express.Request, res: express.Response) => {
@@ -161,7 +168,7 @@ export function config(config: {
             debug('ERROR: ', err);
             res
                 .status(500)
-                .append('err_msg', err.message)
+                .append('err_msg', err.message)         //add to headers
                 .render('errorPage', { [ERR_MSG]: err.message });
             return;
         }
