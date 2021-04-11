@@ -91,8 +91,10 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
         //validate the credentials:
         if(hashedPass !== user.getPassword()) {
             //wrong password:
-            await this.onAuthenticationFailure(user.getUsername(), serverPath);
+            await this.onAuthenticationFailure(user, serverPath);
         }
+
+        const passChangeRequired = this.setLoginSuccessForUser(name);
 
         //success
         return user;
@@ -466,21 +468,14 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
 
 
     private async onAuthenticationFailure(
-        username: string,
+        user: AuthenticationUser,
         serverPath: string) {
 
-        debug(`login failed for user: ` + username);
-
-        //notify the processor (that updates the DB):
-        let user: AuthenticationUser;
-        try {
-            user = await this._authenticationAccountRepository.loadUserByUsername( username );
-        }
-        catch(usernameNotFoundError) {
-            return;
-        }
         if(!user)
             return;
+
+        const username = user.getUsername();
+        debug(`login failed for user: ` + username);
 
         await this._authenticationAccountRepository.decrementAttemptsLeft(username);
 
