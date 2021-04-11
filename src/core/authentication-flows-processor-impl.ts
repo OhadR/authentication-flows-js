@@ -418,6 +418,9 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
     }
 
     async deleteAccount(email: string, password: string) {
+        if(!password)
+            return;
+
         //encrypt the password:
         const encodedPassword: string = shaString(password);
 
