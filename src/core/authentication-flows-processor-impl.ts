@@ -235,8 +235,8 @@ export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProc
     setLoginSuccessForUser(username: string): boolean {
         debug("setting login success for user " + username);
         //TODO:
-        // this._authenticationAccountRepository.setAttemptsLeft( username,
-        //     getAuthenticationSettings().getMaxPasswordEntryAttempts() );
+        this._authenticationAccountRepository.setAttemptsLeft( username,
+            /*getAuthenticationSettings().getMaxPasswordEntryAttempts()*/5 );
 
         return this.isPasswordChangeRequired(username);
     }
