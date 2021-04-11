@@ -3,7 +3,6 @@ import {
     AuthenticationFlowsError,
     LinkExpiredError,
     PasswordAlreadyChangedError,
-    AuthenticationFlowsProcessor,
     AuthenticationPolicy,
     AuthenticationUser,
     decryptString,
@@ -48,7 +47,7 @@ const LINK_DOES_NOT_EXIST = "link does not exist in DB";	//means that link was a
 const CHANGE_PASSWORD_FAILED_NEW_PASSWORD_SAME_AS_OLD_PASSWORD = "CHANGE PASSWORD FAILED: New Password is same as Old Password.";
 const CHANGE_PASSWORD_BAD_OLD_PASSWORD = "CHANGE PASSWORD Failed: Bad Old Password.";
 
-export class AuthenticationFlowsProcessorImpl implements AuthenticationFlowsProcessor {
+export class AuthenticationFlowsProcessorImpl {
 
     private static _instance: AuthenticationFlowsProcessorImpl;
 
