@@ -14,8 +14,8 @@ export class DefaultMailSenderImpl implements MailSender {
                 host: "mail.smtp2go.com",
                 port: 2525,
                 auth: {
-                    user: AuthenticationFlowsConfig.instance.emailServerUser,
-                    pass: AuthenticationFlowsConfig.instance.emailServerPass
+                    user: process.env.emailServerUser,
+                    pass: process.env.emailServerPass
                 }
             });
 

@@ -19,6 +19,7 @@ import {
 } from "../types/flows-constatns";
 import { AuthenticationAccountRepository } from "../interfaces/repository/authentication-account-repository";
 import { AuthenticationUserImpl } from "./authentication-user-impl";
+import { DefaultMailSenderImpl } from "../interceptors/default-email-sender";
 
 const debug = require('debug')('authentication-flows-processor');
 
@@ -54,7 +55,7 @@ export class AuthenticationFlowsProcessorImpl {
 
     private _authenticationAccountRepository: AuthenticationAccountRepository;
 
-    private _mailSender: MailSender = ;
+    private _mailSender: MailSender = new DefaultMailSenderImpl();
 
 
     private constructor() {

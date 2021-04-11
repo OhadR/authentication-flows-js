@@ -2,8 +2,6 @@ export class AuthenticationFlowsConfig {
 
     private static _instance: AuthenticationFlowsConfig;
     private _emailSender: string;
-    private _emailServerUser: string;
-    private _emailServerPass: string;
 
     private constructor() {
     }
@@ -21,22 +19,6 @@ export class AuthenticationFlowsConfig {
 
     public get emailSender(): string {
         return this._emailSender;
-    }
-
-    public set emailServerUser(emailServerUser: string) {
-        this._emailServerUser = emailServerUser;
-    }
-
-    public get emailServerUser(): string {
-        return this._emailServerUser;
-    }
-
-    public set emailServerPass(emailServerPass: string) {
-        this._emailServerPass = emailServerPass;
-    }
-
-    public get emailServerPass(): string {
-        return this._emailServerPass;
     }
 }
 
