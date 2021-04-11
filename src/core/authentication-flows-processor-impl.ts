@@ -8,7 +8,7 @@ import {
     decryptString,
     encryptString,
     generateKeyFile,
-    shaString
+    shaString, MailSender
 } from "..";
 import { CreateAccountInterceptor } from "../interceptors/create-account-interceptor";
 import {
@@ -17,7 +17,6 @@ import {
     RESTORE_PASSWORD_ENDPOINT, RESTORE_PASSWORD_MAIL_SUBJECT, UNLOCK_MAIL_SUBJECT,
     UTS_PARAM
 } from "../types/flows-constatns";
-import { sendEmail } from "../interceptors/email";
 import { AuthenticationAccountRepository } from "../interfaces/repository/authentication-account-repository";
 import { AuthenticationUserImpl } from "./authentication-user-impl";
 
@@ -55,6 +54,8 @@ export class AuthenticationFlowsProcessorImpl {
 
     private _authenticationAccountRepository: AuthenticationAccountRepository;
 
+    private _mailSender: MailSender = ;
+
 
     private constructor() {
         // Generate keys
@@ -68,6 +69,11 @@ export class AuthenticationFlowsProcessorImpl {
     public set authenticationAccountRepository(authenticationAccountRepository: AuthenticationAccountRepository) {
         debug(`set authenticationAccountRepository: ${JSON.stringify(authenticationAccountRepository)}`);
         this._authenticationAccountRepository = authenticationAccountRepository;
+    }
+
+    public set mailSender(mailSender: MailSender) {
+        debug(`set mailSender: ${JSON.stringify(mailSender)}`);
+        this._mailSender = mailSender;
     }
 
     async authenticate(
@@ -222,7 +228,7 @@ export class AuthenticationFlowsProcessorImpl {
 
         debug(`sending Unlock-Account email to ${email}; activationUrl: ${activationUrl}`);
 
-        await sendEmail(email,
+        await this._mailSender.sendEmail(email,
             UNLOCK_MAIL_SUBJECT,
             activationUrl );
     }
@@ -387,7 +393,7 @@ export class AuthenticationFlowsProcessorImpl {
 
         await this._authenticationAccountRepository.createUser(authUser);
 
-//            createAccountEndpoint.postCreateAccount( email );
+        await this.createAccountEndpoint.postCreateAccount( email );
 
         const utsPart: string = encryptString( /*new Date(System.currentTimeMillis()),*/ email);
         const activationUrl: string = serverPath + ACTIVATE_ACCOUNT_ENDPOINT +
@@ -400,7 +406,7 @@ export class AuthenticationFlowsProcessorImpl {
         debug("sending registration email to " + email + "; activationUrl: " + activationUrl);
 
 
-        await sendEmail(email,
+        await this._mailSender.sendEmail(email,
             AUTHENTICATION_MAIL_SUBJECT,
             activationUrl );
     }
@@ -442,7 +448,7 @@ export class AuthenticationFlowsProcessorImpl {
 
         debug("sending restore-password email to " + email + "; url: " + passwordRestoreUrl);
 
-        await sendEmail(email,
+        await this._mailSender.sendEmail(email,
             RESTORE_PASSWORD_MAIL_SUBJECT,
             passwordRestoreUrl );
     }

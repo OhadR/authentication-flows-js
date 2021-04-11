@@ -1,12 +1,13 @@
-import { AuthenticationFlowsConfig, AuthenticationFlowsError } from "..";
+import { AuthenticationFlowsConfig, AuthenticationFlowsError, MailSender } from "..";
 import * as nodemailer from 'nodemailer';
 const debug = require('debug')('email');
 
-export async function sendEmail(recipient: string,
-    subject: string,
-    url: string) {
-    debug( 'sending email from: ' + AuthenticationFlowsConfig.instance.emailSender );
+export class DefaultMailSenderImpl implements MailSender {
 
+    async sendEmail(recipient: string,
+              subject: string,
+              url: string) {
+        debug('sending email from: ' + AuthenticationFlowsConfig.instance.emailSender);
 
         try {
             const transporter = nodemailer.createTransport({
@@ -26,10 +27,12 @@ export async function sendEmail(recipient: string,
                 subject,
                 text: url
             };
+
             await transporter.sendMail(mailOptions);
             debug('email was sent successfully.');
         } catch (me) {
             debug(me);
             throw new AuthenticationFlowsError(me);
+        }
     }
 }
