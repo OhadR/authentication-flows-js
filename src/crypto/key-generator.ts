@@ -50,6 +50,10 @@ export function shaString(data: string): string {
         .digest('base64');
 }
 
+export function randomString(): string {
+    return crypto.randomBytes(20).toString('hex');
+}
+
 /**
  * encrypt string and then encode-base64
  * @param plaintext

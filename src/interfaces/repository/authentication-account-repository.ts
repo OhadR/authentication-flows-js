@@ -59,5 +59,9 @@ export interface AuthenticationAccountRepository /*extends UserDetailsManager*/
 
 	getLink(username: string): { link: string, date: Date };
 
+	/**
+	 * @param link
+	 * @throws Error if link was not found for any user
+	 */
 	getUsernameByLink(link: string): string;
 }

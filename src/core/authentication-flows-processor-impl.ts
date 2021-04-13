@@ -6,7 +6,8 @@ import {
     AuthenticationPolicy,
     AuthenticationUser,
     generateKeyFile,
-    shaString, MailSender
+    shaString, MailSender,
+    randomString
 } from "..";
 import { CreateAccountInterceptor } from "../interceptors/create-account-interceptor";
 import {
@@ -125,7 +126,6 @@ export class AuthenticationFlowsProcessorImpl {
 
     public async activateAccount(link: string) {
 
-        //decrypt date:
         const username: string = await this._authenticationAccountRepository.getUsernameByLink(link);
         debug(`activating username: ${username}`);
 
@@ -217,7 +217,7 @@ export class AuthenticationFlowsProcessorImpl {
 
     private async sendUnlockAccountMail(email: string, serverPath: string) {
 
-        const utsPart: string = shaString(email);
+        const utsPart: string = randomString();
         const activationUrl: string = serverPath + ACTIVATE_ACCOUNT_ENDPOINT +
             "?" +
             UTS_PARAM + "=" + utsPart;
@@ -393,7 +393,7 @@ export class AuthenticationFlowsProcessorImpl {
 
         await this.createAccountEndpoint.postCreateAccount( email );
 
-        const utsPart: string = shaString(email);
+        const utsPart: string = randomString();
         const activationUrl: string = serverPath + ACTIVATE_ACCOUNT_ENDPOINT +
             "?" +
             UTS_PARAM + "=" + utsPart;
@@ -437,7 +437,7 @@ export class AuthenticationFlowsProcessorImpl {
     }
 
     private async sendPasswordRestoreMail(email: string, serverPath: string) {
-        const utsPart: string = shaString(email);
+        const utsPart: string = randomString();
         const passwordRestoreUrl: string = serverPath + RESTORE_PASSWORD_ENDPOINT +
             "?" +
             UTS_PARAM + "=" + utsPart;
