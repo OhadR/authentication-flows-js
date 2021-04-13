@@ -5,14 +5,25 @@
 [npm](https://www.npmjs.com/package/authentication-flows-js)
 
 ## motivation
- 
-The Authentication-Flows module implements all authentication flows: 
+
+Every secured web application should support these flows - unless it delegates the authentication to a third party
+(such as oAuth2.0). Thus, we end up in the same code written again and again. 
+
+The `authentication-flows-js` module implements all authentication flows: 
+
+ * authentication
  * create account, 
  * forgot password, 
  * change password by user request, 
  * force change password if password is expired,
  * locks the accont after pre-configured login failures.
  
+`authentication-flows-js` is a package that can be reused, so any secured web applications can add this package as 
+a dependency, to get all the flows implemented, with a minimal set of configurations. 
+This way developers can concentrate on developing the core of their app, instead of messing around with flows that are
+definitely not the core of their business.
+ 
+
 Find [here](here) all required configurations, API and more.
  
 The authentication-flows *uses cryptography* in order to encrypt the data in the links that are sent to the user's email 
