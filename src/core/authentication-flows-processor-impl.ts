@@ -5,8 +5,6 @@ import {
     PasswordAlreadyChangedError,
     AuthenticationPolicy,
     AuthenticationUser,
-    decryptString,
-    encryptString,
     generateKeyFile,
     shaString, MailSender
 } from "..";
@@ -125,11 +123,10 @@ export class AuthenticationFlowsProcessorImpl {
         await this.internalCreateAccount(email, encodedPassword, firstName, lastName, path);
     }
 
-    public async activateAccount(utsParam: string) {
-        //debug(`param: ${utsParam}`);
+    public async activateAccount(link: string) {
 
         //decrypt date:
-        const username: string = decryptString(utsParam);
+        const username: string = await this._authenticationAccountRepository.getUsernameByLink(link);
         debug(`activating username: ${username}`);
 
         //this part was persisted in the DB, in order to make sure the activation-link is single-used.
@@ -148,12 +145,12 @@ export class AuthenticationFlowsProcessorImpl {
     /**
      * decode/decrypt the (UTS part of the) link received. ensure it was not expired,
      * and that the password was not changed in between
-     * @param utsParam
+     * @param link
      */
-    public async validatePasswordRestoration(utsParam: string) {
+    public async validatePasswordRestoration(link: string) {
 
         //decrypt date:
-        const username: string = decryptString(utsParam);
+        const username: string = await this._authenticationAccountRepository.getUsernameByLink(link);
         debug(`restore password for username: ${username}`);
 
         const lastChange: Date = this.getPasswordLastChangeDate(username);
@@ -220,7 +217,7 @@ export class AuthenticationFlowsProcessorImpl {
 
     private async sendUnlockAccountMail(email: string, serverPath: string) {
 
-        const utsPart: string = encryptString( /*new Date(System.currentTimeMillis()),*/ email);
+        const utsPart: string = shaString(email);
         const activationUrl: string = serverPath + ACTIVATE_ACCOUNT_ENDPOINT +
             "?" +
             UTS_PARAM + "=" + utsPart;
@@ -396,7 +393,7 @@ export class AuthenticationFlowsProcessorImpl {
 
         await this.createAccountEndpoint.postCreateAccount( email );
 
-        const utsPart: string = encryptString( /*new Date(System.currentTimeMillis()),*/ email);
+        const utsPart: string = shaString(email);
         const activationUrl: string = serverPath + ACTIVATE_ACCOUNT_ENDPOINT +
             "?" +
             UTS_PARAM + "=" + utsPart;
@@ -440,7 +437,7 @@ export class AuthenticationFlowsProcessorImpl {
     }
 
     private async sendPasswordRestoreMail(email: string, serverPath: string) {
-        const utsPart: string = encryptString( /*new Date(System.currentTimeMillis()),*/ email);
+        const utsPart: string = shaString(email);
         const passwordRestoreUrl: string = serverPath + RESTORE_PASSWORD_ENDPOINT +
             "?" +
             UTS_PARAM + "=" + utsPart;
@@ -464,7 +461,7 @@ export class AuthenticationFlowsProcessorImpl {
         AuthenticationFlowsProcessorImpl.validatePassword(password, settings);
 
         //extract the username/email:
-        const username: string = decryptString(linkParam);
+        const username: string = await this._authenticationAccountRepository.getUsernameByLink(linkParam);
         debug(`setNewPassword(): username: ${username}`);
 
         //validate expiration (again):

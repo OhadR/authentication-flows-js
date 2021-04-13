@@ -58,4 +58,6 @@ export interface AuthenticationAccountRepository /*extends UserDetailsManager*/
 	removeLink(username: string): boolean;
 
 	getLink(username: string): { link: string, date: Date };
+
+	getUsernameByLink(link: string): string;
 }
