@@ -1,4 +1,4 @@
-import { AuthenticationFlowsProcessorImpl } from "../core/authentication-flows-processor-impl";
+import { AuthenticationFlowsProcessor } from "../core/authentication-flows-processor";
 import * as url from 'url';
 import * as express from 'express';
 import {
@@ -20,7 +20,7 @@ export function config(config: {
     authenticationAccountRepository: AuthenticationAccountRepository,
 }) {
     app = config.user_app;
-    AuthenticationFlowsProcessorImpl.instance.authenticationAccountRepository = config.authenticationAccountRepository;
+    AuthenticationFlowsProcessor.instance.authenticationAccountRepository = config.authenticationAccountRepository;
 
 
 
@@ -31,7 +31,7 @@ export function config(config: {
     app.post('/login', async function(req: express.Request, res: express.Response){
         let user;
         try {
-            user = await AuthenticationFlowsProcessorImpl.instance.authenticate(
+            user = await AuthenticationFlowsProcessor.instance.authenticate(
                 req.body.username,
                 req.body.password,
                 fullUrl(req));
@@ -97,7 +97,7 @@ export function config(config: {
         const requestBody = req.body;
         //debug(`createAccount requestBody ${JSON.stringify(requestBody)}`);
         try {
-            await AuthenticationFlowsProcessorImpl.instance.createAccount(
+            await AuthenticationFlowsProcessor.instance.createAccount(
                 requestBody.email,
                 requestBody.password,
                 requestBody.retypedPassword,
@@ -119,7 +119,7 @@ export function config(config: {
     app.get(ACTIVATE_ACCOUNT_ENDPOINT, async (req: express.Request, res: express.Response) => {
         debug('ActivateAccountEndpoint');
         try {
-            await AuthenticationFlowsProcessorImpl.instance.activateAccount(req.param(UTS_PARAM));
+            await AuthenticationFlowsProcessor.instance.activateAccount(req.param(UTS_PARAM));
         }
         catch (e) {
             debug('ERROR: ', e);
@@ -143,7 +143,7 @@ export function config(config: {
     app.post('/forgotPassword', async (req: express.Request, res: express.Response) => {
         const requestBody = req.body;
         try {
-            await AuthenticationFlowsProcessorImpl.instance.forgotPassword(
+            await AuthenticationFlowsProcessor.instance.forgotPassword(
                 requestBody.email,
                 fullUrl(req));
         }
@@ -162,7 +162,7 @@ export function config(config: {
     app.get(RESTORE_PASSWORD_ENDPOINT, async (req: express.Request, res: express.Response) => {
         debug('Restore Password Endpoint');
         try {
-            await AuthenticationFlowsProcessorImpl.instance.validatePasswordRestoration(req.param(UTS_PARAM));
+            await AuthenticationFlowsProcessor.instance.validatePasswordRestoration(req.param(UTS_PARAM));
         }
         catch (err) {
             debug('ERROR: ', err);
@@ -183,7 +183,7 @@ export function config(config: {
 
         debug('Set New Password Endpoint');
         try {
-            await AuthenticationFlowsProcessorImpl.instance.setNewPassword(
+            await AuthenticationFlowsProcessor.instance.setNewPassword(
                 req.body.enc,
                 req.body.password,
                 req.body.retypedPassword);
@@ -207,7 +207,7 @@ export function config(config: {
         const requestBody = req.body;
         //debug(`createAccount requestBody ${JSON.stringify(requestBody)}`);
         try {
-            await AuthenticationFlowsProcessorImpl.instance.deleteAccount(
+            await AuthenticationFlowsProcessor.instance.deleteAccount(
                 requestBody.email,
                 requestBody.password);
         }

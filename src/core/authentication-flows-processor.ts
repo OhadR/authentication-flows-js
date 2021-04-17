@@ -48,9 +48,9 @@ const LINK_DOES_NOT_EXIST = "link does not exist in DB";	//means that link was a
 const CHANGE_PASSWORD_FAILED_NEW_PASSWORD_SAME_AS_OLD_PASSWORD = "CHANGE PASSWORD FAILED: New Password is same as Old Password.";
 const CHANGE_PASSWORD_BAD_OLD_PASSWORD = "CHANGE PASSWORD Failed: Bad Old Password.";
 
-export class AuthenticationFlowsProcessorImpl {
+export class AuthenticationFlowsProcessor {
 
-    private static _instance: AuthenticationFlowsProcessorImpl;
+    private static _instance: AuthenticationFlowsProcessor;
 
     private createAccountEndpoint: CreateAccountInterceptor = new CreateAccountInterceptor();
 
@@ -111,11 +111,11 @@ export class AuthenticationFlowsProcessorImpl {
         //validate the input:
         const settings: AuthenticationPolicy = this.getAuthenticationSettings();
 
-        AuthenticationFlowsProcessorImpl.validateEmail(email);
+        AuthenticationFlowsProcessor.validateEmail(email);
 
-        AuthenticationFlowsProcessorImpl.validateRetypedPassword(password, retypedPassword);
+        AuthenticationFlowsProcessor.validateRetypedPassword(password, retypedPassword);
 
-        AuthenticationFlowsProcessorImpl.validatePassword(password, settings);
+        AuthenticationFlowsProcessor.validatePassword(password, settings);
 
         //encrypt the password:
         const encodedPassword: string = shaString(password);
@@ -196,7 +196,7 @@ export class AuthenticationFlowsProcessorImpl {
         debug('forgotPassword() for user ' + email);
 
 
-        AuthenticationFlowsProcessorImpl.validateEmail(email);
+        AuthenticationFlowsProcessor.validateEmail(email);
 
         //if account is already locked, no need to ask the user the secret question:
         if( ! await this._authenticationAccountRepository.isEnabled(email) )
@@ -458,9 +458,9 @@ export class AuthenticationFlowsProcessorImpl {
         //validate the input:
         const settings: AuthenticationPolicy = this.getAuthenticationSettings();
 
-        AuthenticationFlowsProcessorImpl.validateRetypedPassword(password, retypedPassword);
+        AuthenticationFlowsProcessor.validateRetypedPassword(password, retypedPassword);
 
-        AuthenticationFlowsProcessorImpl.validatePassword(password, settings);
+        AuthenticationFlowsProcessor.validatePassword(password, settings);
 
         //extract the username/email:
         const username: string = await this._authenticationAccountRepository.getUsernameByLink(linkParam);
