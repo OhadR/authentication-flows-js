@@ -49,7 +49,9 @@ export function config(config: {
             debug(`authentication failed for ${req.body.username}`);
             req.session.error = 'Authentication failed, please check your '
                 + ' username and password.';
-            res.redirect(401, '/login');
+            res
+                .append([ERR_MSG], 'authentication failed')         //add to headers
+                .redirect(401, '/login');
             return;
         }
 
@@ -110,7 +112,7 @@ export function config(config: {
             //back again to createAccountPage, but add error message:
             res
                 .status(500)
-                .append('err_msg', e.message)         //add to headers
+                .append([ERR_MSG], e.message)         //add to headers
                 .render('createAccountPage', { [ERR_MSG]: e.message });
             return;
         }
