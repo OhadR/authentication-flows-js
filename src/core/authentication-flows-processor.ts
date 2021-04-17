@@ -20,7 +20,7 @@ import { AuthenticationAccountRepository } from "../interfaces/repository/authen
 import { AuthenticationPolicyRepository } from "../interfaces/authentication-policy-repository";
 import { AuthenticationUserImpl } from "./authentication-user-impl";
 import { DefaultMailSenderImpl } from "../interceptors/default-email-sender";
-import { AuthenticationPolicyRepositoryImpl } from "./authentication-policy-repository-impl";
+import { AuthenticationPolicyRepositoryImpl } from "../config/authentication-policy-repository-impl";
 
 const debug = require('debug')('authentication-flows-processor');
 
