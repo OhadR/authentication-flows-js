@@ -109,11 +109,9 @@ export class AuthenticationFlowsProcessor {
 
     async createAccount(email: string, password: string, retypedPassword: string, firstName: string, lastName: string, path: string) {
         //validate the input:
-        const settings: AuthenticationPolicy = this.getAuthenticationSettings();
-
         AuthenticationFlowsProcessor.validateEmail(email);
 
-        AuthenticationFlowsProcessor.validatePassword(password, settings);
+        this.validatePassword(password);
 
         AuthenticationFlowsProcessor.validateRetypedPassword(password, retypedPassword);
 
@@ -182,7 +180,7 @@ export class AuthenticationFlowsProcessor {
     }
 
     getAuthenticationSettings(): AuthenticationPolicy {
-        return undefined;
+        return this._authenticationPolicyRepository.getDefaultAuthenticationPolicy();
     }
 
     getPasswordLastChangeDate(email: string): Date {
@@ -267,31 +265,30 @@ export class AuthenticationFlowsProcessor {
     }
 
     //TODO
-    private static validatePassword(password: string,
-                                    settings: AuthenticationPolicy) {
-    //     List<String> blackList = settings.getPasswordBlackList();
-    //     if(blackList != null)
-    // {
-    //     for(String forbidenPswd : blackList)
-    // {
-    //     if(password.equalsIgnoreCase(forbidenPswd))
-    // {
-    //     throw new AuthenticationFlowsException(SETTING_A_NEW_PASSWORD_HAS_FAILED_PLEASE_NOTE_THE_PASSWORD_POLICY_AND_TRY_AGAIN_ERROR_MESSAGE + "; " + PASSWORD_CANNOT_BE_USED);
-    // }
-    // }
-    // }
+    private validatePassword(password: string) {
+        const settings: AuthenticationPolicy = this._authenticationPolicyRepository.getDefaultAuthenticationPolicy();
+
+        const blackList: string[] = settings.getPasswordBlackList();
+        if(blackList != null) {
+            for(const forbidenPswd of blackList) {
+                if(password.toLowerCase() === forbidenPswd.toLowerCase())
+                {
+                    throw new Error(SETTING_A_NEW_PASSWORD_HAS_FAILED_PLEASE_NOTE_THE_PASSWORD_POLICY_AND_TRY_AGAIN_ERROR_MESSAGE + "; " + PASSWORD_CANNOT_BE_USED);
+                }
+            }
+        }
     //
     //
     // if(password.length() > settings.getPasswordMaxLength())
     // {
     //     throw new AuthenticationFlowsException(SETTING_A_NEW_PASSWORD_HAS_FAILED_PLEASE_NOTE_THE_PASSWORD_POLICY_AND_TRY_AGAIN_ERROR_MESSAGE + "; " + PASSWORD_IS_TOO_LONG);
     // }
-    //
-    // if(password.length() < settings.getPasswordMinLength())
-    // {
-    //     throw new AuthenticationFlowsException(SETTING_A_NEW_PASSWORD_HAS_FAILED_PLEASE_NOTE_THE_PASSWORD_POLICY_AND_TRY_AGAIN_ERROR_MESSAGE + "; " + PASSWORD_IS_TOO_SHORT);
-    // }
-    //
+
+        if(password.length < settings.getPasswordMinLength())
+        {
+            throw new Error(SETTING_A_NEW_PASSWORD_HAS_FAILED_PLEASE_NOTE_THE_PASSWORD_POLICY_AND_TRY_AGAIN_ERROR_MESSAGE + "; " + PASSWORD_IS_TOO_SHORT);
+        }
+
     // int uppersCounter = 0;
     // int lowersCounter = 0;
     // int numericCounter = 0;
@@ -458,11 +455,9 @@ export class AuthenticationFlowsProcessor {
 
     async setNewPassword(linkParam: string, password: string, retypedPassword: string) {
         //validate the input:
-        const settings: AuthenticationPolicy = this.getAuthenticationSettings();
-
         AuthenticationFlowsProcessor.validateRetypedPassword(password, retypedPassword);
 
-        AuthenticationFlowsProcessor.validatePassword(password, settings);
+        this.validatePassword(password);
 
         //extract the username/email:
         const username: string = await this._authenticationAccountRepository.getUsernameByLink(linkParam);

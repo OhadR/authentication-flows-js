@@ -14,8 +14,7 @@ export class AuthenticationPolicyRepositoryImpl implements AuthenticationPolicyR
             config.passwordMinSpecialSymbols,
             config.passwordBlackList,
             config.maxPasswordEntryAttempts,
-            config.passwordLifeInDays,
-            config.rememberMeTokenValidityInDays);
+            config.passwordLifeInDays);
         return policy;
     }
 

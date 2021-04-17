@@ -1,7 +1,5 @@
 export class AuthenticationPolicy {
 
-	private static readonly DB_ITEMS_DELIMITER: string = ";";
-
 	private readonly passwordMinLength: number;
 	private readonly passwordMaxLength: number;
 	private readonly passwordMinUpCaseChars: number;
@@ -11,7 +9,6 @@ export class AuthenticationPolicy {
 	private readonly passwordBlackList: string[];
 	private readonly maxPasswordEntryAttempts: number;
 	private readonly passwordLifeInDays: number;
-	private readonly rememberMeTokenValidityInDays: number;
 
 
 	public constructor(passwordMinLength: number,
@@ -20,11 +17,10 @@ export class AuthenticationPolicy {
 			passwordMinLoCaseChars: number,
 			passwordMinNumbericDigits: number,
 			passwordMinSpecialSymbols: number,
-			passwordBlackList: string,
+			passwordBlackList: string[],
 			maxPasswordEntryAttempts: number,
-			passwordLifeInDays: number,
-			rememberMeTokenValidityInDays: number)
-	{
+			passwordLifeInDays: number) {
+
 		this.passwordMinLength = passwordMinLength;
 		this.passwordMaxLength = passwordMaxLength;
 		this.passwordMinUpCaseChars = passwordMinUpCaseChars;
@@ -33,59 +29,43 @@ export class AuthenticationPolicy {
 		this.passwordMinSpecialSymbols = passwordMinSpecialSymbols;
 		this.maxPasswordEntryAttempts = maxPasswordEntryAttempts;
 		this.passwordLifeInDays = passwordLifeInDays;
-		this.rememberMeTokenValidityInDays = rememberMeTokenValidityInDays;
-		
-		this.passwordBlackList = passwordBlackList.split(AuthenticationPolicy.DB_ITEMS_DELIMITER);
+		this.passwordBlackList = passwordBlackList;
 
 	}
 
-	public getPasswordMinSpecialSymbols(): number
-	{
+	public getPasswordMinSpecialSymbols(): number {
 		return this.passwordMinSpecialSymbols;
 	}
 
-	public getPasswordBlackList(): string[]
-	{
+	public getPasswordBlackList(): string[] {
 		return this.passwordBlackList;
 	}
 
-	public getPasswordLifeInDays(): number
-	{
+	public getPasswordLifeInDays(): number {
 		return this.passwordLifeInDays;
 	}
 
-	public getPasswordMinLength(): number
-	{
+	public getPasswordMinLength(): number {
 		return this.passwordMinLength;
 	}
 
-	public getPasswordMinLoCaseChars(): number
-	{
+	public getPasswordMinLoCaseChars(): number {
 		return this.passwordMinLoCaseChars;
 	}
 
-	public getRememberMeTokenValidityInDays(): number
-	{
-		return this.rememberMeTokenValidityInDays;
-	}
-
-	public getPasswordMinUpCaseChars(): number
-	{
+	public getPasswordMinUpCaseChars(): number {
 		return this.passwordMinUpCaseChars;
 	}
 
-	public getPasswordMaxLength(): number
-	{
+	public getPasswordMaxLength(): number {
 		return this.passwordMaxLength;
 	}
 
-	public getPasswordMinNumbericDigits(): number
-	{
+	public getPasswordMinNumbericDigits(): number {
 		return this.passwordMinNumbericDigits;
 	}
 
-	public getMaxPasswordEntryAttempts(): number
-	{
+	public getMaxPasswordEntryAttempts(): number {
 		return this.maxPasswordEntryAttempts;
 	}
 
