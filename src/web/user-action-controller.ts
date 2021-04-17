@@ -114,9 +114,7 @@ export function config(config: {
                 .render('createAccountPage', { [ERR_MSG]: e.message });
             return;
         }
-        res
-            .append('err_msg', 'OK')         //add to headers
-            .render('accountCreatedSuccess', { email: requestBody.email });
+        res.render('accountCreatedSuccess', { email: requestBody.email });
     });
 
     app.get(ACTIVATE_ACCOUNT_ENDPOINT, async (req: express.Request, res: express.Response) => {
