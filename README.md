@@ -26,10 +26,6 @@ definitely not the core of their business.
 
 Find [here](here) all required configurations, API and more.
  
-The authentication-flows *uses cryptography* in order to encrypt the data in the links that are sent to the user's email 
-(upon user's registration and "forget password" flows). 
-Passwords are encrypted as well.
-
 
 ## configuration
 
