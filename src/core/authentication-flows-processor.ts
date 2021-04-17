@@ -281,12 +281,12 @@ export class AuthenticationFlowsProcessor {
     //
     // if(password.length() > settings.getPasswordMaxLength())
     // {
-    //     throw new AuthenticationFlowsException(SETTING_A_NEW_PASSWORD_HAS_FAILED_PLEASE_NOTE_THE_PASSWORD_POLICY_AND_TRY_AGAIN_ERROR_MESSAGE + "; " + PASSWORD_IS_TOO_LONG);
+    //     throw new AuthenticationFlowsException(SETTING_A_NEW_PASSWORD_HAS_FAILED_PLEASE_NOTE_THE_PASSWORD_POLICY_AND_TRY_AGAIN_ERROR_MESSAGE + " " + PASSWORD_IS_TOO_LONG);
     // }
 
         if(password.length < settings.getPasswordMinLength())
         {
-            throw new Error(SETTING_A_NEW_PASSWORD_HAS_FAILED_PLEASE_NOTE_THE_PASSWORD_POLICY_AND_TRY_AGAIN_ERROR_MESSAGE + "; " + PASSWORD_IS_TOO_SHORT);
+            throw new Error(SETTING_A_NEW_PASSWORD_HAS_FAILED_PLEASE_NOTE_THE_PASSWORD_POLICY_AND_TRY_AGAIN_ERROR_MESSAGE + " " + PASSWORD_IS_TOO_SHORT);
         }
 
     // int uppersCounter = 0;

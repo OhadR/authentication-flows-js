@@ -110,6 +110,7 @@ export function config(config: {
             //back again to createAccountPage, but add error message:
             res
                 .status(500)
+                .append('err_msg', e.message)         //add to headers
                 .render('createAccountPage', { [ERR_MSG]: e.message });
             return;
         }
