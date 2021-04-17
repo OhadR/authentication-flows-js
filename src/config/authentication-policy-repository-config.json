@@ -1,0 +1,12 @@
+{
+    "passwordMinLength": 5,
+    "passwordMaxLength": 5,
+    "passwordMinUpCaseChars": 5,
+    "passwordMinLoCaseChars": 5,
+    "passwordMinNumbericDigits": 5,
+    "passwordMinSpecialSymbols": 5,
+    "passwordBlackList": 5,
+    "maxPasswordEntryAttempts": 5,
+    "passwordLifeInDays": 5,
+    "rememberMeTokenValidityInDays": 5
+}

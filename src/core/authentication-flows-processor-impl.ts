@@ -17,8 +17,10 @@ import {
     UTS_PARAM
 } from "../types/flows-constatns";
 import { AuthenticationAccountRepository } from "../interfaces/repository/authentication-account-repository";
+import { AuthenticationPolicyRepository } from "../interfaces/authentication-policy-repository";
 import { AuthenticationUserImpl } from "./authentication-user-impl";
 import { DefaultMailSenderImpl } from "../interceptors/default-email-sender";
+import { AuthenticationPolicyRepositoryImpl } from "./authentication-policy-repository-impl";
 
 const debug = require('debug')('authentication-flows-processor');
 
@@ -53,11 +55,14 @@ export class AuthenticationFlowsProcessorImpl {
     private createAccountEndpoint: CreateAccountInterceptor = new CreateAccountInterceptor();
 
     private _authenticationAccountRepository: AuthenticationAccountRepository;
+    private _authenticationPolicyRepository: AuthenticationPolicyRepository;
 
     private _mailSender: MailSender = new DefaultMailSenderImpl();
 
 
-    private constructor() {}
+    private constructor() {
+        this._authenticationPolicyRepository = new AuthenticationPolicyRepositoryImpl();
+    }
 
     public static get instance() {
         return this._instance || (this._instance = new this());
