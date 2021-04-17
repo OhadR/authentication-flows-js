@@ -113,9 +113,9 @@ export class AuthenticationFlowsProcessor {
 
         AuthenticationFlowsProcessor.validateEmail(email);
 
-        AuthenticationFlowsProcessor.validateRetypedPassword(password, retypedPassword);
-
         AuthenticationFlowsProcessor.validatePassword(password, settings);
+
+        AuthenticationFlowsProcessor.validateRetypedPassword(password, retypedPassword);
 
         //encrypt the password:
         const encodedPassword: string = shaString(password);
@@ -130,6 +130,8 @@ export class AuthenticationFlowsProcessor {
 
         const username: string = await this._authenticationAccountRepository.getUsernameByLink(link);
         debug(`activating username: ${username}`);
+
+        //TODO check link expiration and throw LINK_HAS_EXPIRED
 
         //this part was persisted in the DB, in order to make sure the activation-link is single-used.
         //so here we remove it from the DB:
