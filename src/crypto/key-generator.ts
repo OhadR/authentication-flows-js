@@ -91,15 +91,4 @@ function _decryptString (encryptedText: string, privateKeyFile): string {
     return decrypted.toString("utf8");
 }
 
-/*
-function _encryptIntAndString (arg1, arg2, publicKeyFile): string {
-    const publicKey = fs.readFileSync(publicKeyFile, "utf8");
-
-    // publicEncrypt() method with its parameters
-    const encrypted = crypto.publicEncrypt(
-        publicKey, Buffer.from(plaintext));
-    return encrypted.toString("base64");
-}
-*/
-
 
