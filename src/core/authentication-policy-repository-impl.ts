@@ -1,7 +1,8 @@
 import { AuthenticationPolicyRepository } from "../interfaces/authentication-policy-repository";
 import { AuthenticationPolicy } from "../types/authentication-policy";
 
-const config = require('../config/authentication-flows-config.json');
+//load the json file with the policy:
+const config = require('../config/authentication-policy-repository-config.json');
 
 export class AuthenticationPolicyRepositoryImpl implements AuthenticationPolicyRepository {
     public getAuthenticationPolicy(settingsId: number): AuthenticationPolicy {
