@@ -5,7 +5,7 @@
     "passwordMinLoCaseChars": 5,
     "passwordMinNumbericDigits": 5,
     "passwordMinSpecialSymbols": 5,
-    "passwordBlackList": 5,
+    "passwordBlackList": ["password", "123456"],
     "maxPasswordEntryAttempts": 5,
     "passwordLifeInDays": 5,
     "rememberMeTokenValidityInDays": 5
