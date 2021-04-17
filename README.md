@@ -1,5 +1,8 @@
 # authentication-flows-js
 
+[![npm Package](https://img.shields.io/npm/v/authentication-flows-js.svg?style=flat-square)](https://www.npmjs.org/package/authentication-flows-js)
+[![build status](https://secure.travis-ci.org/jprichardson/authentication-flows-js.svg)](http://travis-ci.org/jprichardson/authentication-flows-js)
+
 [authentication-flows](https://github.com/OhadR/authentication-flows) for javascript
 
 [npm](https://www.npmjs.com/package/authentication-flows-js)
