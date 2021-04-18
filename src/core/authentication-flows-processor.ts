@@ -31,10 +31,10 @@ const USER_ALREADY_EXIST = "cannot create account - user already exist.";
 const PASSWORD_CANNOT_BE_USED = "Your password is not acceptable by the organizational password policy.";
 const PASSWORD_IS_TOO_LONG = "Password is too long";
 const PASSWORD_IS_TOO_SHORT = "Password is too short";
-const PASSWORD_TOO_FEW_LOWERS = "Password needs to contains at least %d lower-case characters";
-const PASSWORD_TOO_FEW_UPPERS = "Password needs to contains at least %d upper-case characters";
-const PASSWORD_TOO_FEW_NUMERICS = "Password needs to contains at least %d numeric characters";
-const PASSWORD_TOO_FEW_SPECIAL_SYMBOLS = "Password needs to contains at least %d special symbols";
+const PASSWORD_TOO_FEW_LOWERS = "Password needs to contains at least XXXX lower-case characters";
+const PASSWORD_TOO_FEW_UPPERS = "Password needs to contains at least XXXX upper-case characters";
+const PASSWORD_TOO_FEW_NUMERICS = "Password needs to contains at least XXXX numeric characters";
+const PASSWORD_TOO_FEW_SPECIAL_SYMBOLS = "Password needs to contains at least XXXX special symbols";
 const SETTING_A_NEW_PASSWORD_HAS_FAILED_PLEASE_NOTE_THE_PASSWORD_POLICY_AND_TRY_AGAIN_ERROR_MESSAGE =
     "Setting a new password has failed. Please note the password policy and try again. Error message: ";
 const ACCOUNT_CREATION_HAS_FAILED_PASSWORDS_DO_NOT_MATCH =
@@ -264,7 +264,7 @@ export class AuthenticationFlowsProcessor {
         }
     }
 
-    //TODO
+
     private validatePassword(password: string) {
         const settings: AuthenticationPolicy = this._authenticationPolicyRepository.getDefaultAuthenticationPolicy();
 
@@ -277,72 +277,49 @@ export class AuthenticationFlowsProcessor {
                 }
             }
         }
-    //
-    //
-    // if(password.length() > settings.getPasswordMaxLength())
-    // {
-    //     throw new AuthenticationFlowsException(SETTING_A_NEW_PASSWORD_HAS_FAILED_PLEASE_NOTE_THE_PASSWORD_POLICY_AND_TRY_AGAIN_ERROR_MESSAGE + " " + PASSWORD_IS_TOO_LONG);
-    // }
+
+
+        if(password.length > settings.getPasswordMaxLength())
+            throw new Error(SETTING_A_NEW_PASSWORD_HAS_FAILED_PLEASE_NOTE_THE_PASSWORD_POLICY_AND_TRY_AGAIN_ERROR_MESSAGE + " " + PASSWORD_IS_TOO_LONG);
+
 
         if(password.length < settings.getPasswordMinLength())
-        {
             throw new Error(SETTING_A_NEW_PASSWORD_HAS_FAILED_PLEASE_NOTE_THE_PASSWORD_POLICY_AND_TRY_AGAIN_ERROR_MESSAGE + " " + PASSWORD_IS_TOO_SHORT);
+
+        let uppersCounter = 0;
+        let lowersCounter = 0;
+        let numericCounter = 0;
+        let specialSymbolCounter = 0;
+
+        for(let i=0; i<password.length; ++i) {
+            const c = password.charAt(i);
+
+            if (c == c.toUpperCase() && !(c >= '0' && c <= '9') &&(c >='A' && c <= 'Z'))
+                ++uppersCounter;
+            else if (c == c.toLowerCase() && !(c >= '0' && c <= '9') &&(c >='a' && c <= 'z'))
+                ++lowersCounter;
+            else if (c >= '0' && c <= '9')
+                ++numericCounter;
+            else
+                ++specialSymbolCounter;
         }
 
-    // int uppersCounter = 0;
-    // int lowersCounter = 0;
-    // int numericCounter = 0;
-    // int specialSymbolCounter = 0;
-    // char[] dst = new char[password.length()];
-    // password.getChars(0, password.length(), dst, 0);
-    // for(int i=0; i<password.length(); ++i)
-    // {
-    //     if(Character.isUpperCase(dst[i]))
-    //     {
-    //         ++uppersCounter;
-    //     }
-    //     else if(Character.isLowerCase(dst[i]))
-    //     {
-    //         ++lowersCounter;
-    //     }
-    //     else if(Character.isDigit(dst[i]))
-    //     {
-    //         ++numericCounter;
-    //     }
-    //     else
-    //     {
-    //         //not digit and not a letter - consider it as a 'special symbol':
-    //         ++specialSymbolCounter;
-    //     }
-    // }
-    //
-    // Formatter formatter = new Formatter();
-    //
-    // String retVal = "";
-    //
-    // if(uppersCounter < settings.getPasswordMinUpCaseChars())
-    // {
-    //     retVal = formatter.format(PASSWORD_TOO_FEW_UPPERS, settings.getPasswordMinUpCaseChars()).toString() ;
-    // }
-    // if(lowersCounter < settings.getPasswordMinLoCaseChars())
-    // {
-    //     retVal =  formatter.format(PASSWORD_TOO_FEW_LOWERS, settings.getPasswordMinLoCaseChars()).toString();
-    // }
-    // if(numericCounter < settings.getPasswordMinNumbericDigits())
-    // {
-    //     retVal =  formatter.format(PASSWORD_TOO_FEW_NUMERICS, settings.getPasswordMinNumbericDigits()).toString();
-    // }
-    // if(specialSymbolCounter < settings.getPasswordMinSpecialSymbols())
-    // {
-    //     retVal =  formatter.format(PASSWORD_TOO_FEW_SPECIAL_SYMBOLS, settings.getPasswordMinSpecialSymbols()).toString();
-    // }
-    //
-    // formatter.close();
-    //
-    // if(!retVal.isEmpty())
-    // {
-    //     throw new AuthenticationFlowsException(SETTING_A_NEW_PASSWORD_HAS_FAILED_PLEASE_NOTE_THE_PASSWORD_POLICY_AND_TRY_AGAIN_ERROR_MESSAGE + "; " + retVal);
-    // }
+        let retVal;
+        if(uppersCounter < settings.getPasswordMinUpCaseChars()) {
+            retVal = PASSWORD_TOO_FEW_UPPERS.replace('XXXX', settings.getPasswordMinUpCaseChars() + '');
+        }
+        if(lowersCounter < settings.getPasswordMinLoCaseChars()) {
+            retVal = PASSWORD_TOO_FEW_LOWERS.replace('XXXX', settings.getPasswordMinLoCaseChars() + '');
+        }
+        if(numericCounter < settings.getPasswordMinNumbericDigits()) {
+            retVal = PASSWORD_TOO_FEW_NUMERICS.replace('XXXX', settings.getPasswordMinNumbericDigits() + '');
+        }
+        if(specialSymbolCounter < settings.getPasswordMinSpecialSymbols()) {
+            retVal = PASSWORD_TOO_FEW_SPECIAL_SYMBOLS.replace('XXXX', settings.getPasswordMinSpecialSymbols()+ '');
+        }
+
+        if(!retVal.isEmpty())
+            throw new Error(SETTING_A_NEW_PASSWORD_HAS_FAILED_PLEASE_NOTE_THE_PASSWORD_POLICY_AND_TRY_AGAIN_ERROR_MESSAGE + " " + retVal);
     }
 
     private async internalCreateAccount(email: string, encedPassword: string, firstName: string, lastName: string, serverPath: string) {
