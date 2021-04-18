@@ -4,7 +4,6 @@
   "description": "authentication-flows for javascript",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
     "test": "echo \"Error: no test specified\""
   },
   "repository": {
