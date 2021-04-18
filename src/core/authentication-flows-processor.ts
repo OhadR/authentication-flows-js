@@ -273,7 +273,7 @@ export class AuthenticationFlowsProcessor {
             for(const forbidenPswd of blackList) {
                 if(password.toLowerCase() === forbidenPswd.toLowerCase())
                 {
-                    throw new Error(SETTING_A_NEW_PASSWORD_HAS_FAILED_PLEASE_NOTE_THE_PASSWORD_POLICY_AND_TRY_AGAIN_ERROR_MESSAGE + "; " + PASSWORD_CANNOT_BE_USED);
+                    throw new Error(SETTING_A_NEW_PASSWORD_HAS_FAILED_PLEASE_NOTE_THE_PASSWORD_POLICY_AND_TRY_AGAIN_ERROR_MESSAGE + " " + PASSWORD_CANNOT_BE_USED);
                 }
             }
         }
@@ -318,7 +318,7 @@ export class AuthenticationFlowsProcessor {
             retVal = PASSWORD_TOO_FEW_SPECIAL_SYMBOLS.replace('XXXX', settings.getPasswordMinSpecialSymbols()+ '');
         }
 
-        if(!retVal.isEmpty())
+        if(!retVal)
             throw new Error(SETTING_A_NEW_PASSWORD_HAS_FAILED_PLEASE_NOTE_THE_PASSWORD_POLICY_AND_TRY_AGAIN_ERROR_MESSAGE + " " + retVal);
     }
 
