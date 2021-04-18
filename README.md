@@ -5,7 +5,7 @@
 
 [authentication-flows](https://github.com/OhadR/authentication-flows) for javascript
 
-##### authentication-flows-js is a powerful and highly customizable framework that covers all flows that any express-based authentication-server needs.
+#### authentication-flows-js is a powerful and highly customizable framework that covers all flows that any express-based authentication-server needs.
 
 ## motivation
 
@@ -49,6 +49,12 @@ Thus, the client-app should pass authentication-flows-js its server object (exam
             user_app: app, 
             authenticationAccountRepository: inmemRepo
         });
+
+### password policy
+
+authentication-flows-js comes with a default set of configuration for the password policy (in 
+`/config/authentication-policy-repository-config.json`). The hosting application can replace\edit the JSON file, and use 
+its own preferred values. 
 
 an example for a client-app can be found [here](https://github.com/OhadR/authentication-flows-js-app).
 
