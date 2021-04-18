@@ -156,6 +156,7 @@ export function config(config: {
             //back again to forgotPasswordPage, but add error message:
             res
                 .status(500)
+                .append(ERR_MSG, e.message)         //add to headers
                 .render('forgotPasswordPage', { [ERR_MSG]: e.message });
             return;
         }
