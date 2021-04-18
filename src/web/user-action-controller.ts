@@ -151,7 +151,7 @@ export function config(config: {
                 requestBody.email,
                 fullUrl(req));
         }
-        cat ch (e) {
+        catch (e) {
             debug('ERROR: ', e);
             //back again to forgotPasswordPage, but add error message:
             res
