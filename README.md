@@ -5,7 +5,7 @@
 
 [authentication-flows](https://github.com/OhadR/authentication-flows) for javascript
 
-[npm](https://www.npmjs.com/package/authentication-flows-js)
+##### authentication-flows-js is a powerful and highly customizable framework that covers all flows that any express-based authentication-server needs.
 
 ## motivation
 
@@ -21,8 +21,8 @@ The `authentication-flows-js` module implements all authentication flows:
  * force change password if password is expired,
  * locks the accont after pre-configured login failures.
  
-`authentication-flows-js` is a package that can be reused, so any secured web applications can add this package as 
-a dependency, to get all the flows implemented, with a minimal set of configurations. 
+`authentication-flows-js` is a package that any express-based secured web applications can reuse, to get all the flows 
+implemented, with a minimal set of configurations. 
 This way developers can concentrate on developing the core of their app, instead of messing around with flows that are
 definitely not the core of their business.
  
