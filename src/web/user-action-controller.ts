@@ -42,6 +42,7 @@ export function config(config: {
                 //redirect the user to "account has been locked" page:
                 res
                     .status(SC_LOCKED)
+                    .append(ERR_MSG, err.message)         //add to headers
                     .render('accountLockedPage');
                 return;
             }

@@ -492,7 +492,7 @@ export class AuthenticationFlowsProcessor {
             await this._authenticationAccountRepository.setDisabled(username);
 
             await this.sendUnlockAccountMail(username, serverPath);
-            throw new AccountLockedError();
+            throw new AccountLockedError(`Account has been locked out for user: ${username} due to exceeding number of attempts to login.`);
         }
 
         throw new Error('bad credentials');
