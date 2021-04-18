@@ -4,7 +4,7 @@
   "description": "authentication-flows for javascript",
   "main": "dist/index.js",
   "scripts": {
-    "test": "npx tsc --sourcemap --declaration"
+    "test": "npx tsc --target ES6"
   },
   "repository": {
     "type": "git",
