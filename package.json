@@ -4,7 +4,7 @@
   "description": "authentication-flows for javascript",
   "main": "dist/index.js",
   "scripts": {
-    "compile": "npx tsc --sourcemap --declaration",
+    "build": "tsc",
     "test": "echo \"Error: no test specified\""
   },
   "repository": {
