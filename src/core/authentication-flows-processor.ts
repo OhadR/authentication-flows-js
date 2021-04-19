@@ -124,12 +124,12 @@ export class AuthenticationFlowsProcessor {
         await this.internalCreateAccount(email, encodedPassword, firstName, lastName, path);
     }
 
-    public async activateAccount(link: string) {
+    public async activateAccount(linkCode: string) {
 
-        const username: string = await this._authenticationAccountRepository.getUsernameByLink(link);
+        const username: string = await this._authenticationAccountRepository.getUsernameByLink(linkCode);
         debug(`activating username: ${username}`);
 
-        //TODO check link expiration and throw LINK_HAS_EXPIRED
+        //TODO check linkCode expiration and throw LINK_HAS_EXPIRED
 
         //this part was persisted in the DB, in order to make sure the activation-link is single-used.
         //so here we remove it from the DB:
@@ -239,9 +239,9 @@ export class AuthenticationFlowsProcessor {
 
     setLoginSuccessForUser(username: string): boolean {
         debug("setting login success for user " + username);
-        //TODO:
+
         this._authenticationAccountRepository.setAttemptsLeft( username,
-            /*getAuthenticationSettings().getMaxPasswordEntryAttempts()*/5 );
+            this.getAuthenticationSettings().getMaxPasswordEntryAttempts() );
 
         return this.isPasswordChangeRequired(username);
     }
@@ -394,6 +394,7 @@ export class AuthenticationFlowsProcessor {
         return set;
     }
 
+    //TODO
     private isPasswordChangeRequired(username: string) {
         return false;
     }

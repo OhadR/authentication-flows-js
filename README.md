@@ -56,6 +56,18 @@ authentication-flows-js comes with a default set of configuration for the passwo
 `/config/authentication-policy-repository-config.json`). The hosting application can replace\edit the JSON file, and use 
 its own preferred values. 
 
+The password policy contains the following properties (with the following default values):
+
+    passwordMinLength: 6,
+    passwordMaxLength: 10,
+    passwordMinUpCaseChars: 1,
+    passwordMinLoCaseChars: 1,
+    passwordMinNumbericDigits: 1,
+    passwordMinSpecialSymbols: 1,
+    passwordBlackList: ["password", "123456"],
+    maxPasswordEntryAttempts: 5,
+    passwordLifeInDays: 60
+
 an example for a client-app can be found [here](https://github.com/OhadR/authentication-flows-js-app).
 
 ## `body-parser`
