@@ -11,8 +11,8 @@ export class DefaultMailSenderImpl implements MailSender {
 
         try {
             const transporter = nodemailer.createTransport({
-                host: "mail.smtp2go.com",
-                port: 2525,
+                host: process.env.smtpServer,
+                port: process.env.smtpPort,
                 auth: {
                     user: process.env.emailServerUser,
                     pass: process.env.emailServerPass
