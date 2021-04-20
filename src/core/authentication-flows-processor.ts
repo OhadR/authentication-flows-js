@@ -201,7 +201,10 @@ export class AuthenticationFlowsProcessor {
         //if account is already locked, no need to ask the user the secret question:
         if( ! await this._authenticationAccountRepository.isEnabled(email) )
         {
-            throw new Error( ACCOUNT_LOCKED_OR_DOES_NOT_EXIST );
+            //security bug: Even if we don’t find an email address, we return 'ok'. We don’t want untoward
+            // bots figuring out what emails are real vs not real in our database.
+            //throw new Error( ACCOUNT_LOCKED_OR_DOES_NOT_EXIST );
+            return;
         }
 
         await this.sendPasswordRestoreMail(email, serverPath);
