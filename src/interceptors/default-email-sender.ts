@@ -1,4 +1,4 @@
-import { AuthenticationFlowsConfig, AuthenticationFlowsError, MailSender } from "..";
+import { AuthenticationFlowsError, MailSender } from "..";
 import * as nodemailer from 'nodemailer';
 const debug = require('debug')('email');
 
@@ -7,7 +7,7 @@ export class DefaultMailSenderImpl implements MailSender {
     async sendEmail(recipient: string,
               subject: string,
               url: string) {
-        debug('sending email from: ' + AuthenticationFlowsConfig.instance.emailSender);
+        debug('sending email from: ' + process.env.emailSender);
 
         try {
             const transporter = nodemailer.createTransport({
@@ -20,7 +20,7 @@ export class DefaultMailSenderImpl implements MailSender {
             });
 
             const mailOptions = {
-                from: AuthenticationFlowsConfig.instance.emailSender,
+                from: process.env.emailSender,
                 to: recipient,
                 // from: '"Fred Foo 👻" <foo@example.com>', // sender address
                 // to: "bar@example.com, baz@example.com", // list of receivers
