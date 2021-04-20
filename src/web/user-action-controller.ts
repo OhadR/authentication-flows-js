@@ -198,6 +198,7 @@ export function config(config: {
             //back again to setNewPasswordPage, but add error message:
             res
                 .status(500)
+                .append(ERR_MSG, e.message)         //add to headers
                 .render('setNewPasswordPage', {
                     [ERR_MSG]: e.message,
                     [HASH_PARAM_NAME]: req.body.enc
