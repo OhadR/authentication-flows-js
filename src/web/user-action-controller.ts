@@ -92,7 +92,7 @@ export function config(config: {
     /**
  	 * The UI calls this method in order to get the password policy
      */
-    app.get('/createAccountPage', (req, res) => {
+    app.get('/createAccount', (req, res) => {
         res.render('createAccountPage', { [ERR_MSG]: null });
     });
 
@@ -140,7 +140,7 @@ export function config(config: {
     /**
      * just like createAccount, this controller renders the forgot-password form:
      */
-    app.get('/forgotPasswordPage', (req: express.Request, res: express.Response) => {
+    app.get('/forgotPassword', (req: express.Request, res: express.Response) => {
         res.render('forgotPasswordPage', { 'err_msg': null });
     });
 
