@@ -120,10 +120,10 @@ export function config(config: {
         res.render('accountCreatedSuccess', { email: requestBody.email });
     });
 
-    app.get(ACTIVATE_ACCOUNT_ENDPOINT, async (req: express.Request, res: express.Response) => {
+    app.get(ACTIVATE_ACCOUNT_ENDPOINT + '/:token', async (req: express.Request, res: express.Response) => {
         debug('ActivateAccountEndpoint');
         try {
-            await AuthenticationFlowsProcessor.instance.activateAccount(req.param(UTS_PARAM));
+            await AuthenticationFlowsProcessor.instance.activateAccount(req.params.token);
         }
         catch (e) {
             debug('ERROR: ', e);

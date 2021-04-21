@@ -217,12 +217,11 @@ export class AuthenticationFlowsProcessor {
 
     private async sendUnlockAccountMail(email: string, serverPath: string) {
 
-        const utsPart: string = randomString();
+        const token: string = randomString();
         const activationUrl: string = serverPath + ACTIVATE_ACCOUNT_ENDPOINT +
-            "?" +
-            UTS_PARAM + "=" + utsPart;
+            "/" + token;
         //persist the "uts", so this activation link will be single-used:
-        await this._authenticationAccountRepository.addLink( email, utsPart );
+        await this._authenticationAccountRepository.addLink( email, token );
 
         debug(`sending Unlock-Account email to ${email}; activationUrl: ${activationUrl}`);
 
@@ -369,12 +368,11 @@ export class AuthenticationFlowsProcessor {
 
         await this.createAccountEndpoint.postCreateAccount( email );
 
-        const utsPart: string = randomString();
+        const token: string = randomString();
         const activationUrl: string = serverPath + ACTIVATE_ACCOUNT_ENDPOINT +
-            "?" +
-            UTS_PARAM + "=" + utsPart;
+            "/" + token;
         //persist the "uts", so this activation link will be single-used:
-        await this._authenticationAccountRepository.addLink( email, utsPart );
+        await this._authenticationAccountRepository.addLink( email, token );
 
 
         debug("sending registration email to " + email + "; activationUrl: " + activationUrl);
