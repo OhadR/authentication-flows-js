@@ -3,7 +3,8 @@ import * as url from 'url';
 import * as express from 'express';
 import {
     ACTIVATE_ACCOUNT_ENDPOINT,
-    ERR_MSG, HASH_PARAM_NAME, RESTORE_PASSWORD_ENDPOINT,
+    ERR_MSG, HASH_PARAM_NAME,
+    RESTORE_PASSWORD_ENDPOINT,
     UTS_PARAM
 } from "../types/flows-constatns";
 import { AccountLockedError, AuthenticationAccountRepository, LinkExpiredError, PasswordAlreadyChangedError } from "..";
@@ -164,10 +165,10 @@ export function config(config: {
             .render('passwordRestoreEmailSent', { email: requestBody.email });
     });
 
-    app.get(RESTORE_PASSWORD_ENDPOINT, async (req: express.Request, res: express.Response) => {
+    app.get(RESTORE_PASSWORD_ENDPOINT + '/:token', async (req: express.Request, res: express.Response) => {
         debug('Restore Password Endpoint');
         try {
-            await AuthenticationFlowsProcessor.instance.validatePasswordRestoration(req.param(UTS_PARAM));
+            await AuthenticationFlowsProcessor.instance.validatePasswordRestoration(req.params.token);
         }
         catch (err) {
             debug('ERROR: ', err);

@@ -418,12 +418,11 @@ export class AuthenticationFlowsProcessor {
     }
 
     private async sendPasswordRestoreMail(email: string, serverPath: string) {
-        const utsPart: string = randomString();
+        const token: string = randomString();
         const passwordRestoreUrl: string = serverPath + RESTORE_PASSWORD_ENDPOINT +
-            "?" +
-            UTS_PARAM + "=" + utsPart;
+            "/" + token;
         //persist the "uts", so this activation link will be single-used:
-        await this._authenticationAccountRepository.addLink( email, utsPart );
+        await this._authenticationAccountRepository.addLink( email, token );
 
         debug("sending restore-password email to " + email + "; url: " + passwordRestoreUrl);
 
