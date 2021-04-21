@@ -3,9 +3,9 @@
 [![npm Package](https://img.shields.io/npm/v/authentication-flows-js.svg?style=flat-square)](https://www.npmjs.org/package/authentication-flows-js)
 [![build status](https://api.travis-ci.com/OhadR/authentication-flows-js.svg)](http://travis-ci.com/OhadR/authentication-flows-js)
 
-[authentication-flows](https://github.com/OhadR/authentication-flows) for javascript
-
 #### authentication-flows-js is a powerful and highly customizable framework that covers all flows that any express-based authentication-server needs.
+
+[authentication-flows](https://github.com/OhadR/authentication-flows) for javascript
 
 ## motivation
 
@@ -93,11 +93,9 @@ Thus, the `authentication-flows-js` can use:
 
 ## emails
 
-This module sends verification emails. By default, it uses `nodemail`er` and [SMTP2GO](https://www.smtp2go.com/),
-but it makes sense that each client-app will has its own mailing system, plus verification emails
-can have the same look and feel of the hosting application.
-
-Client-app can easily override the `sendEmail()` function.
+This module sends verification emails. By default, it uses `nodemailer` and [SMTP2GO](https://www.smtp2go.com/),
+but it makes sense that each application has its own mailing system. In addition, verification emails
+may have the same look and feel of the hosting application. Hosing-application can have their own implementation by implementing `MailSender` interface.
 
 ## tests
 
@@ -107,3 +105,9 @@ all flows are tested very clearly using [Cucumber automated tests](https://githu
 ## refs
 
 https://softwareengineering.stackexchange.com/questions/424981/authentication-flows-for-secured-applications
+
+https://www.smashingmagazine.com/2020/03/creating-secure-password-flows-nodejs-mysql/
+
+## Questions? issues? something is missing?
+
+Feel free to open issues here if you have any unclear matter or any other question.
