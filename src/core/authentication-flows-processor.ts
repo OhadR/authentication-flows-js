@@ -141,7 +141,6 @@ export class AuthenticationFlowsProcessor {
         // reset the #attempts, since there is a flow of exceeding attempts number, so when clicking the link
         // (in the email), we get here and enable the account and reset the attempts number
         this.setLoginSuccessForUser(username);
-
     }
 
     /**
@@ -155,7 +154,7 @@ export class AuthenticationFlowsProcessor {
         const username: string = await this._authenticationAccountRepository.getUsernameByLink(link);
         debug(`restore password for username: ${username}`);
 
-        const lastChange: Date = this.getPasswordLastChangeDate(username);
+        const lastChange: Date = await this._authenticationAccountRepository.getPasswordLastChangeDate(username);
 
         const linkData = await this._authenticationAccountRepository.getLink(username);
 
@@ -181,10 +180,6 @@ export class AuthenticationFlowsProcessor {
 
     getAuthenticationSettings(): AuthenticationPolicy {
         return this._authenticationPolicyRepository.getDefaultAuthenticationPolicy();
-    }
-
-    getPasswordLastChangeDate(email: string): Date {
-        return this._authenticationAccountRepository.getPasswordLastChangeDate(email);
     }
 
     handleChangePassword(currentPassword: string, newPassword: string, retypedPassword: string, encUser: string);
@@ -240,13 +235,13 @@ export class AuthenticationFlowsProcessor {
         await this._authenticationAccountRepository.setEnabled(userEmail);
     }
 
-    setLoginSuccessForUser(username: string): boolean {
+    async setLoginSuccessForUser(username: string): Promise<boolean> {
         debug("setting login success for user " + username);
 
         this._authenticationAccountRepository.setAttemptsLeft( username,
             this.getAuthenticationSettings().getMaxPasswordEntryAttempts() );
 
-        return this.isPasswordChangeRequired(username);
+        return await this.isPasswordChangeRequired(username);
     }
 
 
@@ -397,9 +392,15 @@ export class AuthenticationFlowsProcessor {
         return set;
     }
 
-    //TODO
-    private isPasswordChangeRequired(username: string) {
-        return false;
+
+    private async isPasswordChangeRequired(username: string): Promise<boolean> {
+        const lastChange: Date = await this._authenticationAccountRepository.getPasswordLastChangeDate(username);
+        debug("lastChange: " + lastChange);
+        debug("PasswordLifeInDays: " + this.getAuthenticationSettings().getPasswordLifeInDays());
+
+        const passwordChangeRequired = (Date.now() - lastChange.getTime()) > (this.getAuthenticationSettings().getPasswordLifeInDays() * 24 * 60 * 60 * 1000);
+        debug("passwordChangeRequired: " + passwordChangeRequired);
+        return passwordChangeRequired;
     }
 
     async deleteAccount(email: string, password: string) {
