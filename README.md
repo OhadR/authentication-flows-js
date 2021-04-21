@@ -97,6 +97,55 @@ This module sends verification emails. By default, it uses `nodemailer` and [SMT
 but it makes sense that each application has its own mailing system. In addition, verification emails
 may have the same look and feel of the hosting application. Hosing-application can have their own implementation by implementing `MailSender` interface.
 
+## API
+   
+The AFM supports the below APIs:
+
+This URL renders the login page that is sent to the user:
+
+    GET
+    /login
+
+As mentioned earlier, the AFM manages also the authentication of the hosting application:
+   
+    POST
+    /login
+        username: string
+        password: string
+   
+By calling the URL, the hosting application can get the password policy. e.g. constraints like length, number of Capital 
+letters required, number of digits required etc. This way the UI can alert the user if the password he chooses does not meet 
+the requirements, before the request is sent to the server.
+
+    GET
+    /getPasswordConstraints
+
+renders the create account page that is sent to the user:
+   
+    GET 
+    /createAccount
+   
+    POST 
+    /createAccount
+    
+    GET
+    /aa
+    
+    GET 
+    /forgotPassword
+    
+    POST 
+    /forgotPassword
+    
+    GET 
+    /rp
+    
+    POST 
+    /setNewPassword
+    
+    POST 
+    /deleteAccount
+
 ## tests
 
 all flows are tested very clearly using [Cucumber automated tests](https://github.com/OhadR/authentication-flows-js-automation).
