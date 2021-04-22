@@ -69,7 +69,7 @@ export class AuthenticationFlowsProcessor {
     }
 
     public set authenticationAccountRepository(authenticationAccountRepository: AuthenticationAccountRepository) {
-        debug(`set authenticationAccountRepository: ${JSON.stringify(authenticationAccountRepository)}`);
+        debug(`set authenticationAccountRepository: ${authenticationAccountRepository.constructor.name}`);
         this._authenticationAccountRepository = authenticationAccountRepository;
     }
 
