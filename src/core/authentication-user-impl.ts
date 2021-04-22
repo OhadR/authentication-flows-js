@@ -10,9 +10,8 @@ export class AuthenticationUserImpl implements AuthenticationUser {
         private firstName: string,
         private lastName: string,
         private authorities: string[],
-        private link: string = null,
-        private linkDate: Date = null) {
-
+        private token: string = null,
+        private tokenDate: Date = null) {
     }
 
     getAuthorities(): string[] {
@@ -47,12 +46,11 @@ export class AuthenticationUserImpl implements AuthenticationUser {
         return this.isActive;
     }
 
-    getLink(): string {
-        return this.link;
+    getToken(): string {
+        return this.token;
     }
 
-    getLinkDate(): Date {
-        return this.linkDate;
+    getTokenDate(): Date {
+        return this.tokenDate;
     }
 }
-
