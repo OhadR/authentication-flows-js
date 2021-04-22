@@ -2,7 +2,7 @@ import { AuthenticationUser } from "../..";
 
 export interface AuthenticationAccountRepository /*extends UserDetailsManager*/
 {
-	loadUserByUsername(email: string): AuthenticationUser;
+	loadUserByUsername(email: string): Promise<AuthenticationUser>;
 
 	/**
 	 * Create a new user with the supplied details.
@@ -18,12 +18,12 @@ export interface AuthenticationAccountRepository /*extends UserDetailsManager*/
 	/**
 	 * Check if a user with the supplied login name exists in the system.
 	 */
-	userExists(username: string): boolean;
+	userExists(username: string): Promise<boolean>;
 
 
 	setEnabled(email: string);
 	setDisabled(email: string);
-	isEnabled(email: string): boolean;
+	isEnabled(email: string): Promise<boolean>;
 
 //	boolean changePassword(String username, String newEncodedPassword);
 	
@@ -41,8 +41,8 @@ export interface AuthenticationAccountRepository /*extends UserDetailsManager*/
 	 */
 	setPassword(email: string, newPassword: string);
 
-	getEncodedPassword(username: string): string;
-	getPasswordLastChangeDate(email: string): Date;
+	getEncodedPassword(username: string): Promise<string>;
+	getPasswordLastChangeDate(email: string): Promise<Date>;
 
 	setAuthority(username: string, authority: string);
 
@@ -55,13 +55,13 @@ export interface AuthenticationAccountRepository /*extends UserDetailsManager*/
 	 * @param username- the key in the map to whom the link is attached
 	 * @return true if link was found (and removed). false otherwise.
 	 */
-	removeLink(username: string): boolean;
+	removeLink(username: string): Promise<boolean>;
 
-	getLink(username: string): { link: string, date: Date };
+	getLink(username: string): Promise<{ link: string, date: Date }>;
 
 	/**
 	 * @param link
 	 * @throws Error if link was not found for any user
 	 */
-	getUsernameByLink(link: string): string;
+	getUsernameByLink(link: string): Promise<string>;
 }
