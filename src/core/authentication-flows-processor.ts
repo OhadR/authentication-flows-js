@@ -101,7 +101,7 @@ export class AuthenticationFlowsProcessor {
             await this.onAuthenticationFailure(user, serverPath);
         }
 
-        const passChangeRequired = this.setLoginSuccessForUser(name);
+        const passChangeRequired = await this.setLoginSuccessForUser(name);
 
         //success
         return user;
@@ -140,7 +140,7 @@ export class AuthenticationFlowsProcessor {
 
         // reset the #attempts, since there is a flow of exceeding attempts number, so when clicking the link
         // (in the email), we get here and enable the account and reset the attempts number
-        this.setLoginSuccessForUser(username);
+        await this.setLoginSuccessForUser(username);
     }
 
     /**
@@ -209,7 +209,7 @@ export class AuthenticationFlowsProcessor {
         return "";
     }
 
-    async removeLinkFromDB(username: string) {
+    private async removeLinkFromDB(username: string) {
         const deleted = await this._authenticationAccountRepository.removeLink(username);
         if(!deleted)
             throw new Error(LINK_DOES_NOT_EXIST);
@@ -392,10 +392,11 @@ export class AuthenticationFlowsProcessor {
 
     private async isPasswordChangeRequired(username: string): Promise<boolean> {
         const lastChange: Date = await this._authenticationAccountRepository.getPasswordLastChangeDate(username);
-        debug("lastChange: " + lastChange);
+        const lastChangedDate: Date = new Date(lastChange);
+        debug("lastChangedDate: " + lastChangedDate);
         debug("PasswordLifeInDays: " + this.getAuthenticationSettings().getPasswordLifeInDays());
 
-        const passwordChangeRequired = (Date.now() - lastChange.getTime()) > (this.getAuthenticationSettings().getPasswordLifeInDays() * 24 * 60 * 60 * 1000);
+        const passwordChangeRequired = (Date.now() - lastChangedDate.getTime()) > (this.getAuthenticationSettings().getPasswordLifeInDays() * 24 * 60 * 60 * 1000);
         debug("passwordChangeRequired: " + passwordChangeRequired);
         return passwordChangeRequired;
     }
