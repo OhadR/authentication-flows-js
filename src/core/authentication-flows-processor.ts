@@ -355,8 +355,7 @@ export class AuthenticationFlowsProcessor {
         authUser = new AuthenticationUserImpl(
             email, encedPassword,
             false,									//start as de-activated
-//            policyRepo.getDefaultAuthenticationPolicy().getMaxPasswordEntryAttempts(),
-            5,
+            this._authenticationPolicyRepository.getDefaultAuthenticationPolicy().getMaxPasswordEntryAttempts(),
             null,					//set by the repo-impl
             firstName,
             lastName,
