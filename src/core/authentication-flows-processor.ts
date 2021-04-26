@@ -150,11 +150,12 @@ export class AuthenticationFlowsProcessor {
      */
     public async validatePasswordRestoration(link: string) {
 
-        //decrypt date:
         const username: string = await this._authenticationAccountRepository.getUsernameByLink(link);
         debug(`restore password for username: ${username}`);
 
         const lastChange: Date = await this._authenticationAccountRepository.getPasswordLastChangeDate(username);
+        const lastChangedDate: Date = new Date(lastChange);
+        debug("lastChangedDate: " + lastChangedDate);
 
         const linkData = await this._authenticationAccountRepository.getLink(username);
 
@@ -163,16 +164,17 @@ export class AuthenticationFlowsProcessor {
             throw new LinkExpiredError(`ERROR: user ${username} tried to use non-existing`);
         }
 
+        const tokenDate: Date = new Date(linkData.date);
 
         //check if link is expired:
-        if(new Date().getTime() - linkData.date.getTime() > 1000 * 1000) {
+        if(new Date().getTime() - tokenDate.getTime() > 1000 * 1000) {
             debug(`ERROR: user ${username} tried to use an expired link`);
             throw new LinkExpiredError(`ERROR: user ${username} tried to use an expired link: link is valid for 1000 seconds`);
         }
 
         //if password was changed AFTER the email creation (that is AFTER the user initiated "4got password" flow) -
         //it means the request is irrelevant
-        if(lastChange > linkData.date) {
+        if(lastChangedDate > tokenDate) {
             debug(`ERROR: user ${username} tried to use an expired link: password was already changed AFTER the timestamp of the link`);
             throw new PasswordAlreadyChangedError(`ERROR: user ${username} tried to use an expired link: password was already changed AFTER the timestamp of the link`);
         }
@@ -205,10 +207,6 @@ export class AuthenticationFlowsProcessor {
         await this.sendPasswordRestoreMail(email, serverPath);
     }
 
-    handleSetNewPassword(encUserAndTimestamp: string, password: string, retypedPassword: string): string {
-        return "";
-    }
-
     private async removeLinkFromDB(username: string) {
         const deleted = await this._authenticationAccountRepository.removeLink(username);
         if(!deleted)
@@ -230,11 +228,11 @@ export class AuthenticationFlowsProcessor {
             activationUrl );
     }
 
-    async setEnabled(userEmail: string) {
+    private async setEnabled(userEmail: string) {
         await this._authenticationAccountRepository.setEnabled(userEmail);
     }
 
-    async setLoginSuccessForUser(username: string): Promise<boolean> {
+    private async setLoginSuccessForUser(username: string): Promise<boolean> {
         debug("setting login success for user " + username);
 
         this._authenticationAccountRepository.setAttemptsLeft( username,
@@ -243,11 +241,6 @@ export class AuthenticationFlowsProcessor {
         return await this.isPasswordChangeRequired(username);
     }
 
-
-    async setPassword(username: string, encodedPassword: string) {
-        debug("setting password for user " + username);
-        await this._authenticationAccountRepository.setPassword(username, encodedPassword);
-    }
 
     private static validateEmail(email: string) {
         if( ! email.includes("@") ) {
@@ -442,12 +435,13 @@ export class AuthenticationFlowsProcessor {
         const username: string = await this._authenticationAccountRepository.getUsernameByLink(linkParam);
         debug(`setNewPassword(): username: ${username}`);
 
-        //validate expiration (again):
+        //validate expiration (again): TODO
 
         //encrypt the password:
         const encodedPassword: string = shaString(password);
 
-        await this.setPassword(username, encodedPassword);
+        debug("setting password for user " + username);
+        await this._authenticationAccountRepository.setPassword(username, encodedPassword);
     }
 
 
