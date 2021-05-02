@@ -107,7 +107,7 @@ export class AuthenticationFlowsProcessor {
         return user;
     }
 
-    async createAccount(email: string, password: string, retypedPassword: string, firstName: string, lastName: string, path: string) {
+    async createAccount(email: string, password: string, retypedPassword: string, firstName: string, lastName: string, serverPath: string) {
         //validate the input:
         AuthenticationFlowsProcessor.validateEmail(email);
 
@@ -121,7 +121,66 @@ export class AuthenticationFlowsProcessor {
         //make any other additional chackes. this let applications override this impl and add their custom functionality:
         this.createAccountEndpoint.additionalValidations(email, password);
 
-        await this.internalCreateAccount(email, encodedPassword, firstName, lastName, path);
+        email = email.toLowerCase();		// issue #23 : username is case-sensitive
+        debug('createAccount() for user ' + email);
+        debug('encoded password: ' + encodedPassword);
+
+        let authUser: AuthenticationUser = null;
+        try
+        {
+            authUser = await this._authenticationAccountRepository.loadUserByUsername( email );
+        }
+        catch(unfe)
+        {
+            //basically do nothing - we expect user not to be found.
+        }
+        debug(`oauthUser: ${authUser}`);
+
+        //if user exist, but not activated - we allow re-registration:
+        if(authUser)
+        {
+            if( !authUser.isEnabled())
+            {
+                await this._authenticationAccountRepository.deleteUser( email );
+            }
+            else
+            {
+                //error - user already exists and active
+                //log.error( "cannot create account - user " + email + " already exist." );
+                debug( "cannot create account - user " + email + " already exist." );
+                throw new AuthenticationFlowsError( USER_ALREADY_EXIST );
+            }
+        }
+
+        const authorities: string[] = this.setAuthorities();		//set authorities
+        authUser = new AuthenticationUserImpl(
+            email, encodedPassword,
+            false,									//start as de-activated
+            this._authenticationPolicyRepository.getDefaultAuthenticationPolicy().getMaxPasswordEntryAttempts(),
+            null,					//set by the repo-impl
+            firstName,
+            lastName,
+            authorities);
+
+        debug(`authUser: ${authUser}`);
+
+        await this._authenticationAccountRepository.createUser(authUser);
+
+        await this.createAccountEndpoint.postCreateAccount( email );
+
+        const token: string = randomString();
+        const activationUrl: string = serverPath + ACTIVATE_ACCOUNT_ENDPOINT +
+            "/" + token;
+        //persist the "uts", so this activation link will be single-used:
+        await this._authenticationAccountRepository.addLink( email, token );
+
+
+        debug("sending registration email to " + email + "; activationUrl: " + activationUrl);
+
+
+        await this._mailSender.sendEmail(email,
+            AUTHENTICATION_MAIL_SUBJECT,
+            activationUrl );
     }
 
     public async activateAccount(linkCode: string) {
@@ -310,69 +369,6 @@ export class AuthenticationFlowsProcessor {
 
         if(retVal)
             throw new Error(SETTING_A_NEW_PASSWORD_HAS_FAILED_PLEASE_NOTE_THE_PASSWORD_POLICY_AND_TRY_AGAIN_ERROR_MESSAGE + " " + retVal);
-    }
-
-    private async internalCreateAccount(email: string, encedPassword: string, firstName: string, lastName: string, serverPath: string) {
-        email = email.toLowerCase();		// issue #23 : username is case-sensitive (https://github.com/OhadR/oAuth2-sample/issues/23)
-        debug('createAccount() for user ' + email);
-        debug('encrypted password: ' + encedPassword);
-
-        let authUser: AuthenticationUser = null;
-        try
-        {
-            authUser = await this._authenticationAccountRepository.loadUserByUsername( email );
-        }
-        catch(unfe)
-        {
-            //basically do nothing - we expect user not to be found.
-        }
-        debug(`oauthUser: ${authUser}`);
-
-        //if user exist, but not activated - we allow re-registration:
-        if(authUser)
-        {
-            if( !authUser.isEnabled())
-            {
-                await this._authenticationAccountRepository.deleteUser( email );
-            }
-            else
-            {
-                //error - user already exists and active
-                //log.error( "cannot create account - user " + email + " already exist." );
-                debug( "cannot create account - user " + email + " already exist." );
-                throw new AuthenticationFlowsError( USER_ALREADY_EXIST );
-            }
-        }
-
-        const authorities: string[] = this.setAuthorities();		//set authorities
-        authUser = new AuthenticationUserImpl(
-            email, encedPassword,
-            false,									//start as de-activated
-            this._authenticationPolicyRepository.getDefaultAuthenticationPolicy().getMaxPasswordEntryAttempts(),
-            null,					//set by the repo-impl
-            firstName,
-            lastName,
-            authorities);
-
-        debug(`authUser: ${authUser}`);
-
-        await this._authenticationAccountRepository.createUser(authUser);
-
-        await this.createAccountEndpoint.postCreateAccount( email );
-
-        const token: string = randomString();
-        const activationUrl: string = serverPath + ACTIVATE_ACCOUNT_ENDPOINT +
-            "/" + token;
-        //persist the "uts", so this activation link will be single-used:
-        await this._authenticationAccountRepository.addLink( email, token );
-
-
-        debug("sending registration email to " + email + "; activationUrl: " + activationUrl);
-
-
-        await this._mailSender.sendEmail(email,
-            AUTHENTICATION_MAIL_SUBJECT,
-            activationUrl );
     }
 
     private setAuthorities(): string[]

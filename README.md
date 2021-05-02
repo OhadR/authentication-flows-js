@@ -157,6 +157,8 @@ https://softwareengineering.stackexchange.com/questions/424981/authentication-fl
 
 https://www.smashingmagazine.com/2020/03/creating-secure-password-flows-nodejs-mysql/
 
+https://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_generator
+
 ## Questions? issues? something is missing?
 
 Feel free to open issues here if you have any unclear matter or any other question.
