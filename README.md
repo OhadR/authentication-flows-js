@@ -150,6 +150,8 @@ renders the create account page that is sent to the user:
 
 all flows are tested very clearly using [Cucumber automated tests](https://github.com/OhadR/authentication-flows-js-automation).
 
+<img src="cucumber-logo.png" height="50px" />
+
 
 ## refs
 
