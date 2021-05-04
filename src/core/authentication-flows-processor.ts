@@ -5,7 +5,6 @@ import {
     PasswordAlreadyChangedError,
     AuthenticationPolicy,
     AuthenticationUser,
-    generateKeyFile,
     shaString, MailSender,
     randomString
 } from "..";
@@ -17,10 +16,10 @@ import {
     UTS_PARAM
 } from "../types/flows-constatns";
 import { AuthenticationAccountRepository } from "../interfaces/repository/authentication-account-repository";
-import { AuthenticationPolicyRepository } from "../interfaces/authentication-policy-repository";
+import { PasswordPolicyRepository } from "../interfaces/password-policy-repository";
 import { AuthenticationUserImpl } from "./authentication-user-impl";
 import { DefaultMailSenderImpl } from "../interceptors/default-email-sender";
-import { AuthenticationPolicyRepositoryImpl } from "../config/authentication-policy-repository-impl";
+import { PasswordPolicyRepositoryImpl } from "../config/password-policy-repository-impl";
 
 const debug = require('debug')('authentication-flows-processor');
 
@@ -55,13 +54,13 @@ export class AuthenticationFlowsProcessor {
     private createAccountEndpoint: CreateAccountInterceptor = new CreateAccountInterceptor();
 
     private _authenticationAccountRepository: AuthenticationAccountRepository;
-    private _authenticationPolicyRepository: AuthenticationPolicyRepository;
+    private _passwordPolicyRepository: PasswordPolicyRepository;
 
     private _mailSender: MailSender = new DefaultMailSenderImpl();
 
 
     private constructor() {
-        this._authenticationPolicyRepository = new AuthenticationPolicyRepositoryImpl();
+        this._passwordPolicyRepository = new PasswordPolicyRepositoryImpl();
     }
 
     public static get instance() {
@@ -156,7 +155,7 @@ export class AuthenticationFlowsProcessor {
         authUser = new AuthenticationUserImpl(
             email, encodedPassword,
             false,									//start as de-activated
-            this._authenticationPolicyRepository.getDefaultAuthenticationPolicy().getMaxPasswordEntryAttempts(),
+            this._passwordPolicyRepository.getDefaultAuthenticationPolicy().getMaxPasswordEntryAttempts(),
             null,					//set by the repo-impl
             firstName,
             lastName,
@@ -240,7 +239,7 @@ export class AuthenticationFlowsProcessor {
     }
 
     getAuthenticationSettings(): AuthenticationPolicy {
-        return this._authenticationPolicyRepository.getDefaultAuthenticationPolicy();
+        return this._passwordPolicyRepository.getDefaultAuthenticationPolicy();
     }
 
     handleChangePassword(currentPassword: string, newPassword: string, retypedPassword: string, encUser: string);
@@ -315,7 +314,7 @@ export class AuthenticationFlowsProcessor {
 
 
     private validatePassword(password: string) {
-        const settings: AuthenticationPolicy = this._authenticationPolicyRepository.getDefaultAuthenticationPolicy();
+        const settings: AuthenticationPolicy = this._passwordPolicyRepository.getDefaultAuthenticationPolicy();
 
         const blackList: string[] = settings.getPasswordBlackList();
         if(blackList != null) {

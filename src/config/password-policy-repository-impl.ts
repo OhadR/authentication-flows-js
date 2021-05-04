@@ -1,10 +1,10 @@
-import { AuthenticationPolicyRepository } from "../interfaces/authentication-policy-repository";
+import { PasswordPolicyRepository } from "../interfaces/password-policy-repository";
 import { AuthenticationPolicy } from "../types/authentication-policy";
 
 //load the json file with the policy:
 const config = require('../../config/authentication-policy-repository-config.json');
 
-export class AuthenticationPolicyRepositoryImpl implements AuthenticationPolicyRepository {
+export class PasswordPolicyRepositoryImpl implements PasswordPolicyRepository {
     public getAuthenticationPolicy(settingsId: number): AuthenticationPolicy {
         const policy: AuthenticationPolicy = new AuthenticationPolicy(
             config.passwordMinLength,
