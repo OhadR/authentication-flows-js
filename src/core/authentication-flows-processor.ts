@@ -430,7 +430,22 @@ export class AuthenticationFlowsProcessor {
         const username: string = await this._authenticationAccountRepository.getUsernameByLink(linkParam);
         debug(`setNewPassword(): username: ${username}`);
 
-        //validate expiration (again): TODO
+        //validate expiration (again):
+        const linkData = await this._authenticationAccountRepository.getLink(username);
+
+        if(!linkData || !linkData.link) {
+            debug(`ERROR: user ${username} tried to use an non-existing link`);
+            throw new LinkExpiredError(`ERROR: user ${username} tried to use non-existing`);
+        }
+
+        const tokenDate: Date = new Date(linkData.date);
+
+        //check if link is expired:
+        if(new Date().getTime() - tokenDate.getTime() > 1000 * 1000) {
+            debug(`ERROR: user ${username} tried to use an expired link`);
+            throw new LinkExpiredError(`ERROR: user ${username} tried to use an expired link: link is valid for 1000 seconds`);
+        }
+
 
         //encrypt the password:
         const encodedPassword: string = shaString(password);
