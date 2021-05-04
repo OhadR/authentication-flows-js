@@ -187,7 +187,21 @@ export class AuthenticationFlowsProcessor {
         const username: string = await this._authenticationAccountRepository.getUsernameByLink(linkCode);
         debug(`activating username: ${username}`);
 
-        //TODO check linkCode expiration and throw LINK_HAS_EXPIRED
+        // check token expiration and throw LINK_HAS_EXPIRED
+        const tokenData = await this._authenticationAccountRepository.getLink(username);
+
+        if(!tokenData || !tokenData.link) {
+            debug(`ERROR: user ${username} tried to use an non-existing link`);
+            throw new LinkExpiredError(`ERROR: user ${username} tried to use non-existing`);
+        }
+
+        const tokenDate: Date = new Date(tokenData.date);
+
+        //check if link is expired:
+        if(new Date().getTime() - tokenDate.getTime() > 1000 * 1000) {
+            debug(`ERROR: user ${username} tried to use an expired link`);
+            throw new LinkExpiredError(`ERROR: user ${username} tried to use an expired link: link is valid for 1000 seconds`);
+        }
 
         //this part was persisted in the DB, in order to make sure the activation-link is single-used.
         //so here we remove it from the DB:
@@ -215,14 +229,14 @@ export class AuthenticationFlowsProcessor {
         const lastChangedDate: Date = new Date(lastChange);
         debug("lastChangedDate: " + lastChangedDate);
 
-        const linkData = await this._authenticationAccountRepository.getLink(username);
+        const tokenData = await this._authenticationAccountRepository.getLink(username);
 
-        if(!linkData || !linkData.link) {
+        if(!tokenData || !tokenData.link) {
             debug(`ERROR: user ${username} tried to use an non-existing link`);
             throw new LinkExpiredError(`ERROR: user ${username} tried to use non-existing`);
         }
 
-        const tokenDate: Date = new Date(linkData.date);
+        const tokenDate: Date = new Date(tokenData.date);
 
         //check if link is expired:
         if(new Date().getTime() - tokenDate.getTime() > 1000 * 1000) {
@@ -431,14 +445,14 @@ export class AuthenticationFlowsProcessor {
         debug(`setNewPassword(): username: ${username}`);
 
         //validate expiration (again):
-        const linkData = await this._authenticationAccountRepository.getLink(username);
+        const tokenData = await this._authenticationAccountRepository.getLink(username);
 
-        if(!linkData || !linkData.link) {
+        if(!tokenData || !tokenData.link) {
             debug(`ERROR: user ${username} tried to use an non-existing link`);
             throw new LinkExpiredError(`ERROR: user ${username} tried to use non-existing`);
         }
 
-        const tokenDate: Date = new Date(linkData.date);
+        const tokenDate: Date = new Date(tokenData.date);
 
         //check if link is expired:
         if(new Date().getTime() - tokenDate.getTime() > 1000 * 1000) {
