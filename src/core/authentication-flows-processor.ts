@@ -4,11 +4,9 @@ import {
     LinkExpiredError,
     PasswordAlreadyChangedError,
     AuthenticationPolicy,
-    AuthenticationUser,
-    shaString, MailSender,
-    randomString
 } from "..";
 import { CreateAccountInterceptor } from "../interceptors/create-account-interceptor";
+import { DefaultMailSenderImpl } from "../interceptors/default-email-sender";
 import {
     ACTIVATE_ACCOUNT_ENDPOINT,
     AUTHENTICATION_MAIL_SUBJECT,
@@ -17,9 +15,11 @@ import {
 } from "../types/flows-constatns";
 import { AuthenticationAccountRepository } from "../interfaces/repository/authentication-account-repository";
 import { PasswordPolicyRepository } from "../interfaces/password-policy-repository";
+import { AuthenticationUser } from "../interfaces/authentication-user";
+import { MailSender } from "../interfaces/mail-sender";
 import { AuthenticationUserImpl } from "./authentication-user-impl";
-import { DefaultMailSenderImpl } from "../interceptors/default-email-sender";
 import { PasswordPolicyRepositoryImpl } from "../config/password-policy-repository-impl";
+import { randomString, shaString } from "../crypto/key-generator";
 
 const debug = require('debug')('authentication-flows-processor');
 

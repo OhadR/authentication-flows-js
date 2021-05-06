@@ -1,4 +1,4 @@
-import { AuthenticationUser } from "..";
+import { AuthenticationUser } from "../interfaces/authentication-user";
 
 export class AuthenticationUserImpl implements AuthenticationUser {
     constructor(

@@ -1,4 +1,4 @@
-import { AuthenticationUser } from "../..";
+import { AuthenticationUser } from "../authentication-user";
 
 export interface AuthenticationAccountRepository /*extends UserDetailsManager*/
 {

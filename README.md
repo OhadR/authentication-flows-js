@@ -27,14 +27,33 @@ This way developers can concentrate on developing the core of their app, instead
 definitely not the core of their business.
  
 
-Find [here](here) all required configurations, API and more.
- 
 
 ## configuration
 
+### sample application
+
+I have prepared a [sample application](https://github.com/OhadR/authentication-flows-js-app) that uses `authentication-flows-js` so it is a great place to start. Below there are 
+the required configurations needed. 
+
 ### repository adapters
 
-The client-app passes the repository-adapters (**TODO: elaborate**).  
+According to the design:
+
+![images/repos-design.JPG](images/repos-design.JPG)
+
+
+The client-app chooses which repository it works with, and passes the appropriate adapters:  
+
+    const app = express();
+    var authFlows = require('authentication-flows-js');
+    const authFlowsES = require('authentication-flows-js-elasticsearch');
+    const esRepo = new authFlowsES.AuthenticationAccountElasticsearchRepository();
+    
+    authFlows.config({
+        user_app: app,
+        authenticationAccountRepository: repo,
+    });
+
 
 ### express server object
 
