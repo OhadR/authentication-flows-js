@@ -54,20 +54,15 @@ The client-app chooses which repository it works with, and passes the appropriat
         authenticationAccountRepository: repo,
     });
 
+currently, the following repositories are supported:
+
+* [in-memory](https://github.com/OhadR/authentication-flows-js-inmem)
+* [elasticsearch](https://github.com/OhadR/authentication-flows-js-elasticsearch)
 
 ### express server object
 
 This module *reuses* that client-app' express server and adds several endpoints to it (e.g. `/createAccount`).
-Thus, the client-app should pass authentication-flows-js its server object (example below).
-
-
-    const app = module.exports = express();
-    var authentication-flows-js = require('authentication-flows-js');
-    authentication-flows-js.config(
-        config: {
-            user_app: app, 
-            authenticationAccountRepository: inmemRepo
-        });
+Thus, the client-app should pass authentication-flows-js its server object (example above).
 
 ### password policy
 
