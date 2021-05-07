@@ -7,6 +7,11 @@
 
 [authentication-flows](https://github.com/OhadR/authentication-flows) for javascript
 
+----
+Read the article in CodeProject:
+[![images/codeProjectLogo.JPG](images/codeProjectLogo.JPG)](https://www.codeproject.com/Articles/5300920/Authentication-flows-js)
+---
+
 ## motivation
 
 Every secured web application should support these flows - unless it delegates the authentication to a third party
