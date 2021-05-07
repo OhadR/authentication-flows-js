@@ -7,10 +7,10 @@
 
 [authentication-flows](https://github.com/OhadR/authentication-flows) for javascript
 
-----
-Read the article in CodeProject:
+
+## Read the article in CodeProject:
 [![images/codeProjectLogo.JPG](images/codeProjectLogo.JPG)](https://www.codeproject.com/Articles/5300920/Authentication-flows-js)
----
+
 
 ## motivation
 
