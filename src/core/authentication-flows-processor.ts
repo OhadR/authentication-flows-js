@@ -10,7 +10,10 @@ import { DefaultMailSenderImpl } from "../interceptors/default-email-sender";
 import {
     ACTIVATE_ACCOUNT_ENDPOINT,
     AUTHENTICATION_MAIL_SUBJECT,
-    RESTORE_PASSWORD_ENDPOINT, RESTORE_PASSWORD_MAIL_SUBJECT, UNLOCK_MAIL_SUBJECT,
+    PASSWORD_CHANGED_MAIL_SUBJECT,
+    RESTORE_PASSWORD_ENDPOINT,
+    RESTORE_PASSWORD_MAIL_SUBJECT,
+    UNLOCK_MAIL_SUBJECT,
     UTS_PARAM
 } from "../types/flows-constatns";
 import { AuthenticationAccountRepository } from "../interfaces/repository/authentication-account-repository";
@@ -256,14 +259,9 @@ export class AuthenticationFlowsProcessor {
         return this._passwordPolicyRepository.getDefaultAuthenticationPolicy();
     }
 
-    handleChangePassword(currentPassword: string, newPassword: string, retypedPassword: string, encUser: string);
-    handleChangePassword(currentPassword: string, newPassword: string, retypedPassword: string);
-    handleChangePassword(currentPassword: string, newPassword: string, retypedPassword: string, encUser?: string) {
-    }
 
     async forgotPassword(email: string, serverPath: string) {
         debug('forgotPassword() for user ' + email);
-
 
         AuthenticationFlowsProcessor.validateEmail(email);
 
@@ -493,5 +491,26 @@ export class AuthenticationFlowsProcessor {
         }
 
         throw new Error('bad credentials');
+    }
+
+    async changePassword(
+        username: string,
+        currentPassword: string,
+        newPassword: string,
+        retypedPassword: string) {
+
+        AuthenticationFlowsProcessor.validateRetypedPassword(newPassword, retypedPassword);
+
+        this.validatePassword(newPassword);
+
+        //encrypt the password:
+        const encodedPassword: string = shaString(newPassword);
+
+        debug("setting password for user " + username);
+        await this._authenticationAccountRepository.setPassword(username, encodedPassword);
+
+        await this._mailSender.sendEmail(username,
+            PASSWORD_CHANGED_MAIL_SUBJECT,
+            'your password has been changed.' );
     }
 }
