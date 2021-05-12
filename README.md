@@ -116,6 +116,20 @@ This module sends verification emails. By default, it uses `nodemailer` and [SMT
 but it makes sense that each application has its own mailing system. In addition, verification emails
 may have the same look and feel of the hosting application. Hosing-application can have their own implementation by implementing `MailSender` interface.
 
+## Flows
+
+### Create Account
+
+![create-account-diagram](images/create-account-diagram.JPG)
+
+### Forgot Password
+
+![forgot-password-diagram](images/forgot-password-diagram.JPG)
+
+### Change Password
+
+![change-password-diagram](images/change-password-diagram.JPG)
+
 ## API
    
 The AFM supports the below APIs:
