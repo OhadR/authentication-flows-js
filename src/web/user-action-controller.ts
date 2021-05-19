@@ -58,6 +58,9 @@ export function config(config: {
         }
 
         debug(user);
+        //store the username upon login:
+        req.app.username = req.body.username;
+
 
         // Regenerate session when signing in
         // to prevent fixation
