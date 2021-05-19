@@ -213,6 +213,34 @@ export function config(config: {
             .render('passwordSetSuccess');
     });
 
+
+    app.get('/changePassword', (req: express.Request, res: express.Response) => {
+        res.render('changePasswordPage', { [ERR_MSG]: null });
+    });
+
+    app.post('/changePassword', async (req: express.Request, res: express.Response) => {
+        const requestBody = req.body;
+        debug('req.app.username: ', req.app.username);
+        try {
+            await AuthenticationFlowsProcessor.instance.changePassword(
+                req.app.username,
+                requestBody.currentPassword,
+                requestBody.newPassword,
+                requestBody.retypedPassword);
+        }
+        catch (e) {
+            debug('ERROR: ', e);
+            //back again to changePasswordPage, but add error message:
+            res
+                .status(500)
+                .append(ERR_MSG, e.message)         //add to headers
+                .render('changePasswordPage', { [ERR_MSG]: e.message });
+            return;
+        }
+        res
+            .render('passwordChangedEmailSent', { email: requestBody.email });
+    });
+
     app.post('/deleteAccount', async (req: express.Request, res: express.Response) => {
         const requestBody = req.body;
         //debug(`createAccount requestBody ${JSON.stringify(requestBody)}`);
