@@ -221,6 +221,9 @@ export function config(config: {
     app.post('/changePassword', async (req: express.Request, res: express.Response) => {
         const requestBody = req.body;
         debug('req.app.username: ', req.app.username);
+        debug('req.session.user: ', req.session.user);
+        debug('req.session.user: ', JSON.stringify( req.session.user ));
+
         try {
             await AuthenticationFlowsProcessor.instance.changePassword(
                 req.app.username,
