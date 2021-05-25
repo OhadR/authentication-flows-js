@@ -177,7 +177,8 @@ export class AuthenticationFlowsProcessor {
         await this._authenticationAccountRepository.addLink( email, token );
 
 
-        debug("sending registration email to " + email + "; activationUrl: " + activationUrl);
+        //debug("sending registration email to " + email + "; activationUrl: " + activationUrl);
+        debug("sending registration email; activationUrl: " + activationUrl);
 
 
         await this._mailSender.sendEmail(email,

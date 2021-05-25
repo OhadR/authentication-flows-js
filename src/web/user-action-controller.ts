@@ -58,9 +58,6 @@ export function config(config: {
         }
 
         debug(user);
-        //store the username upon login:
-        req.app.username = req.body.username;
-
 
         // Regenerate session when signing in
         // to prevent fixation
@@ -68,7 +65,8 @@ export function config(config: {
             // Store the user's primary key
             // in the session store to be retrieved,
             // or in this case the entire user object
-            req.session.user = user;
+            req.session.user = user.email;
+
             req.session.success = 'Authenticated as ' + user.email
                 + ' click to <a href="/logout">logout</a>. '
                 + ' You may now access <a href="/restricted">/restricted</a>.';
@@ -220,13 +218,11 @@ export function config(config: {
 
     app.post('/changePassword', async (req: express.Request, res: express.Response) => {
         const requestBody = req.body;
-        debug('req.app.username: ', req.app.username);
         debug('req.session.user: ', req.session.user);
-        debug('req.session.user: ', JSON.stringify( req.session.user ));
 
         try {
             await AuthenticationFlowsProcessor.instance.changePassword(
-                req.app.username,
+                req.session.user,
                 requestBody.currentPassword,
                 requestBody.newPassword,
                 requestBody.retypedPassword);
