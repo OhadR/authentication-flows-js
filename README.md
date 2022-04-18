@@ -101,7 +101,7 @@ Thus, the `authentication-flows-js` can use:
 ## dependencies
 
 * `express` - this module uses web-api for flows such create-account, forget-password, etc.
-* `log4js` - logs.
+* `@log4js-node/log4js-api` - rather than being dependent on a specific version of`log4js` (to avoid headache for this library users). 
 * `nodemailer` - sending verification emails. version 4.7.0 and NOT latest: https://stackoverflow.com/questions/54385031/nodemailer-fails-with-connection-refused-using-known-good-smtp-server/54537119#54537119
 
 
