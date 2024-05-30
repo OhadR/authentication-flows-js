@@ -105,8 +105,22 @@ Thus, the `authentication-flows-js` can use:
 * `nodemailer` - sending verification emails. version 4.7.0 and NOT latest: https://stackoverflow.com/questions/54385031/nodemailer-fails-with-connection-refused-using-known-good-smtp-server/54537119#54537119
 
 
+## required environment variables
+
+    emailSender
+    smtpServer
+    smtpPort
+    emailServerUser
+    emailServerPass
+
+## run tests
+
+    ts-node test\mail\mail.test.ts
+
+note: set the environment variables.
+
 ## deploy 
-* tsc
+* npm run build
 * npm version patch
 * npm publish
 
