@@ -105,8 +105,9 @@ Thus, the `authentication-flows-js` can use:
 * `nodemailer` - sending verification emails. version 4.7.0 and NOT latest: https://stackoverflow.com/questions/54385031/nodemailer-fails-with-connection-refused-using-known-good-smtp-server/54537119#54537119
 
 
-## required environment variables
+## required environment variables (for hosting-app and tests)
 
+    DEBUG=*,-follow-redirects -express:* -body-parser:*
     emailSender
     smtpServer
     smtpPort
