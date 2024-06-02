@@ -1,7 +1,6 @@
-# authentication-flows-js
+# <img src="images/favicon.ico" alt="logo" height="40"/> authentication-flows-js
 
 [![npm Package](https://img.shields.io/npm/v/authentication-flows-js.svg?style=flat-square)](https://www.npmjs.org/package/authentication-flows-js)
-[![build status](https://api.travis-ci.com/OhadR/authentication-flows-js.svg)](http://travis-ci.com/OhadR/authentication-flows-js)
 
 ### authentication-flows-js is a powerful and highly customizable framework that covers all flows that any express-based authentication-server needs.
 
