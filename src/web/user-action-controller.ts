@@ -179,12 +179,11 @@ export function config(config: {
                 .render('errorPage', { [ERR_MSG]: err.message });
             return;
         }
-        debug('req.query', JSON.stringify(req.query));
-        debug('req.param', JSON.stringify(req.param));
+        // debug('req.params', JSON.stringify(req.params));
         res
             .render('setNewPasswordPage', {
                 [ERR_MSG]: null,
-                [HASH_PARAM_NAME]: req.query[UTS_PARAM]
+                [HASH_PARAM_NAME]: req.params.token
             });
     });
 
