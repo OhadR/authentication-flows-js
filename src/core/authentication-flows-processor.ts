@@ -136,7 +136,7 @@ export class AuthenticationFlowsProcessor {
         {
             //basically do nothing - we expect user not to be found.
         }
-        debug(`oauthUser: ${authUser}`);
+        debug(`create-account, user: ${authUser}`);
 
         //if user exist, but not activated - we allow re-registration:
         if(authUser)
@@ -195,8 +195,8 @@ export class AuthenticationFlowsProcessor {
         const tokenData = await this._authenticationAccountRepository.getLink(username);
 
         if(!tokenData || !tokenData.link) {
-            debug(`ERROR: user ${username} tried to use an non-existing link`);
-            throw new LinkExpiredError(`ERROR: user ${username} tried to use non-existing`);
+            debug(`ERROR: user ${username} tried to use a non-existing link`);
+            throw new LinkExpiredError(`ERROR: user ${username} tried to use non-existing link`);
         }
 
         const tokenDate: Date = new Date(tokenData.date);
@@ -236,8 +236,8 @@ export class AuthenticationFlowsProcessor {
         const tokenData = await this._authenticationAccountRepository.getLink(username);
 
         if(!tokenData || !tokenData.link) {
-            debug(`ERROR: user ${username} tried to use an non-existing link`);
-            throw new LinkExpiredError(`ERROR: user ${username} tried to use non-existing`);
+            debug(`ERROR: user ${username} tried to use a non-existing link`);
+            throw new LinkExpiredError(`ERROR: user ${username} tried to use non-existing link`);
         }
 
         const tokenDate: Date = new Date(tokenData.date);
@@ -266,7 +266,7 @@ export class AuthenticationFlowsProcessor {
 
         AuthenticationFlowsProcessor.validateEmail(email);
 
-        //if account is already locked, no need to ask the user the secret question:
+        //if account is already locked, he is not allowed to reset password:
         if( ! await this._authenticationAccountRepository.isEnabled(email) )
         {
             //security bug: Even if we don’t find an email address, we return 'ok'. We don’t want untoward
@@ -447,8 +447,8 @@ export class AuthenticationFlowsProcessor {
         const tokenData = await this._authenticationAccountRepository.getLink(username);
 
         if(!tokenData || !tokenData.link) {
-            debug(`ERROR: user ${username} tried to use an non-existing link`);
-            throw new LinkExpiredError(`ERROR: user ${username} tried to use non-existing`);
+            debug(`ERROR: user ${username} tried to use a non-existing link`);
+            throw new LinkExpiredError(`ERROR: user ${username} tried to use non-existing link`);
         }
 
         const tokenDate: Date = new Date(tokenData.date);
