@@ -240,10 +240,6 @@ export class AuthenticationFlowsProcessor {
             throw new LinkExpiredError(`ERROR: user ${username} tried to use non-existing link`);
         }
 
-        //this part was persisted in the DB, in order to make sure the activation-link is single-used.
-        //so here we remove it from the DB:
-        await this.removeLinkFromDB( username );
-
         const tokenDate: Date = new Date(tokenData.date);
 
         //check if link is expired:
@@ -454,6 +450,10 @@ export class AuthenticationFlowsProcessor {
             debug(`ERROR: user ${username} tried to use a non-existing link`);
             throw new LinkExpiredError(`ERROR: user ${username} tried to use non-existing link`);
         }
+
+        //this part was persisted in the DB, in order to make sure the activation-link is single-used.
+        //so here we remove it from the DB:
+        await this.removeLinkFromDB( username );
 
         const tokenDate: Date = new Date(tokenData.date);
 
