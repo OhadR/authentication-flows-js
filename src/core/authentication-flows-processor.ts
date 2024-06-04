@@ -25,6 +25,10 @@ import { PasswordPolicyRepositoryImpl } from "../config/password-policy-reposito
 import { randomString, shaString } from "../crypto/key-generator";
 
 const debug = require('debug')('authentication-flows-processor');
+const logger = require('@log4js-node/log4js-api').getLogger();
+logger.category = 'authentication-flows-processor';
+
+
 
 //constants that are relevant only for this class:
 const EMAIL_NOT_VALID = "The e-mail you have entered is not valid.";
@@ -76,7 +80,7 @@ export class AuthenticationFlowsProcessor {
     }
 
     public set mailSender(mailSender: MailSender) {
-        debug(`set mailSender: ${JSON.stringify(mailSender)}`);
+        logger.info(`set mailSender: ${JSON.stringify(mailSender)}`);
         this._mailSender = mailSender;
     }
 
@@ -189,13 +193,13 @@ export class AuthenticationFlowsProcessor {
     public async activateAccount(linkCode: string) {
 
         const username: string = await this._authenticationAccountRepository.getUsernameByLink(linkCode);
-        debug(`activating username: ${username}`);
+        logger.info(`activating username: ${username}`);
 
         // check token expiration and throw LINK_HAS_EXPIRED
         const tokenData = await this._authenticationAccountRepository.getLink(username);
 
         if(!tokenData || !tokenData.link) {
-            debug(`ERROR: user ${username} tried to use a non-existing link`);
+            logger.error(`ERROR: user ${username} tried to use a non-existing link`);
             throw new LinkExpiredError(`ERROR: user ${username} tried to use non-existing link`);
         }
 
