@@ -128,7 +128,7 @@ export class AuthenticationFlowsProcessor {
         this.createAccountEndpoint.additionalValidations(email, password);
 
         email = email.toLowerCase();		// issue #23 : username is case-sensitive
-        debug('createAccount() for user ' + email);
+        logger.info('createAccount() for user ' + email);
         debug('encoded password: ' + encodedPassword);
 
         let authUser: AuthenticationUser = null;
