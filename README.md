@@ -216,4 +216,11 @@ Feel free to open issues here if you have any unclear matter or any other questi
 
 ### 1.2.0
 
-bugfix | change password flow: get the token from the url correctly.
+* bugfix | change password flow: get the token from the url correctly.
+
+### 1.1.0
+
+* use GitHub-CI rather than Travis-CI.
+* re-arrange (dev-)dependencies in package.json
+* add build scripts (with rimraf).
+
