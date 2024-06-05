@@ -211,3 +211,9 @@ https://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_gener
 ## Questions? issues? something is missing?
 
 Feel free to open issues here if you have any unclear matter or any other question.
+
+## versions
+
+### 1.2.0
+
+bugfix | change password flow: get the token from the url correctly.
