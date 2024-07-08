@@ -19,6 +19,7 @@ const SC_LOCKED = 423;
 export function config(config: {
     user_app: object,
     authenticationAccountRepository: AuthenticationAccountRepository,
+    redirectAfterLogin: string,
 }) {
     app = config.user_app;
     AuthenticationFlowsProcessor.instance.authenticationAccountRepository = config.authenticationAccountRepository;
@@ -70,7 +71,7 @@ export function config(config: {
             req.session.success = 'Authenticated as ' + user.email
                 + ' click to <a href="/logout">logout</a>. '
                 + ' You may now access <a href="/restricted">/restricted</a>.';
-            res.redirect('back');
+            res.redirect(config.redirectAfterLogin || '/');
         });
     });
 
