@@ -57,6 +57,7 @@ export class AuthenticationFlowsProcessor {
     private createAccountEndpoint: CreateAccountInterceptor = new CreateAccountInterceptor();
 
     private _authenticationAccountRepository: AuthenticationAccountRepository;
+    private _sendActivationEmailUponActivation: boolean;
     private _passwordPolicyRepository: PasswordPolicyRepository;
 
     private _mailSender: MailSender = new DefaultMailSenderImpl();
@@ -73,6 +74,11 @@ export class AuthenticationFlowsProcessor {
     public set authenticationAccountRepository(authenticationAccountRepository: AuthenticationAccountRepository) {
         debug(`set authenticationAccountRepository: ${authenticationAccountRepository.constructor.name}`);
         this._authenticationAccountRepository = authenticationAccountRepository;
+    }
+
+    public set sendActivationEmailUponActivation(sendActivationEmailUponActivation: boolean) {
+        debug(`set sendActivationEmailUponActivation: ${sendActivationEmailUponActivation}`);
+        this._sendActivationEmailUponActivation = sendActivationEmailUponActivation;
     }
 
     public set mailSender(mailSender: MailSender) {
@@ -181,9 +187,10 @@ export class AuthenticationFlowsProcessor {
         debug("sending registration email; activationUrl: " + activationUrl);
 
 
-        await this._mailSender.sendEmail(email,
-            AUTHENTICATION_MAIL_SUBJECT,
-            activationUrl );
+        if(this._sendActivationEmailUponActivation)
+            await this._mailSender.sendEmail(email,
+                AUTHENTICATION_MAIL_SUBJECT,
+                activationUrl );
     }
 
     public async activateAccount(linkCode: string) {

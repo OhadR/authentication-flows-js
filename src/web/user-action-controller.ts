@@ -20,9 +20,11 @@ export function config(config: {
     user_app: object,
     authenticationAccountRepository: AuthenticationAccountRepository,
     redirectAfterLogin: string,
+    sendActivationEmailUponActivation?: boolean,
 }) {
     app = config.user_app;
     AuthenticationFlowsProcessor.instance.authenticationAccountRepository = config.authenticationAccountRepository;
+    AuthenticationFlowsProcessor.instance.sendActivationEmailUponActivation = config.sendActivationEmailUponActivation !== undefined ? config.sendActivationEmailUponActivation : true;
 
 
 
