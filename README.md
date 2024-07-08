@@ -214,6 +214,12 @@ Feel free to open issues here if you have any unclear matter or any other questi
 
 ## versions
 
+### 1.3.0
+
+* redirect after login: till now, after login there was a redirect-back; but technically it led me back to login page, 
+  and this is not the desired behavior. So now I redirect to '/', and also the client app have the option to override this 
+  and to redirect to a different page, via the config option `redirectAfterLogin`.
+
 ### 1.2.0
 
 * bugfix | change password flow: get the token from the url correctly.
