@@ -224,6 +224,10 @@ Feel free to open issues here if you have any unclear matter or any other questi
 
 ## versions
 
+### 1.5.0
+
+* bugfix: after failed-authentication, redirect properly back to login page. currently there is "Unauthorized. Redirecting to /login" #12
+
 ### 1.4.0
 
 * avoid sending activation email upon account-creation #11 (see above)
