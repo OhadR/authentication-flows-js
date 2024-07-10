@@ -56,7 +56,7 @@ export function config(config: {
                 + ' username and password.';
             res
                 .append(ERR_MSG, 'authentication failed')         //add to headers
-                .redirect(401, '/login');
+                .redirect('/login');
             return;
         }
 
