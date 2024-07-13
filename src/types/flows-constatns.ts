@@ -17,10 +17,10 @@ export const CHANGE_PASSWORD_ENDPOINT = '/cp';
 
 export const UTS_PARAM = 'uts';
 	
-export const AUTHENTICATION_MAIL_SUBJECT = " Account Created Successfully";
-export const RESTORE_PASSWORD_MAIL_SUBJECT = " Password Restore Request";
-export const UNLOCK_MAIL_SUBJECT = " Account has been Locked";
-export const PASSWORD_CHANGED_MAIL_SUBJECT = " Password has been Changed";
+export const AUTHENTICATION_MAIL_SUBJECT = ": Account Created Successfully";
+export const RESTORE_PASSWORD_MAIL_SUBJECT = ": Password Restore Request";
+export const UNLOCK_MAIL_SUBJECT = ": Account has been Locked";
+export const PASSWORD_CHANGED_MAIL_SUBJECT = ": Password has been Changed";
 
 /*export const AUTHENTICATION_MAIL_BODY = "Account Created Successfully. \n\nplease click on this link to activate your account:\n";
 
