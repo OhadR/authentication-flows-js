@@ -224,7 +224,7 @@ Feel free to open issues here if you have any unclear matter or any other questi
 
 ## versions
 
-### 1.6.0
+### 1.6.1 (1.6.0 is bad)
 
 * the subject of the email - allow it to contain the hosting-application's name #14
 
