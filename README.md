@@ -224,6 +224,10 @@ Feel free to open issues here if you have any unclear matter or any other questi
 
 ## versions
 
+### 1.6.0
+
+* the subject of the email - allow it to contain the hosting-application's name #14
+
 ### 1.5.0
 
 * bugfix: after failed-authentication, redirect properly back to login page. currently there is "Unauthorized. Redirecting to /login" #12
