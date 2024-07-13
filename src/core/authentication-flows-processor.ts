@@ -58,6 +58,7 @@ export class AuthenticationFlowsProcessor {
 
     private _authenticationAccountRepository: AuthenticationAccountRepository;
     private _sendActivationEmailUponActivation: boolean;
+    private _applicationName: string;
     private _passwordPolicyRepository: PasswordPolicyRepository;
 
     private _mailSender: MailSender = new DefaultMailSenderImpl();
@@ -79,6 +80,14 @@ export class AuthenticationFlowsProcessor {
     public set sendActivationEmailUponActivation(sendActivationEmailUponActivation: boolean) {
         debug(`set sendActivationEmailUponActivation: ${sendActivationEmailUponActivation}`);
         this._sendActivationEmailUponActivation = sendActivationEmailUponActivation;
+    }
+
+    public set applicationName(applicationName: string) {
+        if(!applicationName)
+            throw new Error('applicationName cannot be null.');
+
+        debug(`set applicationName: ${applicationName}`);
+        this._applicationName = applicationName;
     }
 
     public set mailSender(mailSender: MailSender) {
@@ -189,7 +198,7 @@ export class AuthenticationFlowsProcessor {
 
         if(this._sendActivationEmailUponActivation)
             await this._mailSender.sendEmail(email,
-                AUTHENTICATION_MAIL_SUBJECT,
+                this._applicationName + AUTHENTICATION_MAIL_SUBJECT,
                 activationUrl );
     }
 
@@ -302,7 +311,7 @@ export class AuthenticationFlowsProcessor {
         debug(`sending Unlock-Account email to ${email}; activationUrl: ${activationUrl}`);
 
         await this._mailSender.sendEmail(email,
-            UNLOCK_MAIL_SUBJECT,
+            this._applicationName + UNLOCK_MAIL_SUBJECT,
             activationUrl );
     }
 
@@ -435,7 +444,7 @@ export class AuthenticationFlowsProcessor {
         debug("sending restore-password email to " + email + "; url: " + passwordRestoreUrl);
 
         await this._mailSender.sendEmail(email,
-            RESTORE_PASSWORD_MAIL_SUBJECT,
+            this._applicationName + RESTORE_PASSWORD_MAIL_SUBJECT,
             passwordRestoreUrl );
     }
 
@@ -519,7 +528,7 @@ export class AuthenticationFlowsProcessor {
         await this._authenticationAccountRepository.setPassword(username, encodedPassword);
 
         await this._mailSender.sendEmail(username,
-            PASSWORD_CHANGED_MAIL_SUBJECT,
+            this._applicationName + PASSWORD_CHANGED_MAIL_SUBJECT,
             'your password has been changed.' );
     }
 }
