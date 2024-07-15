@@ -123,9 +123,10 @@ Thus, the `authentication-flows-js` can use:
 note: set the environment variables.
 
 ## deploy 
-* npm run build
-* npm version patch
-* npm publish
+
+    npm run build
+    npm version patch
+    npm publish
 
 ## emails
 
@@ -216,6 +217,10 @@ https://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_gener
 Feel free to open issues here if you have any unclear matter or any other question.
 
 ## versions
+
+### 1.9.0
+
+* enable customized CreateAccountInterceptor #18
 
 ### 1.8.0
 
