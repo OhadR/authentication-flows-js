@@ -7,7 +7,13 @@ import {
     RESTORE_PASSWORD_ENDPOINT,
     UTS_PARAM
 } from "../types/flows-constatns";
-import { AccountLockedError, AuthenticationAccountRepository, LinkExpiredError, PasswordAlreadyChangedError } from "..";
+import {
+    AccountLockedError,
+    AuthenticationAccountRepository,
+    AuthenticationUser,
+    LinkExpiredError,
+    PasswordAlreadyChangedError
+} from "..";
 const debug = require('debug')('user-action-controller');
 let app;
 
@@ -33,7 +39,7 @@ export function config(config: {
     });
 
     app.post('/login', async function(req: express.Request, res: express.Response){
-        let user;
+        let user: AuthenticationUser;
         try {
             user = await AuthenticationFlowsProcessor.instance.authenticate(
                 req.body.username,
@@ -68,9 +74,10 @@ export function config(config: {
             // Store the user's primary key
             // in the session store to be retrieved,
             // or in this case the entire user object
-            req.session.user = user.email;
+            req.session.user = user.getUsername();
+            req.session.authorities = user.getAuthorities();
 
-            req.session.success = 'Authenticated as ' + user.email
+            req.session.success = 'Authenticated as ' + user.getUsername()
                 + ' click to <a href="/logout">logout</a>. '
                 + ' You may now access <a href="/restricted">/restricted</a>.';
             res.redirect(config.redirectAfterLogin || '/');
