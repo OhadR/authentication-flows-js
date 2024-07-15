@@ -44,7 +44,7 @@ export interface AuthenticationAccountRepository /*extends UserDetailsManager*/
 	getEncodedPassword(username: string): Promise<string>;
 	getPasswordLastChangeDate(email: string): Promise<Date>;
 
-	setAuthority(username: string, authority: string);
+	setAuthorities(username: string, authorities: string[]);
 
 	// LINKS:
 
