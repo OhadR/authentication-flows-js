@@ -217,6 +217,11 @@ Feel free to open issues here if you have any unclear matter or any other questi
 
 ## versions
 
+### 1.8.0
+
+* debug message: use prefix, so hosting app can omit the auth-flows logs using asterik (like ' -body-parser:*') #16
+* handle authorization: store authorities on the session (#17 related)
+
 ### 1.7.0
 
 * bugfix #17: rollback 1.4.0 'avoid sending activation email upon account-creation #11'
