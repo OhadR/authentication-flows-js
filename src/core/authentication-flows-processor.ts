@@ -54,7 +54,7 @@ export class AuthenticationFlowsProcessor {
 
     private static _instance: AuthenticationFlowsProcessor;
 
-    private createAccountEndpoint: CreateAccountInterceptor = new CreateAccountInterceptor();
+    private _createAccountEndpoint: CreateAccountInterceptor = new CreateAccountInterceptor();
 
     private _authenticationAccountRepository: AuthenticationAccountRepository;
     private _applicationName: string;
@@ -87,6 +87,11 @@ export class AuthenticationFlowsProcessor {
     public set mailSender(mailSender: MailSender) {
         debug(`set mailSender: ${JSON.stringify(mailSender)}`);
         this._mailSender = mailSender;
+    }
+
+    public set createAccountInterceptor(createAccountInterceptor: CreateAccountInterceptor) {
+        debug(`set createAccountInterceptor`);
+        this._createAccountEndpoint = createAccountInterceptor;
     }
 
     async authenticate(
@@ -130,7 +135,7 @@ export class AuthenticationFlowsProcessor {
         const encodedPassword: string = shaString(password);
 
         //make any other additional chackes. this let applications override this impl and add their custom functionality:
-        this.createAccountEndpoint.additionalValidations(email, password);
+        this._createAccountEndpoint.additionalValidations(email, password);
 
         email = email.toLowerCase();		// issue #23 : username is case-sensitive
         debug('createAccount() for user ' + email);
@@ -177,7 +182,7 @@ export class AuthenticationFlowsProcessor {
 
         await this._authenticationAccountRepository.createUser(authUser);
 
-        await this.createAccountEndpoint.postCreateAccount( email );
+        await this._createAccountEndpoint.postCreateAccount( email );
 
         const token: string = randomString();
         const activationUrl: string = serverPath + ACTIVATE_ACCOUNT_ENDPOINT +

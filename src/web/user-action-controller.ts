@@ -10,7 +10,7 @@ import {
 import {
     AccountLockedError,
     AuthenticationAccountRepository,
-    AuthenticationUser,
+    AuthenticationUser, CreateAccountInterceptor,
     LinkExpiredError,
     PasswordAlreadyChangedError
 } from "..";
@@ -26,11 +26,13 @@ export function config(config: {
     user_app: object,
     authenticationAccountRepository: AuthenticationAccountRepository,
     applicationName: string,        //the name of the hosting application; will appear in the emails to users
+    createAccountInterceptor?: CreateAccountInterceptor,
     redirectAfterLogin: string,
 }) {
     app = config.user_app;
     AuthenticationFlowsProcessor.instance.authenticationAccountRepository = config.authenticationAccountRepository;
     AuthenticationFlowsProcessor.instance.applicationName = config.applicationName;
+    AuthenticationFlowsProcessor.instance.createAccountInterceptor = config.createAccountInterceptor;
 
 
 
