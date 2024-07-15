@@ -14,7 +14,6 @@ import {
     RESTORE_PASSWORD_ENDPOINT,
     RESTORE_PASSWORD_MAIL_SUBJECT,
     UNLOCK_MAIL_SUBJECT,
-    UTS_PARAM
 } from "../types/flows-constatns";
 import { AuthenticationAccountRepository } from "../interfaces/repository/authentication-account-repository";
 import { PasswordPolicyRepository } from "../interfaces/password-policy-repository";

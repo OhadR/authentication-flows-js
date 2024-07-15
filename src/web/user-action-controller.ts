@@ -5,7 +5,6 @@ import {
     ACTIVATE_ACCOUNT_ENDPOINT,
     ERR_MSG, HASH_PARAM_NAME,
     RESTORE_PASSWORD_ENDPOINT,
-    UTS_PARAM
 } from "../types/flows-constatns";
 import {
     AccountLockedError,

@@ -15,8 +15,6 @@ export const ACTIVATE_ACCOUNT_ENDPOINT = '/aa';
 export const RESTORE_PASSWORD_ENDPOINT = '/rp';
 export const CHANGE_PASSWORD_ENDPOINT = '/cp';
 
-export const UTS_PARAM = 'uts';
-	
 export const AUTHENTICATION_MAIL_SUBJECT = ": Account Created Successfully";
 export const RESTORE_PASSWORD_MAIL_SUBJECT = ": Password Restore Request";
 export const UNLOCK_MAIL_SUBJECT = ": Account has been Locked";
