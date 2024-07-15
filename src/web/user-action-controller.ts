@@ -21,11 +21,9 @@ export function config(config: {
     authenticationAccountRepository: AuthenticationAccountRepository,
     applicationName: string,        //the name of the hosting application; will appear in the emails to users
     redirectAfterLogin: string,
-    sendActivationEmailUponActivation?: boolean,
 }) {
     app = config.user_app;
     AuthenticationFlowsProcessor.instance.authenticationAccountRepository = config.authenticationAccountRepository;
-    AuthenticationFlowsProcessor.instance.sendActivationEmailUponActivation = config.sendActivationEmailUponActivation !== undefined ? config.sendActivationEmailUponActivation : true;
     AuthenticationFlowsProcessor.instance.applicationName = config.applicationName;
 
 

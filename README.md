@@ -91,13 +91,6 @@ The password policy contains the following properties (with the following defaul
 
 an example for a client-app can be found [here](https://github.com/OhadR/authentication-flows-js-app).
 
-### avoid sending activation email upon account-creation #11
-
-There is a use case ('iot-management-console') where we do not want to allow self-registration, but instead we want 
-admin to approve every new account. For these cases we do not want activation email to be sent. So we have a special
-configuration for this, `sendActivationEmailUponActivation` so hosting app can set it to `false`. It is optional, 
-default is `true`.
-
 ## `body-parser`
 
 According to https://www.digitalocean.com/community/tutorials/use-expressjs-to-get-url-and-post-parameters, the client-app
@@ -223,6 +216,10 @@ https://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_gener
 Feel free to open issues here if you have any unclear matter or any other question.
 
 ## versions
+
+### 1.7.0
+
+* bugfix #17: rollback 1.4.0 'avoid sending activation email upon account-creation #11'
 
 ### 1.6.1 (1.6.0 is bad)
 
