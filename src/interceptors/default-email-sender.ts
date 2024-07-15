@@ -1,7 +1,7 @@
 import { AuthenticationFlowsError } from "..";
 import * as nodemailer from 'nodemailer';
 import { MailSender } from "../interfaces/mail-sender";
-const debug = require('debug')('email');
+const debug = require('debug')('authentication-flows:email');
 
 export class DefaultMailSenderImpl implements MailSender {
 

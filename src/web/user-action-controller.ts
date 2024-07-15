@@ -14,7 +14,7 @@ import {
     LinkExpiredError,
     PasswordAlreadyChangedError
 } from "..";
-const debug = require('debug')('user-action-controller');
+const debug = require('debug')('authentication-flows:user-action-controller');
 let app;
 
 /**

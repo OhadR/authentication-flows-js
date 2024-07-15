@@ -5,7 +5,7 @@
 import * as crypto from 'crypto';
 import * as fs from 'fs';
 import * as path from "path";
-const debug = require('debug')('crypto');
+const debug = require('debug')('authentication-flows:crypto');
 
 const PUBLIC_KEY_FILE_NAME = "auth_flows_js_public_key";
 const PRIVATE_KEY_FILE_NAME = "auth_flows_js_private_key";

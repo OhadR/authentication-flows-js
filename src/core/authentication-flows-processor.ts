@@ -24,7 +24,7 @@ import { AuthenticationUserImpl } from "./authentication-user-impl";
 import { PasswordPolicyRepositoryImpl } from "../config/password-policy-repository-impl";
 import { randomString, shaString } from "../crypto/key-generator";
 
-const debug = require('debug')('authentication-flows-processor');
+const debug = require('debug')('authentication-flows:processor');
 
 //constants that are relevant only for this class:
 const EMAIL_NOT_VALID = "The e-mail you have entered is not valid.";
