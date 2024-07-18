@@ -534,6 +534,6 @@ export class AuthenticationFlowsProcessor {
     }
 
     async setAuthoritiesForUser(email: string, authorities: any) {
-        return this._authenticationAccountRepository.setAuthoritiesForUser(email, authorities);
+        return this._authenticationAccountRepository.setAuthorities(email, authorities);
     }
 }

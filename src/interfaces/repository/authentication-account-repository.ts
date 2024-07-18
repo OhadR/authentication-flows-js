@@ -68,6 +68,4 @@ export interface AuthenticationAccountRepository /*extends UserDetailsManager*/
 	//------------------- management -------------------//
 
 	getAllUsers(): Promise<AuthenticationUser[]>;
-
-	setAuthoritiesForUser(email: string, authorities: string[]): Promise<any>;
 }
