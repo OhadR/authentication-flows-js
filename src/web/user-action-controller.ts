@@ -291,9 +291,9 @@ export function config(config: {
     });
 
     app.put('/user/:email/authorities', async (req: express.Request, res: express.Response) => {
-        let users: AuthenticationUser[];
+        let result: string;
         try {
-            users = await AuthenticationFlowsProcessor.instance.setAuthoritiesForUser(req.params.email, req.body);
+            result = await AuthenticationFlowsProcessor.instance.setAuthoritiesForUser(req.params.email, req.body.authorities);
         } catch (err) {
             debug('ERROR: ', err);
             res
@@ -303,7 +303,7 @@ export function config(config: {
             return;
         }
         // debug('req.params', JSON.stringify(req.params));
-        res.json(users);
+        res.json(result);
     });
 }
 

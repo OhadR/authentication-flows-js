@@ -533,7 +533,7 @@ export class AuthenticationFlowsProcessor {
         return this._authenticationAccountRepository.getAllUsers();
     }
 
-    async setAuthoritiesForUser(email: string, authorities: any) {
+    async setAuthoritiesForUser(email: string, authorities: string[]) {
         return this._authenticationAccountRepository.setAuthorities(email, authorities);
     }
 }
