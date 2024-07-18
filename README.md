@@ -197,6 +197,12 @@ renders the create account page that is sent to the user:
     POST 
     /deleteAccount
 
+    GET
+    /user                       get all users
+
+    PUT
+    /user/:email/authorities    set authorities for user
+
 ## tests
 
 all flows are tested very clearly using [Cucumber automated tests](https://github.com/OhadR/authentication-flows-js-automation).
@@ -217,6 +223,10 @@ https://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_gener
 Feel free to open issues here if you have any unclear matter or any other question.
 
 ## versions
+
+### 1.10.0
+
+* add APIs for management - `getAllUsers`, and `setAuthorities`. so hosting app can manage authorization for users. #17
 
 ### 1.9.0
 
