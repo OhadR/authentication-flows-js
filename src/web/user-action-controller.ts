@@ -271,6 +271,40 @@ export function config(config: {
         res
             .render('accountDeletedSuccess', { email: requestBody.email });
     });
+
+    //------------------- management -------------------//
+
+    app.get('/user', async (req: express.Request, res: express.Response) => {
+        let users: AuthenticationUser[];
+        try {
+            users = await AuthenticationFlowsProcessor.instance.getAllUsers();
+        } catch (err) {
+            debug('ERROR: ', err);
+            res
+                .status(500)
+                .append('err_msg', err.message)         //add to headers
+                .json({ [ERR_MSG]: err.message });
+            return;
+        }
+        // debug('req.params', JSON.stringify(req.params));
+        res.json(users);
+    });
+
+    app.put('/user/:email/authorities', async (req: express.Request, res: express.Response) => {
+        let result: string;
+        try {
+            result = await AuthenticationFlowsProcessor.instance.setAuthoritiesForUser(req.params.email, req.body.authorities);
+        } catch (err) {
+            debug('ERROR: ', err);
+            res
+                .status(500)
+                .append('err_msg', err.message)         //add to headers
+                .json({ [ERR_MSG]: err.message });
+            return;
+        }
+        // debug('req.params', JSON.stringify(req.params));
+        res.json(result);
+    });
 }
 
 export function fullUrl(req: express.Request): string {

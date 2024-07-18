@@ -528,4 +528,12 @@ export class AuthenticationFlowsProcessor {
             this._applicationName + PASSWORD_CHANGED_MAIL_SUBJECT,
             'your password has been changed.' );
     }
+
+    async getAllUsers() : Promise<AuthenticationUser[]> {
+        return this._authenticationAccountRepository.getAllUsers();
+    }
+
+    async setAuthoritiesForUser(email: string, authorities: string[]) {
+        return this._authenticationAccountRepository.setAuthorities(email, authorities);
+    }
 }

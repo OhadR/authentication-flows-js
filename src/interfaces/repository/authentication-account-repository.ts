@@ -64,4 +64,8 @@ export interface AuthenticationAccountRepository /*extends UserDetailsManager*/
 	 * @throws Error if link was not found for any user
 	 */
 	getUsernameByLink(link: string): Promise<string>;
+
+	//------------------- management -------------------//
+
+	getAllUsers(): Promise<AuthenticationUser[]>;
 }
