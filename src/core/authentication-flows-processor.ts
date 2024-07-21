@@ -319,10 +319,12 @@ export class AuthenticationFlowsProcessor {
     private async setLoginSuccessForUser(username: string): Promise<boolean> {
         debug("setting login success for user " + username);
 
-        this._authenticationAccountRepository.setAttemptsLeft( username,
+        await this._authenticationAccountRepository.setAttemptsLeft( username,
             this.getAuthenticationSettings().getMaxPasswordEntryAttempts() );
 
-        return await this.isPasswordChangeRequired(username);
+        await this._authenticationAccountRepository.setLastLoginDate( username, new Date() );
+
+        return this.isPasswordChangeRequired(username);
     }
 
 

@@ -224,6 +224,10 @@ Feel free to open issues here if you have any unclear matter or any other questi
 
 ## versions
 
+### 1.11.0
+
+* store the last login date #21
+
 ### 1.10.0
 
 * add APIs for management - `getAllUsers`, and `setAuthorities`. so hosting app can manage authorization for users. #17

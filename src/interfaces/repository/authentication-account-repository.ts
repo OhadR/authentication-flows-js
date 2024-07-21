@@ -65,6 +65,8 @@ export interface AuthenticationAccountRepository /*extends UserDetailsManager*/
 	 */
 	getUsernameByLink(link: string): Promise<string>;
 
+	setLastLoginDate(email: string, lastLoginDate: Date);
+
 	//------------------- management -------------------//
 
 	getAllUsers(): Promise<AuthenticationUser[]>;
