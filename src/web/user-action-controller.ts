@@ -62,8 +62,9 @@ export function config(config: {
             req.session.error = 'Authentication failed, please check your '
                 + ' username and password.';
             res
+                .status(401)
                 .append(ERR_MSG, 'authentication failed')         //add to headers
-                .redirect('/login');
+                .render('login');
             return;
         }
 
