@@ -89,6 +89,9 @@ export class AuthenticationFlowsProcessor {
     }
 
     public set createAccountInterceptor(createAccountInterceptor: CreateAccountInterceptor) {
+        if(!createAccountInterceptor)
+            return;
+
         debug(`set createAccountInterceptor`);
         this._createAccountEndpoint = createAccountInterceptor;
     }
