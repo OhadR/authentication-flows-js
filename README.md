@@ -224,6 +224,15 @@ Feel free to open issues here if you have any unclear matter or any other questi
 
 ## versions
 
+### 1.12.2
+
+* bugfix
+* add in-mem impl from authentication-flows-js-inmem #23
+
+### 1.12.0
+
+reveiled by automation: authentication failure - do not "redirect", but "render" instead, so can send 401 and message #22
+
 ### 1.11.0
 
 * store the last login date #21
