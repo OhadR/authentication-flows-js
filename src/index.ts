@@ -10,3 +10,5 @@ export * from './interfaces/repository/authentication-account-repository'
 export * from './interfaces/mail-sender'
 
 export * from './web/user-action-controller'
+
+export * from './in-mem-impl'
