@@ -11,4 +11,4 @@ export * from './interfaces/mail-sender'
 
 export * from './web/user-action-controller'
 
-export * from './in-mem-impl'
+export * from './in-mem-impl/authentication-account-inmem-repository'
