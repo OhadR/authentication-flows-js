@@ -221,10 +221,10 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
         throw new Error("Could not find any user with this link.");
     }
 
-    setLastLoginDate(email: string, lastLoginDate: Date): any {
+    setLastLoginDate(email: string, lastLoginDate: Date) {
     }
 
     getAllUsers(): Promise<AuthenticationUser[]> {
-        return Promise.resolve([]);
+        return Promise.resolve(Array.from(this.users.values()));
     }
 }
