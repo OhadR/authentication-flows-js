@@ -1,8 +1,13 @@
 import { AuthenticationAccountRepository,
 	AuthenticationUser,
-    AuthenticationUserImpl } from 'authentication-flows-js';
+    AuthenticationUserImpl } from '..';
 const debug = require('debug')('authentication-account-inmem-repository');
 
+/**
+ * IN-MEM implementation. used for debugging. initially was in a seperate package (https://github.com/OhadR/authentication-flows-js-inmem)
+ * but for simplicity of dev,deployment and usage was bundled here.
+ * Now when "app" wants in-mem impl, it does not have to import a different package, manage versions, etc.
+ */
 export class AuthenticationAccountInmemRepository implements AuthenticationAccountRepository {
 
     private users = new Map<string, AuthenticationUser>();
@@ -108,7 +113,7 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
         return Promise.resolve( storedUser.getPasswordLastChangeDate() );
     }
 
-    setAuthority(username: string, authority: string) {
+    setAuthorities(username: string, authorities: string[]): any {
         throw new Error("Method not implemented.");
     }
 
@@ -192,8 +197,8 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
         this.users.set(username, newUser);
         return Promise.resolve( true );
     }
-
     //this is for the automation only:
+
     async getLink(username: string): Promise<{ link: string; date: Date; }> {
         const storedUser: AuthenticationUser =  await this.loadUserByUsername(username);
         return Promise.resolve( {
@@ -201,6 +206,7 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
             date: storedUser.getTokenDate()
         } );
     }
+
 
     /**
      * in real DB we will index also the link. In-mem impl just iterates over all entries.
@@ -213,5 +219,12 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
                 return Promise.resolve( user.getUsername() );
         }
         throw new Error("Could not find any user with this link.");
+    }
+
+    setLastLoginDate(email: string, lastLoginDate: Date): any {
+    }
+
+    getAllUsers(): Promise<AuthenticationUser[]> {
+        return Promise.resolve([]);
     }
 }
